@@ -169,7 +169,17 @@
           "assignees": [
             "함흥우"
           ],
-          "steps": []
+          "steps": [
+            {
+              "id": "s1781688057301",
+              "name": "꿈틀이 첫 과학",
+              "type": "check",
+              "assignees": [
+                "함흥우"
+              ],
+              "done": false
+            }
+          ]
         }
       ]
     }
