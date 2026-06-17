@@ -60,7 +60,17 @@
           "assignees": [
             "함흥우"
           ],
-          "steps": []
+          "steps": [
+            {
+              "id": "s1781687893974",
+              "name": "로컬PC에서 작업완료",
+              "type": "pct",
+              "assignees": [
+                "함흥우"
+              ],
+              "pct": 0
+            }
+          ]
         },
         {
           "id": "p2t2",
