@@ -152,6 +152,35 @@ app.get('/api/projects', (req, res) => {
 
 function saveProjects(data) {
   fs.writeFileSync(PROJECTS_PATH, JSON.stringify(data, null, 2), 'utf-8');
+  // GitHub 자동 커밋 (비동기, 실패해도 서버 동작에 영향 없음)
+  if (process.env.GITHUB_TOKEN) {
+    const content = Buffer.from(JSON.stringify(data, null, 2), 'utf-8').toString('base64');
+    fetch('https://api.github.com/repos/galaxyboys318/sungwoo-report-system/contents/data/projects.json', {
+      method: 'GET',
+      headers: {
+        'Authorization': `token ${process.env.GITHUB_TOKEN}`,
+        'Accept': 'application/vnd.github.v3+json',
+      }
+    })
+    .then(r => r.json())
+    .then(fileInfo => {
+      return fetch('https://api.github.com/repos/galaxyboys318/sungwoo-report-system/contents/data/projects.json', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `token ${process.env.GITHUB_TOKEN}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: '[자동] projects.json 업데이트',
+          content: content,
+          sha: fileInfo.sha,
+        })
+      });
+    })
+    .then(() => console.log('[GitHub] projects.json 자동 커밋 완료'))
+    .catch(e => console.error('[GitHub] 커밋 실패:', e.message));
+  }
 }
 
 // 관리자용 전체 프로젝트 조회 (필터링 없음)
