@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>대시보드 · 일일보고</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; background: #f5f6fa; min-height: 100vh; }
+
+    /* 탑바 */
+    .topbar { background: #1a73e8; padding: 0 24px; display: flex; align-items: center; height: 52px; }
+    .topbar-title { color: #fff; font-size: 15px; font-weight: 700; margin-right: 32px; }
+    .tab { color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 600; padding: 0 16px; height: 52px; display: flex; align-items: center; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; text-decoration: none; }
+    .tab:hover { color: #fff; }
+    .tab.active { color: #fff; border-bottom-color: #fff; }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    .topbar-user { color: rgba(255,255,255,0.8); font-size: 13px; }
+    .btn-topbar { color: #fff; background: rgba(255,255,255,0.15); border: none; border-radius: 5px; padding: 5px 12px; font-size: 12px; cursor: pointer; }
+    .btn-topbar:hover { background: rgba(255,255,255,0.25); }
+
+    .wrap { max-width: 960px; margin: 0 auto; padding: 28px 24px; }
+
+    /* 헤더 */
+    .dash-title { font-size: 34px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+    .dash-sub { font-size: 17px; color: #888; margin-bottom: 32px; }
+
+    /* 요약 카드 4개 */
+    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 32px; }
+    .summary-card { border-radius: 12px; padding: 26px 18px; text-align: center; }
+    .summary-card .label { font-size: 15px; color: #666; margin-bottom: 10px; }
+    .summary-card .value { font-size: 52px; font-weight: 700; line-height: 1; }
+    .summary-card .sub { font-size: 13px; margin-top: 6px; }
+    .card-total { background: #f0f4ff; }
+    .card-total .value { color: #1a1a2e; }
+    .card-done { background: #f0fff4; }
+    .card-done .value { color: #639922; }
+    .card-progress { background: #f0f7ff; }
+    .card-progress .value { color: #378ADD; }
+    .card-deadline { background: #fff0f0; border: 2px solid #e74c3c; }
+    .card-deadline .value { color: #e74c3c; }
+    .card-deadline .sub { color: #e74c3c; }
+
+    /* 섹션 구분선 */
+    .divider { border: none; border-top: 1px solid #eee; margin: 0 0 24px; }
+    .section-title { font-size: 21px; font-weight: 700; color: #1a1a2e; margin-bottom: 20px; }
+
+    /* 프로젝트 카드 */
+    .project-cards { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+    .project-card { border-radius: 10px; background: #f8f9fa; overflow: hidden; }
+    .project-card-header { display: flex; align-items: center; gap: 12px; padding: 18px 20px; cursor: pointer; border-left: 6px solid #ccc; }
+    .project-card-header:hover { background: #f0f0f0; }
+    .project-card-left { flex: 1; }
+    .project-card-name { font-size: 17px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
+    .project-card-meta { font-size: 13px; color: #888; }
+    .project-status-badge { font-size: 12px; padding: 4px 12px; border-radius: 10px; font-weight: 700; color: #fff; white-space: nowrap; }
+    .project-progress-wrap { text-align: right; min-width: 60px; }
+    .project-progress-pct { font-size: 22px; font-weight: 700; }
+    .project-dday { font-size: 12px; color: #888; margin-top: 2px; }
+    .project-arrow { font-size: 12px; color: #aaa; transition: transform 0.2s; margin-left: 8px; }
+    .project-arrow.open { transform: rotate(90deg); }
+
+    /* 프로젝트 상세 (단위업무) */
+    .project-detail { display: none; padding: 0 20px 16px; border-left: 6px solid #ccc; background: #f8f9fa; }
+    .project-detail.open { display: block; }
+
+    /* 진행률 바 */
+    .bar-wrap { margin-bottom: 16px; }
+    .bar-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+    .bar-name { font-size: 15px; font-weight: 600; color: #1a1a2e; }
+    .bar-dday { font-size: 13px; font-weight: 700; }
+    .bar-pct { font-size: 15px; font-weight: 700; }
+    .bar-bg { background: #e8e8e8; border-radius: 20px; height: 22px; overflow: hidden; }
+    .bar-fill { height: 22px; border-radius: 20px; transition: width 0.4s; }
+    .bar-steps { font-size: 12px; color: #888; margin-top: 4px; }
+
+    /* 2단 레이아웃 */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px; }
+
+    /* 세로 막대 차트 */
+    .bar-chart { display: flex; align-items: flex-end; gap: 16px; height: 180px; }
+    .bar-chart-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+    .bar-chart-pct { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+    .bar-chart-bar { width: 60%; border-radius: 6px 6px 0 0; min-height: 4px; transition: height 0.4s; }
+    .bar-chart-label { font-size: 11px; color: #555; margin-top: 6px; text-align: center; word-break: keep-all; }
+
+    /* 팀원 현황 */
+    .reporter-list { display: flex; flex-direction: column; gap: 10px; }
+    .reporter-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #f8f9fa; border-radius: 8px; }
+    .reporter-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .reporter-info { flex: 1; }
+    .reporter-name { font-size: 14px; font-weight: 700; color: #1a1a2e; }
+    .reporter-sub { font-size: 12px; color: #888; margin-top: 2px; }
+    .reporter-status { font-size: 12px; padding: 3px 10px; border-radius: 10px; font-weight: 700; }
+    .status-done { background: #f0fff4; color: #639922; }
+    .status-none { background: #f5f5f5; color: #aaa; }
+
+    /* 로딩 */
+    .loading { text-align: center; padding: 60px; color: #888; font-size: 15px; }
+    .spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid #ddd; border-top-color: #1a73e8; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 8px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title">⚙️ 관리자</div>
+  <a class="tab" href="/admin">프로젝트 관리</a>
+  <a class="tab" href="/admin/users">직원 관리</a>
+  <a class="tab active" href="/dashboard">대시보드</a>
+  <div class="topbar-right">
+    <span class="topbar-user" id="topbar-user"></span>
+    <button class="btn-topbar" onclick="location.href='/report'">← 보고 폼</button>
+    <button class="btn-topbar" onclick="doLogout()">로그아웃</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div id="content">
+    <div class="loading"><span class="spinner"></span> 데이터 불러오는 중...</div>
+  </div>
+</div>
+
+<script>
+  // 진행률 바 색상
+  function barColor(p) {
+    if (p === 0)   return '#ddd';
+    if (p < 25)    return '#e74c3c';
+    if (p < 50)    return '#e67e22';
+    if (p < 75)    return '#3498db';
+    return '#639922';
+  }
+
+  // D-day 계산
+  function calcDday(targetDate) {
+    if (!targetDate) return null;
+    const today = new Date(); today.setHours(0,0,0,0);
+    const target = new Date(targetDate); target.setHours(0,0,0,0);
+    return Math.round((target - today) / (1000 * 60 * 60 * 24));
+  }
+
+  function ddayColor(d) {
+    if (d === null) return '#888';
+    if (d <= 3) return '#e74c3c';
+    if (d <= 7) return '#e67e22';
+    return '#378ADD';
+  }
+
+  // 상태 판정
+  function getStatus(progress, dday) {
+    if (progress >= 100) return { label: '완료', color: '#639922' };
+    if (dday !== null && dday <= 0) return { label: '지연', color: '#e74c3c' };
+    if (dday !== null && dday <= 7 && progress < 50) return { label: '경고', color: '#e74c3c' };
+    if (dday !== null && dday <= 14 && progress < 30) return { label: '주의', color: '#e67e22' };
+    return { label: '진행중', color: '#378ADD' };
+  }
+
+  // 단위업무 진행률 계산
+  function calcTaskProgress(task) {
+    const steps = task.steps || [];
+    if (!steps.length) return 0;
+    const total = steps.reduce((s, step) => {
+      if (step.type === 'check') return s + (step.done ? 100 : 0);
+      if (step.type === 'qty') return s + (step.target > 0 ? Math.min(100, Math.round((step.current||0)/step.target*100)) : 0);
+      if (step.type === 'pct') return s + (step.pct || 0);
+      return s;
+    }, 0);
+    return Math.round(total / steps.length);
+  }
+
+  function calcProjectProgress(project) {
+    const tasks = project.tasks || [];
+    if (!tasks.length) return 0;
+    return Math.round(tasks.reduce((s,t) => s + calcTaskProgress(t), 0) / tasks.length);
+  }
+
+  async function loadDashboard() {
+    // 로그인 확인
+    const meRes = await fetch('/api/me');
+    const meData = await meRes.json();
+    if (!meData.user) { location.href = '/login'; return; }
+    const user = meData.user;
+    document.getElementById('topbar-user').textContent = `${user.name} (${user.position||'관리자'})`;
+
+    // 프로젝트 데이터 (레벨 기반 필터링)
+    const projRes = await fetch('/api/projects');
+    const projData = await projRes.json();
+    const projects = projData.projects || [];
+
+    // 직원 데이터
+    const userRes = await fetch('/api/users');
+    const userData = await userRes.json();
+    const users = userData.users || [];
+
+    // 보고 기록 (오늘)
+    const today = new Date().toISOString().slice(0, 10);
+    const reportRes = await fetch(`/api/reports/today`);
+    const reportData = await reportRes.json();
+    const todayReporters = reportData.reporters || [];
+
+    // 날짜 포맷
+    const now = new Date();
+    const days = ['일','월','화','수','목','금','토'];
+    const dateStr = `${now.getFullYear()}년 ${now.getMonth()+1}월 ${now.getDate()}일 (${days[now.getDay()]})`;
+
+    // 요약 계산
+    const totalProjects = projects.length;
+    const doneProjects = projects.filter(p => calcProjectProgress(p) >= 100).length;
+    const inProgress = projects.filter(p => { const pg = calcProjectProgress(p); return pg > 0 && pg < 100; }).length;
+
+    // 가장 빠른 마감
+    let nearestDeadline = null;
+    let nearestProject = null;
+    projects.forEach(p => {
+      if (!p.targetDate) return;
+      const d = calcDday(p.targetDate);
+      if (d !== null && d >= 0 && (nearestDeadline === null || d < nearestDeadline)) {
+        nearestDeadline = d;
+        nearestProject = p;
+      }
+    });
+
+    // HTML 생성
+    let html = `
+      <p class="dash-title">일일 업무 보고서</p>
+      <p class="dash-sub">${dateStr} &nbsp;·&nbsp; 도서출판 성우 · ${user.team || '솔루션개발팀'}</p>
+
+      <!-- 요약 카드 -->
+      <div class="summary-grid">
+        <div class="summary-card card-total">
+          <div class="label">전체 프로젝트</div>
+          <div class="value">${totalProjects}</div>
+          <div class="sub" style="color:#888">진행중 ${inProgress}개</div>
+        </div>
+        <div class="summary-card card-done">
+          <div class="label">완료</div>
+          <div class="value">${doneProjects}</div>
+          <div class="sub" style="color:#639922">프로젝트</div>
+        </div>
+        <div class="summary-card card-progress">
+          <div class="label">오늘 보고</div>
+          <div class="value">${todayReporters.length}</div>
+          <div class="sub" style="color:#378ADD">/ ${users.length}명</div>
+        </div>
+        <div class="summary-card card-deadline">
+          <div class="label">가장 빠른 마감</div>
+          <div class="value">D-${nearestDeadline !== null ? nearestDeadline : '-'}</div>
+          <div class="sub">${nearestProject ? nearestProject.name : '-'}</div>
+        </div>
+      </div>
+
+      <hr class="divider">
+      <div class="section-title">프로젝트 현황</div>
+      <div class="project-cards">
+    `;
+
+    // 프로젝트 카드
+    const PROJECT_COLORS = ['#4285f4','#34a853','#ea4335','#fbbc04','#9c27b0'];
+    projects.forEach((project, pi) => {
+      const progress = calcProjectProgress(project);
+      const dday = calcDday(project.targetDate);
+      const status = getStatus(progress, dday);
+      const pcolor = PROJECT_COLORS[pi % PROJECT_COLORS.length];
+      const ddayStr = dday !== null ? `D-${dday}` : '';
+      const ddayCol = ddayColor(dday);
+
+      let taskBarsHtml = '';
+      (project.tasks || []).forEach(task => {
+        const tp = calcTaskProgress(task);
+        const tc = barColor(tp);
+        const td = calcDday(project.targetDate);
+        const tdStr = td !== null ? `D-${td}` : '';
+        const tdCol = ddayColor(td);
+        const stepCount = (task.steps||[]).length;
+        const doneSteps = (task.steps||[]).filter(s => {
+          if (s.type==='check') return s.done;
+          if (s.type==='qty') return s.target > 0 && (s.current||0) >= s.target;
+          if (s.type==='pct') return (s.pct||0) >= 100;
+          return false;
+        }).length;
+
+        taskBarsHtml += `
+          <div class="bar-wrap">
+            <div class="bar-header">
+              <div>
+                <span class="bar-name">${task.name}</span>
+                ${tdStr ? `&nbsp;<span class="bar-dday" style="color:${tdCol}">${tdStr}</span>` : ''}
+              </div>
+              <span class="bar-pct" style="color:${tc}">${tp}%</span>
+            </div>
+            <div class="bar-bg">
+              <div class="bar-fill" style="width:${tp}%;background:${tc}"></div>
+            </div>
+            ${stepCount > 0 ? `<div class="bar-steps">단계 ${doneSteps}/${stepCount} 완료 · 담당: ${(task.assignees||[]).join(', ')||'전체'}</div>` : ''}
+          </div>`;
+      });
+
+      html += `
+        <div class="project-card">
+          <div class="project-card-header" style="border-left-color:${pcolor}" onclick="toggleProject('proj-${project.id}')">
+            <div class="project-card-left">
+              <div class="project-card-name">${project.name}</div>
+              <div class="project-card-meta">${project.division||''} · ${project.team||''} · 책임자: ${project.manager||'-'}</div>
+            </div>
+            <span class="project-status-badge" style="background:${status.color}">${status.label}</span>
+            <div class="project-progress-wrap">
+              <div class="project-progress-pct" style="color:${barColor(progress)}">${progress}%</div>
+              ${ddayStr ? `<div class="project-dday" style="color:${ddayCol}">${ddayStr}</div>` : ''}
+            </div>
+            <span class="project-arrow open" id="arrow-proj-${project.id}">▶</span>
+          </div>
+          <div class="project-detail open" id="proj-${project.id}" style="border-left-color:${pcolor}">
+            ${taskBarsHtml || '<p style="color:#aaa;font-size:13px;padding:12px 0">등록된 단위업무가 없습니다.</p>'}
+          </div>
+        </div>`;
+    });
+
+    html += `</div>`;
+
+    // 2단 레이아웃: 전체 진행률 막대 | 팀원 보고 현황
+    html += `
+      <hr class="divider">
+      <div class="two-col">
+        <div>
+          <div class="section-title">프로젝트별 진행률</div>
+          <div class="bar-chart">`;
+
+    projects.forEach((project, pi) => {
+      const progress = calcProjectProgress(project);
+      const color = PROJECT_COLORS[pi % PROJECT_COLORS.length];
+      const barHeight = Math.max(4, Math.round(progress * 1.6));
+      html += `
+        <div class="bar-chart-col">
+          <div class="bar-chart-pct" style="color:${color}">${progress}%</div>
+          <div class="bar-chart-bar" style="background:${color};height:${barHeight}px"></div>
+          <div class="bar-chart-label">${project.name}</div>
+        </div>`;
+    });
+
+    html += `
+          </div>
+        </div>
+        <div>
+          <div class="section-title">팀원 보고 현황</div>
+          <div class="reporter-list">`;
+
+    const AVATAR_COLORS = ['#4285f4','#34a853','#ea4335','#fbbc04','#9c27b0','#00bcd4'];
+    users.forEach((u, ui) => {
+      const reported = todayReporters.includes(u.name);
+      const avatarColor = AVATAR_COLORS[ui % AVATAR_COLORS.length];
+      html += `
+        <div class="reporter-row">
+          <div class="reporter-avatar" style="background:${avatarColor}">${u.name[0]}</div>
+          <div class="reporter-info">
+            <div class="reporter-name">${u.name}</div>
+            <div class="reporter-sub">${u.position||'팀원'} · ${u.team||''}</div>
+          </div>
+          <span class="reporter-status ${reported ? 'status-done' : 'status-none'}">${reported ? '✅ 보고완료' : '미보고'}</span>
+        </div>`;
+    });
+
+    html += `
+          </div>
+        </div>
+      </div>
+      <hr class="divider">
+      <p style="font-size:13px;color:#aaa;text-align:center">이 보고서는 일일보고 시스템 데이터를 기반으로 자동 생성되었습니다.</p>
+    `;
+
+    document.getElementById('content').innerHTML = html;
+  }
+
+  function toggleProject(id) {
+    const detail = document.getElementById(id);
+    const arrow = document.getElementById(`arrow-${id}`);
+    detail.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+
+  async function doLogout() {
+    await fetch('/api/logout', { method: 'POST' });
+    location.href = '/login';
+  }
+
+  loadDashboard();
+</script>
+</body>
+</html>

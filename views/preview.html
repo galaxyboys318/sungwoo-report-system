@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>보고서 미리보기</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+      background: #f4f6f9;
+      min-height: 100vh;
+      padding: 24px;
+      display: flex;
+      justify-content: center;
+    }
+    .wrap { width: 100%; max-width: 680px; }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+      padding: 40px;
+      margin-bottom: 16px;
+    }
+    .step-tag {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+    h2 { font-size: 18px; color: #1a1a1a; margin-bottom: 20px; }
+
+    /* 메일 미리보기 영역 */
+    .mail-preview {
+      border: 1.5px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .mail-header {
+      background: #f8f8f8;
+      padding: 14px 18px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .mail-header .field {
+      display: flex;
+      font-size: 13px;
+      color: #444;
+      margin-bottom: 4px;
+    }
+    .mail-header .field:last-child { margin-bottom: 0; }
+    .mail-header .label {
+      width: 48px;
+      color: #999;
+      flex-shrink: 0;
+    }
+    .mail-body {
+      padding: 20px 18px;
+      font-size: 14px;
+      line-height: 1.9;
+      color: #222;
+      white-space: pre-wrap;
+      word-break: keep-all;
+      min-height: 160px;
+    }
+
+    /* 수신자 선택 */
+    .recipient-section { margin-top: 24px; }
+    .recipient-section h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 12px;
+    }
+    .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: #333;
+      cursor: pointer;
+    }
+    .checkbox-item input[type="checkbox"] {
+      width: 16px; height: 16px;
+      accent-color: #1a73e8;
+      cursor: pointer;
+    }
+    .email-addr { color: #888; font-size: 13px; margin-left: 4px; }
+
+    /* 버튼 */
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .btn {
+      flex: 1;
+      padding: 13px;
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-back {
+      background: #f0f0f0;
+      color: #555;
+    }
+    .btn-back:hover { background: #e0e0e0; }
+    .btn-send {
+      background: #1a73e8;
+      color: #fff;
+    }
+    .btn-send:hover { background: #1558b0; }
+    .btn-send:disabled { background: #aac4f0; cursor: not-allowed; }
+
+    /* 발송 완료 */
+    .result {
+      display: none;
+      text-align: center;
+      padding: 32px;
+    }
+    .result.show { display: block; }
+    .result-icon { font-size: 48px; margin-bottom: 12px; }
+    .result-msg { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
+    .result-sub { font-size: 13px; color: #888; }
+    .btn-again {
+      margin-top: 20px;
+      padding: 10px 24px;
+      background: #1a73e8;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.7);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 15px;
+      color: #444;
+    }
+    .loading-overlay.show { display: flex; }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid #ccc;
+      border-top-color: #1a73e8;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" id="preview-card">
+      <div class="step-tag">STEP 2 · 미리보기 및 발송</div>
+      <h2>보고서를 확인하고 발송하세요</h2>
+
+      <div class="mail-preview">
+        <div class="mail-header">
+          <div class="field"><span class="label">제목</span><span id="preview-subject">-</span></div>
+          <div class="field"><span class="label">발신</span><span id="preview-from">-</span></div>
+          <div class="field"><span class="label">수신</span><span id="preview-to">선택된 수신자</span></div>
+        </div>
+        <div class="mail-body" id="preview-body">불러오는 중...</div>
+      </div>
+
+      <div class="recipient-section">
+        <h3>수신자 선택</h3>
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" id="chk-manager" checked>
+            팀장 / 이사
+            <span class="email-addr" id="addr-manager"></span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" id="chk-exec" checked>
+            경영진
+            <span class="email-addr" id="addr-exec"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="goBack()">← 다시 작성</button>
+        <button class="btn btn-send" id="send-btn" onclick="sendReport()">이 내용으로 발송 →</button>
+      </div>
+    </div>
+
+    <div class="card result" id="result-card">
+      <div class="result-icon">✅</div>
+      <div class="result-msg">보고서가 발송되었습니다!</div>
+      <div class="result-sub" id="result-sub"></div>
+      <button class="btn-again" onclick="location.href='/report'">새 보고서 작성</button>
+    </div>
+  </div>
+
+  <div class="loading-overlay" id="loading">
+    <div class="spinner"></div>
+    <span>메일 발송 중...</span>
+  </div>
+
+  <script>
+    const data = JSON.parse(sessionStorage.getItem('reportData') || '{}');
+
+    if (!data.subject) {
+      alert('잘못된 접근입니다.');
+      location.href = '/report';
+    }
+
+    document.getElementById('preview-subject').textContent = data.subject;
+    document.getElementById('preview-from').textContent = data.reporterEmail || '';
+    document.getElementById('preview-body').textContent = data.body;
+    document.getElementById('addr-manager').textContent = data.recipientManager || '';
+    document.getElementById('addr-exec').textContent = data.recipientExec || '';
+
+    function goBack() {
+      history.back();
+    }
+
+    async function sendReport() {
+      const recipients = [];
+      if (document.getElementById('chk-manager').checked) recipients.push('manager');
+      if (document.getElementById('chk-exec').checked) recipients.push('exec');
+
+      if (recipients.length === 0) {
+        alert('수신자를 1명 이상 선택해주세요.');
+        return;
+      }
+
+      document.getElementById('loading').classList.add('show');
+      document.getElementById('send-btn').disabled = true;
+
+      try {
+        const res = await fetch('/report/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ report: data, recipients }),
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+          document.getElementById('preview-card').style.display = 'none';
+          const resultCard = document.getElementById('result-card');
+          resultCard.classList.add('show');
+          document.getElementById('result-sub').textContent =
+            `${result.sentTo.join(', ')} 으로 발송 완료 (${result.date})`;
+          sessionStorage.removeItem('reportData');
+        } else {
+          throw new Error(result.error || '발송 실패');
+        }
+      } catch (e) {
+        alert('발송 중 오류가 발생했습니다.\n' + e.message);
+        document.getElementById('send-btn').disabled = false;
+      } finally {
+        document.getElementById('loading').classList.remove('show');
+      }
+    }
+  </script>
+</body>
+</html>

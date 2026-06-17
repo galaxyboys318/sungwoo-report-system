@@ -1,0 +1,113 @@
+{
+  "projects": [
+    {
+      "id": "p1",
+      "name": "뒤집기솔루션",
+      "tag": "신규사업",
+      "division": "초등콘텐츠사업부",
+      "team": "솔루션개발팀",
+      "manager": "함흥우",
+      "startDate": "2026-01-01",
+      "targetDate": "2026-12-31",
+      "tasks": [
+        {
+          "id": "p1t1",
+          "name": "AI 풀이 위젯 개발",
+          "assignees": [
+            "함흥우"
+          ],
+          "steps": []
+        },
+        {
+          "id": "p1t2",
+          "name": "마케팅 기획",
+          "assignees": [
+            "함흥우"
+          ],
+          "steps": [
+            {
+              "id": "s1781589753456",
+              "name": "업체리스트업",
+              "type": "qty",
+              "assignees": [],
+              "target": 10,
+              "current": 0
+            }
+          ]
+        },
+        {
+          "id": "p1t3",
+          "name": "가격 정책 수립",
+          "assignees": [
+            "함흥우"
+          ],
+          "steps": []
+        },
+        {
+          "id": "p1t4",
+          "name": "기획서 작성",
+          "assignees": [
+            "함흥우"
+          ],
+          "steps": []
+        }
+      ]
+    },
+    {
+      "id": "p2",
+      "name": "AI활용 생산성개선",
+      "tag": "AI활용",
+      "division": "초등콘텐츠사업부",
+      "team": "솔루션개발팀",
+      "manager": "함흥우",
+      "startDate": "2026-01-01",
+      "targetDate": "2026-12-31",
+      "tasks": [
+        {
+          "id": "p2t1",
+          "name": "일일보고 자동화 시스템",
+          "assignees": [
+            "함흥우"
+          ],
+          "steps": []
+        },
+        {
+          "id": "p2t2",
+          "name": "AI 뉴스레터 자동화",
+          "assignees": [
+            "함흥우"
+          ],
+          "steps": []
+        }
+      ]
+    },
+    {
+      "id": "p3",
+      "name": "기타",
+      "tag": "업무협조",
+      "division": "초등콘텐츠사업부",
+      "team": "솔루션개발팀",
+      "manager": "함흥우",
+      "startDate": "2026-01-01",
+      "targetDate": "2026-12-31",
+      "tasks": [
+        {
+          "id": "p3t1",
+          "name": "알림톡 검수 대응",
+          "assignees": [
+            "함흥우"
+          ],
+          "steps": []
+        },
+        {
+          "id": "p3t2",
+          "name": "그룹웨어 관리",
+          "assignees": [
+            "함흥우"
+          ],
+          "steps": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>일일업무보고 작성</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+      background: #f4f6f9;
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .wrap { max-width: 700px; margin: 0 auto; }
+
+    .header {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      padding: 28px 32px;
+      margin-bottom: 16px;
+    }
+    .header .tag { font-size: 12px; color: #1a73e8; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .header h1 { font-size: 20px; color: #1a1a1a; font-weight: 700; }
+    .header .date { font-size: 13px; color: #888; margin-top: 4px; }
+
+    .project-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .project-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .project-header:hover { background: #fafafa; }
+    .project-color { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .project-name { font-size: 15px; font-weight: 700; color: #1a1a1a; flex: 1; }
+    .project-tag { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+    .project-arrow { font-size: 12px; color: #aaa; transition: transform 0.2s; }
+    .project-arrow.open { transform: rotate(90deg); }
+    .checked-count { font-size: 12px; color: #1a73e8; font-weight: 600; min-width: 40px; text-align: right; }
+
+    .task-list { padding: 4px 0; display: none; }
+    .task-list.open { display: block; }
+
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 20px;
+      border-bottom: 1px solid #f5f5f5;
+      transition: background 0.15s;
+    }
+    .task-item:hover { background: #fafafa; }
+    .task-item.checked { background: #f0f6ff; }
+
+    .task-checkbox {
+      width: 18px; height: 18px;
+      accent-color: #1a73e8;
+      cursor: pointer;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .task-right { flex: 1; }
+    .task-name { font-size: 14px; color: #333; margin-bottom: 6px; line-height: 1.4; }
+    .task-item.checked .task-name { color: #1a73e8; font-weight: 600; }
+
+    .task-memo {
+      width: 100%;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #333;
+      resize: none;
+      height: 36px;
+      display: none;
+      line-height: 1.5;
+    }
+    .task-memo.show { display: block; }
+    .task-memo:focus { outline: none; border-color: #1a73e8; height: 72px; transition: height 0.2s; }
+    .task-memo::placeholder { color: #bbb; }
+
+    /* 임시 추가 단위업무 (오늘만) */
+    .task-item.temp .task-name { color: #888; font-style: italic; }
+    .task-item.temp.checked .task-name { color: #1a73e8; font-style: normal; font-weight: 600; }
+    .task-delete {
+      font-size: 14px;
+      color: #ccc;
+      cursor: pointer;
+      margin-top: 2px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .task-delete:hover { color: #e57373; }
+
+    /* + 단위업무 추가 버튼 */
+    .add-task-row {
+      padding: 8px 20px 12px;
+    }
+    .add-task-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #aaa;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px 0;
+      font-family: inherit;
+      transition: color 0.15s;
+    }
+    .add-task-btn:hover { color: #1a73e8; }
+    .add-task-btn .plus { font-size: 16px; font-weight: 300; }
+
+    /* 추가 입력창 */
+    .add-task-input-row {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .add-task-input-row.show { display: flex; }
+    .add-task-input {
+      flex: 1;
+      border: 1.5px solid #1a73e8;
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #333;
+      outline: none;
+    }
+    .add-task-confirm {
+      padding: 7px 14px;
+      background: #1a73e8;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .add-task-cancel {
+      padding: 7px 10px;
+      background: #f0f0f0;
+      color: #666;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* 단계 목록 */
+    .step-section {
+      display: none;
+      margin-top: 8px;
+      border: 1px solid #e8f0fe;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f8fbff;
+    }
+    .step-section.show { display: block; }
+    .step-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #1a73e8;
+      padding: 8px 12px 4px;
+      letter-spacing: 0.3px;
+    }
+    .step-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 8px 12px;
+      border-top: 1px solid #e8f0fe;
+    }
+    .step-row-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .step-type-badge {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .type-check { background: #e8f0fe; color: #1a73e8; }
+    .type-qty   { background: #e6f4ea; color: #137333; }
+    .type-pct   { background: #fef7e0; color: #b06000; }
+    .step-name-label { flex: 1; font-size: 13px; color: #333; }
+    .step-done-check {
+      width: 16px; height: 16px;
+      accent-color: #1a73e8;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .step-qty-input {
+      width: 60px;
+      border: 1px solid #c8e6c9;
+      border-radius: 4px;
+      padding: 4px 6px;
+      font-size: 12px;
+      text-align: center;
+      font-family: inherit;
+      color: #333;
+    }
+    .step-qty-input:focus { outline: none; border-color: #34a853; }
+    .step-qty-target { font-size: 11px; color: #888; white-space: nowrap; }
+    .step-pct-wrap { display: flex; align-items: center; gap: 6px; }
+    .step-pct-slider {
+      width: 80px;
+      accent-color: #f9a825;
+      cursor: pointer;
+    }
+    .step-pct-val { font-size: 12px; color: #b06000; font-weight: 700; min-width: 30px; }
+    .step-memo {
+      width: 100%;
+      border: 1px solid #dde8fb;
+      border-radius: 5px;
+      padding: 5px 9px;
+      font-size: 12px;
+      font-family: inherit;
+      color: #333;
+      background: #fff;
+      resize: none;
+      height: 28px;
+      line-height: 1.5;
+      transition: height 0.15s, border-color 0.15s;
+    }
+    .step-memo:focus { outline: none; border-color: #1a73e8; height: 54px; }
+    .step-memo::placeholder { color: #c0cfe8; }
+    .task-progress-bar {
+      height: 3px;
+      background: #e0e0e0;
+      border-radius: 2px;
+      margin-top: 8px;
+      overflow: hidden;
+      display: none;
+    }
+    .task-progress-bar.show { display: block; }
+    .task-progress-fill {
+      height: 100%;
+      background: #1a73e8;
+      border-radius: 2px;
+      transition: width 0.3s;
+    }
+    .task-progress-label {
+      font-size: 11px;
+      color: #1a73e8;
+      font-weight: 600;
+      margin-top: 4px;
+      display: none;
+    }
+    .task-progress-label.show { display: block; }
+
+    /* 단계 추가 폼 (직원용) */
+    .add-step-form { padding: 6px 12px 8px; border-top: 1px dashed #dde8fb; }
+    .add-step-btn {
+      font-size: 12px; color: #1a73e8; background: none; border: none;
+      cursor: pointer; padding: 4px 0; display: flex; align-items: center; gap: 4px;
+    }
+    .add-step-btn:hover { text-decoration: underline; }
+    .add-step-input-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+    .step-type-mini {
+      border: 1.5px solid #e0e0e0; border-radius: 5px; padding: 5px 6px;
+      font-size: 12px; font-family: inherit; background: #fff; color: #333;
+    }
+    .step-type-mini:focus { outline: none; border-color: #1a73e8; }
+    .step-name-mini {
+      flex: 1; min-width: 100px; border: 1.5px solid #e0e0e0; border-radius: 5px;
+      padding: 5px 8px; font-size: 12px; font-family: inherit; color: #333;
+    }
+    .step-name-mini:focus { outline: none; border-color: #1a73e8; }
+    .step-qty-mini {
+      width: 60px; border: 1.5px solid #e0e0e0; border-radius: 5px;
+      padding: 5px 6px; font-size: 12px; text-align: center; font-family: inherit;
+    }
+    .step-qty-mini:focus { outline: none; border-color: #1a73e8; }
+    .step-confirm-btn {
+      padding: 5px 10px; background: #1a73e8; color: #fff;
+      border: none; border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer;
+    }
+    .step-cancel-btn {
+      padding: 5px 8px; background: #f0f0f0; color: #666;
+      border: none; border-radius: 5px; font-size: 12px; cursor: pointer;
+    }
+    .step-del-btn {
+      font-size: 12px; color: #ccc; background: none; border: none;
+      cursor: pointer; padding: 2px 4px; flex-shrink: 0;
+    }
+    .step-del-btn:hover { color: #e53935; }
+
+    /* 추가 메모 */
+    .extra-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .extra-card label { font-size: 13px; font-weight: 700; color: #555; display: block; margin-bottom: 8px; }
+    .extra-textarea {
+      width: 100%;
+      height: 80px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #333;
+      resize: none;
+      line-height: 1.6;
+    }
+    .extra-textarea:focus { outline: none; border-color: #1a73e8; }
+    .extra-textarea::placeholder { color: #bbb; }
+
+    /* 발송 버튼 */
+    .submit-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      padding: 20px;
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: #1a73e8;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .btn-submit:hover { background: #1558b0; }
+    .btn-submit:disabled { background: #aac4f0; cursor: not-allowed; }
+    .hint { font-size: 12px; color: #aaa; text-align: center; margin-top: 10px; }
+
+    .loading { display: none; text-align: center; margin-top: 14px; color: #666; font-size: 13px; }
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid #ccc; border-top-color: #1a73e8;
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+      vertical-align: middle; margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .color-0 { background: #4285f4; }
+    .color-1 { background: #34a853; }
+    .color-2 { background: #ea4335; }
+    .tag-0 { background: #e8f0fe; color: #1a73e8; }
+    .tag-1 { background: #e6f4ea; color: #137333; }
+    .tag-2 { background: #fce8e6; color: #c5221f; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div>
+        <div class="tag">솔루션개발팀 · 일일업무보고</div>
+        <h1>오늘 진행한 업무를 체크해주세요</h1>
+        <div class="date" id="today-date"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <span id="user-name" style="font-size:13px;color:#555;font-weight:600"></span>
+        <div style="display:flex;gap:8px">
+          <a id="admin-link" href="/admin" style="display:none;font-size:12px;color:#1a73e8;text-decoration:none;border:1px solid #1a73e8;border-radius:5px;padding:4px 10px">관리자</a>
+          <button onclick="doLogout()" style="font-size:12px;color:#888;background:none;border:1px solid #ddd;border-radius:5px;padding:4px 10px;cursor:pointer">로그아웃</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="project-list"></div>
+
+    <div class="extra-card">
+      <label>📌 추가 메모 (선택)</label>
+      <textarea class="extra-textarea" id="extra-memo"
+        placeholder="이슈, 공유사항, 내일 계획 등 자유롭게 입력하세요..."></textarea>
+    </div>
+
+    <div class="submit-card">
+      <button class="btn-submit" id="submit-btn" onclick="submitReport()">보고서 미리보기 생성 →</button>
+      <div class="hint">체크한 항목을 바탕으로 AI가 보고서를 자동 작성합니다</div>
+      <div class="loading" id="loading">
+        <span class="spinner"></span> AI가 보고서를 작성하는 중입니다...
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const now = new Date();
+    const days = ['일','월','화','수','목','금','토'];
+    document.getElementById('today-date').textContent =
+      `${now.getFullYear()}년 ${now.getMonth()+1}월 ${now.getDate()}일 (${days[now.getDay()]})`;
+
+    let projectData = [];
+    let currentUser = null;
+
+    async function loadProjects() {
+      // 로그인 유저 확인
+      const meRes = await fetch('/api/me');
+      const meData = await meRes.json();
+      if (!meData.user) { window.location.href = '/login'; return; }
+      currentUser = meData.user;
+
+      // 유저 이름 표시
+      document.getElementById('user-name').textContent = `${currentUser.name}님`;
+      if (currentUser.role === 'admin') {
+        document.getElementById('admin-link').style.display = 'inline';
+      }
+
+      const res = await fetch('/api/projects');
+      const data = await res.json();
+
+      // 서버에서 이미 레벨 기반 필터링 완료
+      projectData = data.projects || [];
+      renderProjects();
+    }
+
+    function renderProjects() {
+      const container = document.getElementById('project-list');
+      container.innerHTML = '';
+      projectData.forEach((project, pi) => {
+        const card = document.createElement('div');
+        card.className = 'project-card';
+        card.id = `card-${project.id}`;
+
+        // 헤더
+        const header = document.createElement('div');
+        header.className = 'project-header';
+        header.innerHTML = `
+          <div class="project-color color-${pi}"></div>
+          <div class="project-name">${project.name}</div>
+          <span class="project-tag tag-${pi}">${project.tag}</span>
+          <span class="checked-count" id="count-${project.id}"></span>
+          <span class="project-arrow open" id="arrow-${project.id}">▶</span>
+        `;
+        header.onclick = () => toggleProject(project.id);
+
+        // 단위업무 목록
+        const taskList = document.createElement('div');
+        taskList.className = 'task-list open';
+        taskList.id = `tasks-${project.id}`;
+
+        // 기존 단위업무
+        project.tasks.forEach(task => {
+          taskList.appendChild(makeTaskItem(task.id, task.name, project.id));
+        });
+
+        // + 추가 버튼 영역
+        const addRow = document.createElement('div');
+        addRow.className = 'add-task-row';
+        addRow.innerHTML = `
+          <button class="add-task-btn" onclick="showAddInput('${project.id}')">
+            <span class="plus">+</span> 단위업무 추가
+          </button>
+          <div class="add-task-input-row" id="add-input-${project.id}">
+            <input class="add-task-input" id="add-text-${project.id}"
+              placeholder="단위업무명 입력..."
+              onkeydown="if(event.key==='Enter') confirmAdd('${project.id}')">
+            <button class="add-task-confirm" onclick="confirmAdd('${project.id}')">추가</button>
+            <button class="add-task-cancel" onclick="cancelAdd('${project.id}')">취소</button>
+          </div>
+        `;
+
+        taskList.appendChild(addRow);
+        card.appendChild(header);
+        card.appendChild(taskList);
+        container.appendChild(card);
+      });
+    }
+
+    function makeTaskItem(taskId, taskName, projectId) {
+      const project = projectData.find(p => p.id === projectId);
+      const task = project?.tasks.find(t => t.id === taskId);
+      const steps = task?.steps || [];
+
+      const item = document.createElement('div');
+      item.className = 'task-item';
+      item.id = `item-${taskId}`;
+
+      // 단계 HTML 생성
+      let stepsHtml = '';
+      const taskAssignees = task?.assignees || [];
+      const canEditTask = taskAssignees.length === 0 || taskAssignees.includes(currentUser?.name);
+      const addStepFormHtml = canEditTask ? `
+        <div class="add-step-form" id="add-step-form-${taskId}">
+          <button class="add-step-btn" onclick="showStepInput('${taskId}')">
+            <span>+</span> 단계 추가
+          </button>
+          <div class="add-step-input-row" id="step-input-row-${taskId}" style="display:none">
+            <select class="step-type-mini" id="new-step-type-${taskId}" onchange="toggleStepQty('${taskId}')">
+              <option value="check">체크</option>
+              <option value="qty">수량</option>
+              <option value="pct">비율</option>
+            </select>
+            <input class="step-name-mini" id="new-step-name-${taskId}" placeholder="단계명..."
+              onkeydown="if(event.key==='Enter') confirmAddStep('${projectId}','${taskId}')">
+            <input class="step-qty-mini" id="new-step-qty-${taskId}" type="number" placeholder="목표수" min="1" style="display:none">
+            <button class="step-confirm-btn" onclick="confirmAddStep('${projectId}','${taskId}')">추가</button>
+            <button class="step-cancel-btn" onclick="hideStepInput('${taskId}')">취소</button>
+          </div>
+        </div>` : '';
+
+      if (steps.length > 0) {
+        const stepRows = steps.map(step => {
+          let controlHtml = '';
+          if (step.type === 'check') {
+            controlHtml = `<input type="checkbox" class="step-done-check" id="step-${step.id}"
+              ${step.done ? 'checked' : ''}
+              onchange="onStepChange('${projectId}','${taskId}','${step.id}','check',this)">`;
+          } else if (step.type === 'qty') {
+            controlHtml = `
+              <input type="number" class="step-qty-input" id="step-${step.id}"
+                value="${step.current || 0}" min="0" max="${step.target}"
+                onchange="onStepChange('${projectId}','${taskId}','${step.id}','qty',this)">
+              <span class="step-qty-target">/ ${step.target}개</span>`;
+          } else {
+            controlHtml = `
+              <div class="step-pct-wrap">
+                <input type="range" class="step-pct-slider" id="step-${step.id}"
+                  value="${step.pct || 0}" min="0" max="100" step="5"
+                  oninput="onStepPctInput('${step.id}',this.value)"
+                  onchange="onStepChange('${projectId}','${taskId}','${step.id}','pct',this)">
+                <span class="step-pct-val" id="pctval-${step.id}">${step.pct || 0}%</span>
+              </div>`;
+          }
+          const badge = step.type === 'check' ? '체크' : step.type === 'qty' ? '수량' : '비율';
+          const badgeClass = step.type === 'check' ? 'type-check' : step.type === 'qty' ? 'type-qty' : 'type-pct';
+          // 담당자이거나 담당자 미지정이면 삭제 버튼 표시
+          const stepAssignees = step.assignees || [];
+          const canEditStep = stepAssignees.length === 0 || stepAssignees.includes(currentUser.name);
+          const delBtn = canEditStep ? `<button class="step-del-btn" onclick="deleteStepFromForm('${projectId}','${taskId}','${step.id}')">✕</button>` : '';
+          return `
+            <div class="step-row" id="formsteprow-${step.id}">
+              <div class="step-row-top">
+                <span class="step-type-badge ${badgeClass}">${badge}</span>
+                <span class="step-name-label">${step.name}</span>
+                ${controlHtml}
+                ${delBtn}
+              </div>
+              <textarea class="step-memo" id="stepmemo-${step.id}"
+                placeholder="이 단계 진행 내용 메모 (선택)..."
+                onblur="onStepMemoBlur('${projectId}','${taskId}','${step.id}')">${step.memo || ''}</textarea>
+            </div>`;
+        }).join('');
+
+        // 단위업무 담당자이면 단계 추가 폼 표시
+        const taskAssignees = task?.assignees || [];
+        const canEditTask = taskAssignees.length === 0 || taskAssignees.includes(currentUser?.name);
+        const addStepFormHtml = canEditTask ? `
+          <div class="add-step-form" id="add-step-form-${taskId}">
+            <button class="add-step-btn" onclick="showStepInput('${taskId}')">
+              <span>+</span> 단계 추가
+            </button>
+            <div class="add-step-input-row" id="step-input-row-${taskId}" style="display:none">
+              <select class="step-type-mini" id="new-step-type-${taskId}" onchange="toggleStepQty('${taskId}')">
+                <option value="check">체크</option>
+                <option value="qty">수량</option>
+                <option value="pct">비율</option>
+              </select>
+              <input class="step-name-mini" id="new-step-name-${taskId}" placeholder="단계명..."
+                onkeydown="if(event.key==='Enter') confirmAddStep('${projectId}','${taskId}')">
+              <input class="step-qty-mini" id="new-step-qty-${taskId}" type="number" placeholder="목표수" min="1" style="display:none">
+              <button class="step-confirm-btn" onclick="confirmAddStep('${projectId}','${taskId}')">추가</button>
+              <button class="step-cancel-btn" onclick="hideStepInput('${taskId}')">취소</button>
+            </div>
+          </div>` : '';
+
+        const progress = calcTaskProgress(steps);
+        stepsHtml = `
+          <div class="step-section" id="steps-${taskId}">
+            <div class="step-section-title">📋 단계별 진행</div>
+            ${stepRows}
+            ${addStepFormHtml}
+          </div>
+          <div class="task-progress-bar" id="bar-${taskId}">
+            <div class="task-progress-fill" id="fill-${taskId}" style="width:${progress}%"></div>
+          </div>
+          <div class="task-progress-label" id="plabel-${taskId}">진행률 ${progress}%</div>
+        `;
+      } else if (canEditTask) {
+        // 단계 없어도 담당자면 추가 폼 표시
+        stepsHtml = `
+          <div class="step-section" id="steps-${taskId}">
+            <div class="step-section-title">📋 단계별 진행</div>
+            ${addStepFormHtml}
+          </div>
+        `;
+      }
+
+      item.innerHTML = `
+        <input type="checkbox" class="task-checkbox" id="chk-${taskId}"
+          onchange="onCheck('${taskId}', '${projectId}')">
+        <div class="task-right">
+          <div class="task-name">${taskName}</div>
+          ${stepsHtml}
+          <textarea class="task-memo" id="memo-${taskId}"
+            placeholder="오늘 진행 내용을 간단히 메모하세요..."></textarea>
+        </div>
+      `;
+      return item;
+    }
+
+    // 단계 진행률 계산
+    function calcTaskProgress(steps) {
+      if (!steps || steps.length === 0) return 0;
+      const total = steps.reduce((sum, s) => {
+        if (s.type === 'check') return sum + (s.done ? 100 : 0);
+        if (s.type === 'qty') return sum + (s.target > 0 ? Math.min(100, Math.round((s.current || 0) / s.target * 100)) : 0);
+        if (s.type === 'pct') return sum + (s.pct || 0);
+        return sum;
+      }, 0);
+      return Math.round(total / steps.length);
+    }
+
+    // 단계 추가 UI 제어
+    function showStepInput(taskId) {
+      document.getElementById(`step-input-row-${taskId}`).style.display = 'flex';
+      document.getElementById(`new-step-name-${taskId}`).focus();
+    }
+    function hideStepInput(taskId) {
+      document.getElementById(`step-input-row-${taskId}`).style.display = 'none';
+      document.getElementById(`new-step-name-${taskId}`).value = '';
+      document.getElementById(`new-step-qty-${taskId}`).value = '';
+    }
+    function toggleStepQty(taskId) {
+      const type = document.getElementById(`new-step-type-${taskId}`).value;
+      document.getElementById(`new-step-qty-${taskId}`).style.display = type === 'qty' ? 'inline-block' : 'none';
+    }
+
+    // 단계 추가 확인
+    async function confirmAddStep(projectId, taskId) {
+      const type = document.getElementById(`new-step-type-${taskId}`).value;
+      const name = document.getElementById(`new-step-name-${taskId}`).value.trim();
+      const qty = parseInt(document.getElementById(`new-step-qty-${taskId}`).value) || 0;
+      if (!name) return;
+      if (type === 'qty' && !qty) { alert('수량형은 목표 수량을 입력해주세요.'); return; }
+
+      const res = await fetch('/api/projects/step/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectId, taskId,
+          stepName: name, stepType: type, target: qty,
+          assignees: [currentUser.name],
+        }),
+      });
+      const result = await res.json();
+      if (result.success) {
+        // projectData 갱신 후 재렌더
+        const fullRes = await fetch('/api/projects');
+        const fullData = await fullRes.json();
+        projectData = fullData.projects || [];
+        renderProjects();
+      }
+    }
+
+    // 단계 삭제 (직원 폼에서)
+    async function deleteStepFromForm(projectId, taskId, stepId) {
+      if (!confirm('이 단계를 삭제할까요?')) return;
+      const res = await fetch('/api/projects/step/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectId, taskId, stepId }),
+      });
+      const result = await res.json();
+      if (result.success) {
+        const fullRes = await fetch('/api/projects');
+        const fullData = await fullRes.json();
+        projectData = fullData.projects || [];
+        renderProjects();
+      }
+    }
+
+    function onStepPctInput(stepId, val) {
+      const el = document.getElementById(`pctval-${stepId}`);
+      if (el) el.textContent = `${val}%`;
+    }
+
+    // 단계 메모만 저장 (blur 시)
+    async function onStepMemoBlur(projectId, taskId, stepId) {
+      const memoEl = document.getElementById(`stepmemo-${stepId}`);
+      if (!memoEl) return;
+      const memo = memoEl.value.trim();
+
+      // projectData 갱신
+      const project = projectData.find(p => p.id === projectId);
+      const task = project?.tasks.find(t => t.id === taskId);
+      const step = task?.steps?.find(s => s.id === stepId);
+      if (step) step.memo = memo;
+
+      // 서버 저장
+      await fetch('/api/projects/step/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectId, taskId, stepId, type: 'memo', value: 0, memo }),
+      });
+    }
+
+    async function onStepChange(projectId, taskId, stepId, type, el) {
+      const project = projectData.find(p => p.id === projectId);
+      const task = project?.tasks.find(t => t.id === taskId);
+      const step = task?.steps?.find(s => s.id === stepId);
+      if (!step) return;
+
+      if (type === 'check') step.done = el.checked;
+      else if (type === 'qty') step.current = parseInt(el.value) || 0;
+      else if (type === 'pct') step.pct = parseInt(el.value) || 0;
+
+      // 단계 메모 저장
+      const memoEl = document.getElementById(`stepmemo-${stepId}`);
+      if (memoEl) step.memo = memoEl.value.trim();
+
+      // 진행률 바 갱신
+      const progress = calcTaskProgress(task.steps);
+      const fill = document.getElementById(`fill-${taskId}`);
+      const label = document.getElementById(`plabel-${taskId}`);
+      if (fill) fill.style.width = `${progress}%`;
+      if (label) label.textContent = `진행률 ${progress}%`;
+
+      // 서버에 저장
+      await fetch('/api/projects/step/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectId, taskId, stepId, type,
+          value: type === 'check' ? el.checked : parseInt(el.value) || 0,
+          memo: step.memo }),
+      });
+    }
+
+    async function doLogout() {
+      await fetch('/api/logout', { method: 'POST' });
+      window.location.href = '/login';
+    }
+
+    function toggleProject(projectId) {
+      const taskList = document.getElementById(`tasks-${projectId}`);
+      const arrow = document.getElementById(`arrow-${projectId}`);
+      taskList.classList.toggle('open');
+      arrow.classList.toggle('open');
+    }
+
+    function onCheck(taskId, projectId) {
+      const chk = document.getElementById(`chk-${taskId}`);
+      const item = document.getElementById(`item-${taskId}`);
+      const memo = document.getElementById(`memo-${taskId}`);
+      const steps = document.getElementById(`steps-${taskId}`);
+      const bar = document.getElementById(`bar-${taskId}`);
+      const label = document.getElementById(`plabel-${taskId}`);
+      if (chk.checked) {
+        item.classList.add('checked');
+        if (steps) { steps.classList.add('show'); }
+        if (bar) bar.classList.add('show');
+        if (label) label.classList.add('show');
+        memo.classList.add('show');
+      } else {
+        item.classList.remove('checked');
+        if (steps) steps.classList.remove('show');
+        if (bar) bar.classList.remove('show');
+        if (label) label.classList.remove('show');
+        memo.classList.remove('show');
+        memo.value = '';
+      }
+      updateCount(projectId);
+    }
+
+    function updateCount(projectId) {
+      const project = projectData.find(p => p.id === projectId);
+      const checked = project.tasks.filter(t =>
+        document.getElementById(`chk-${t.id}`)?.checked
+      ).length;
+      const countEl = document.getElementById(`count-${projectId}`);
+      countEl.textContent = checked > 0 ? `${checked}개 선택` : '';
+    }
+
+    // + 추가 관련
+    function showAddInput(projectId) {
+      const row = document.getElementById(`add-input-${projectId}`);
+      row.classList.add('show');
+      document.getElementById(`add-text-${projectId}`).focus();
+    }
+
+    function cancelAdd(projectId) {
+      const row = document.getElementById(`add-input-${projectId}`);
+      row.classList.remove('show');
+      document.getElementById(`add-text-${projectId}`).value = '';
+    }
+
+    async function confirmAdd(projectId) {
+      const input = document.getElementById(`add-text-${projectId}`);
+      const name = input.value.trim();
+      if (!name) return;
+
+      const res = await fetch('/api/projects/task/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectId, taskName: name, assignees: [currentUser.name] }),
+      });
+      const result = await res.json();
+      if (result.success) {
+        // 새로 추가된 task id 찾기
+        const updatedProject = result.projects.find(p => p.id === projectId);
+        const newTask = updatedProject.tasks[updatedProject.tasks.length - 1];
+
+        // projectData 갱신
+        projectData = result.projects;
+
+        // DOM에 바로 삽입
+        const addRow = document.querySelector(`#tasks-${projectId} .add-task-row`);
+        const newItem = makeTaskItem(newTask.id, newTask.name, projectId, false);
+        addRow.parentNode.insertBefore(newItem, addRow);
+
+        input.value = '';
+        cancelAdd(projectId);
+      }
+    }
+
+    async function submitReport() {
+      const checkedTasks = [];
+      projectData.forEach(project => {
+        project.tasks.forEach(task => {
+          const chk = document.getElementById(`chk-${task.id}`);
+          if (chk && chk.checked) {
+            const memo = document.getElementById(`memo-${task.id}`)?.value.trim() || '';
+            const progress = calcTaskProgress(task.steps || []);
+            checkedTasks.push({
+              projectName: project.name,
+              projectTag: project.tag,
+              taskName: task.name,
+              memo,
+              progress,
+              steps: (task.steps || []).map(s => ({
+                name: s.name,
+                type: s.type,
+                done: s.done,
+                current: s.current,
+                target: s.target,
+                pct: s.pct,
+                memo: document.getElementById(`stepmemo-${s.id}`)?.value.trim() || s.memo || '',
+              })),
+            });
+          }
+        });
+      });
+
+      if (checkedTasks.length === 0) {
+        alert('오늘 진행한 업무를 1개 이상 체크해주세요.');
+        return;
+      }
+
+      const extraMemo = document.getElementById('extra-memo').value.trim();
+      const btn = document.getElementById('submit-btn');
+      const loading = document.getElementById('loading');
+      btn.disabled = true;
+      loading.style.display = 'block';
+
+      try {
+        const res = await fetch('/report/preview', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ checkedTasks, extraMemo }),
+        });
+        if (!res.ok) throw new Error('서버 오류');
+        const data = await res.json();
+        sessionStorage.setItem('reportData', JSON.stringify(data));
+        window.location.href = '/report/preview-page';
+      } catch (e) {
+        alert('오류가 발생했습니다: ' + e.message);
+        btn.disabled = false;
+        loading.style.display = 'none';
+      }
+    }
+
+    loadProjects();
+  </script>
+</body>
+</html>

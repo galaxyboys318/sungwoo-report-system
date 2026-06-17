@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인 · 일일보고</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+      background: #f4f6f9;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      padding: 48px 40px 40px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+    .logo { font-size: 32px; margin-bottom: 8px; }
+    .title { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
+    .subtitle { font-size: 13px; color: #888; margin-bottom: 32px; }
+
+    .field { margin-bottom: 14px; text-align: left; }
+    .field label { font-size: 12px; font-weight: 700; color: #555; display: block; margin-bottom: 6px; }
+    .field input {
+      width: 100%;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #222;
+      transition: border-color 0.2s;
+    }
+    .field input:focus { outline: none; border-color: #1a73e8; }
+
+    .btn-login {
+      width: 100%;
+      padding: 13px;
+      background: #1a73e8;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+    .btn-login:hover { background: #1558b0; }
+    .btn-login:disabled { background: #aac4f0; cursor: not-allowed; }
+
+    .error {
+      color: #e53935;
+      font-size: 13px;
+      margin-top: 12px;
+      display: none;
+    }
+    .company {
+      font-size: 12px;
+      color: #bbb;
+      margin-top: 28px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">📋</div>
+    <div class="title">일일업무보고 시스템</div>
+    <div class="subtitle">도서출판 성우 · 솔루션개발팀</div>
+
+    <div class="field">
+      <label>이메일</label>
+      <input type="email" id="email" placeholder="이메일 주소 입력"
+        onkeydown="if(event.key==='Enter') document.getElementById('pw').focus()">
+    </div>
+    <div class="field">
+      <label>비밀번호</label>
+      <input type="password" id="pw" placeholder="비밀번호 입력"
+        onkeydown="if(event.key==='Enter') doLogin()">
+    </div>
+
+    <button class="btn-login" id="login-btn" onclick="doLogin()">로그인</button>
+    <div class="error" id="error-msg">이메일 또는 비밀번호가 올바르지 않습니다.</div>
+
+    <div class="company">© 도서출판 성우</div>
+  </div>
+
+  <script>
+    // 이미 로그인된 경우 바로 이동
+    fetch('/api/me').then(r => r.json()).then(data => {
+      if (data.user) window.location.href = '/report';
+    });
+
+    async function doLogin() {
+      const email = document.getElementById('email').value.trim();
+      const pw = document.getElementById('pw').value;
+      const btn = document.getElementById('login-btn');
+      const err = document.getElementById('error-msg');
+
+      if (!email || !pw) { err.style.display = 'block'; err.textContent = '이메일과 비밀번호를 입력해주세요.'; return; }
+
+      btn.disabled = true;
+      err.style.display = 'none';
+
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: pw }),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        window.location.href = data.redirect || '/report';
+      } else {
+        err.style.display = 'block';
+        err.textContent = data.message || '로그인 실패';
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
