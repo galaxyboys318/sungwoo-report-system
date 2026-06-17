@@ -327,11 +327,13 @@ app.post('/report/preview', async (req, res) => {
   }
 
   try {
+    const reporterName = req.session.user?.name || process.env.REPORTER_NAME;
+    const reporterTeam = req.session.user?.team || process.env.REPORTER_TEAM;
     const report = await convertToReport(
       checkedTasks,
       extraMemo || '',
-      process.env.REPORTER_NAME,
-      process.env.REPORTER_TEAM
+      reporterName,
+      reporterTeam
     );
 
     res.json({
