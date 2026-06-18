@@ -27,10 +27,14 @@ function assembleReportText(checkedTasks, extraMemo, reporterName) {
     pData.tasks.forEach(t => {
       body += ` -. ${t.taskName}\n`;
 
-      // steps가 있으면 0% 제외하고 번호 붙여 나열
+      // 오늘 체크된 steps만 포함 (checkedToday=true인 것)
+      // 0%이거나 체크 안 된 steps는 제외
       if (t.steps && t.steps.length > 0) {
         let stepNum = 1;
         t.steps.forEach(s => {
+          // 오늘 체크 안 된 step은 건너뜀
+          if (!s.checkedToday) return;
+
           let val = '';
           let pct = 0;
           if (s.type === 'check') {
@@ -38,10 +42,10 @@ function assembleReportText(checkedTasks, extraMemo, reporterName) {
             val = s.done ? '완료' : '미완료';
           } else if (s.type === 'qty') {
             pct = s.target > 0 ? Math.round((s.current || 0) / s.target * 100) : 0;
-            val = `${s.current || 0}/${s.target}개`;
+            val = `${s.current || 0}/${s.target}개 진행`;
           } else if (s.type === 'pct') {
             pct = s.pct || 0;
-            val = `${pct}%`;
+            val = `${pct}% 진행`;
           }
           // 0%는 제외
           if (pct === 0) return;
