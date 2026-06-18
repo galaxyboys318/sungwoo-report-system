@@ -10,6 +10,17 @@
       "level": 4,
       "team": "솔루션개발팀",
       "division": "초등콘텐츠사업부"
+    },
+    {
+      "id": "u1781771178674",
+      "name": "주성우",
+      "email": "sungwoomb@sungwoobook.com",
+      "password": "1234",
+      "role": "user",
+      "position": "팀원",
+      "level": 4,
+      "team": "해당사항없음",
+      "division": "도서출판성우"
     }
   ]
 }
