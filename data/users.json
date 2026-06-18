@@ -32,6 +32,17 @@
       "level": 1,
       "team": "해당사항없음",
       "division": "도서출판성우"
+    },
+    {
+      "id": "u1781771271503",
+      "name": "권호상",
+      "email": "khs386",
+      "password": "1234",
+      "role": "admin",
+      "position": "이사",
+      "level": 2,
+      "team": "초등편집팀, 디자인팀, 솔루션개발팀",
+      "division": ""
     }
   ]
 }
