@@ -54,13 +54,10 @@
       flex-shrink: 0;
     }
     .mail-body {
-      padding: 20px 18px;
-      font-size: 14px;
-      line-height: 1.9;
-      color: #222;
-      white-space: pre-wrap;
-      word-break: keep-all;
-      min-height: 160px;
+      width: 100%;
+      border: none;
+      min-height: 520px;
+      display: block;
     }
 
     /* 수신자 선택 */
@@ -173,7 +170,7 @@
           <div class="field"><span class="label">발신</span><span id="preview-from">-</span></div>
           <div class="field"><span class="label">수신</span><span id="preview-to">선택된 수신자</span></div>
         </div>
-        <div class="mail-body" id="preview-body">불러오는 중...</div>
+        <iframe class="mail-body" id="preview-body" title="이메일 미리보기"></iframe>
       </div>
 
       <div class="recipient-section">
@@ -221,9 +218,18 @@
 
     document.getElementById('preview-subject').textContent = data.subject;
     document.getElementById('preview-from').textContent = data.reporterEmail || '';
-    document.getElementById('preview-body').textContent = data.body;
     document.getElementById('addr-manager').textContent = data.recipientManager || '';
     document.getElementById('addr-exec').textContent = data.recipientExec || '';
+
+    // HTML 미리보기
+    const iframe = document.getElementById('preview-body');
+    if (data.htmlBody) {
+      iframe.srcdoc = data.htmlBody;
+    } else {
+      // htmlBody 없으면 텍스트를 줄바꿈 유지해서 표시
+      const escaped = (data.body || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      iframe.srcdoc = '<div style="font-family:Malgun Gothic,sans-serif;font-size:14px;line-height:1.9;padding:20px;white-space:pre-wrap;word-break:keep-all;color:#222">' + escaped + '</div>';
+    }
 
     function goBack() {
       history.back();
@@ -246,7 +252,7 @@
         const res = await fetch('/report/send', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ report: data, recipients }),
+          body: JSON.stringify({ report: data, recipients, checkedTasks: data.checkedTasks }),
         });
 
         const result = await res.json();
