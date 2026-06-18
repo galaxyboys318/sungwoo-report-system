@@ -5,9 +5,9 @@
       "name": "함흥우",
       "email": "ham318@sungwoobook.com",
       "password": "1234",
-      "role": "admin",
+      "role": "팀원",
       "position": "팀원",
-      "level": 1,
+      "level": 4,
       "team": "솔루션개발팀",
       "division": "초등콘텐츠사업부"
     }
