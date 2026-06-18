@@ -16,7 +16,17 @@
           "assignees": [
             "함흥우"
           ],
-          "steps": []
+          "steps": [
+            {
+              "id": "s1781765466052",
+              "name": "로컬PC에서 작업 진행(임시)",
+              "type": "check",
+              "assignees": [
+                "함흥우"
+              ],
+              "done": false
+            }
+          ]
         },
         {
           "id": "p1t2",
