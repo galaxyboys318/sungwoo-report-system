@@ -68,6 +68,21 @@ app.post('/api/logout', (req, res) => {
 
 function saveUsers(data) {
   fs.writeFileSync(USERS_PATH, JSON.stringify(data, null, 2), 'utf-8');
+  if (process.env.GITHUB_TOKEN) {
+    const content = Buffer.from(JSON.stringify(data, null, 2), 'utf-8').toString('base64');
+    fetch('https://api.github.com/repos/galaxyboys318/sungwoo-report-system/contents/data/users.json', {
+      method: 'GET',
+      headers: { 'Authorization': `token ${process.env.GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
+    })
+    .then(r => r.json())
+    .then(fileInfo => fetch('https://api.github.com/repos/galaxyboys318/sungwoo-report-system/contents/data/users.json', {
+      method: 'PUT',
+      headers: { 'Authorization': `token ${process.env.GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: '[자동] users.json 업데이트', content, sha: fileInfo.sha })
+    }))
+    .then(() => console.log('[GitHub] users.json 자동 커밋 완료'))
+    .catch(e => console.error('[GitHub] users 커밋 실패:', e.message));
+  }
 }
 
 app.get('/api/recipients', requireLogin, (req, res) => {
@@ -100,6 +115,19 @@ app.post('/api/users/delete', requireAdmin, (req, res) => {
   const { userId } = req.body;
   const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
   data.users = data.users.filter(u => u.id !== userId);
+  saveUsers(data);
+  res.json({ success: true });
+});
+
+app.post('/api/users/level', requireAdmin, (req, res) => {
+  const { email, level } = req.body;
+  const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
+  const user = data.users.find(u => u.email === email);
+  if (!user) return res.status(404).json({ error: '사용자를 찾을 수 없습니다.' });
+  user.level = parseInt(level);
+  // 레벨에 따라 role 자동 업데이트
+  const roleMap = { 1: '회장', 2: '이사', 3: '팀장', 4: '팀원' };
+  user.role = roleMap[user.level] || '팀원';
   saveUsers(data);
   res.json({ success: true });
 });
