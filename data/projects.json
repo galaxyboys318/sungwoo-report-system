@@ -34,7 +34,8 @@
               "assignees": [
                 "함흥우"
               ],
-              "done": false
+              "done": true,
+              "memo": ""
             },
             {
               "id": "s1781765531762",
