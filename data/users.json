@@ -21,6 +21,17 @@
       "level": 4,
       "team": "해당사항없음",
       "division": "도서출판성우"
+    },
+    {
+      "id": "u1781771219247",
+      "name": "주영웅",
+      "email": "p4jyoung@sungwoobook.com",
+      "password": "1234",
+      "role": "admin",
+      "position": "대표이사",
+      "level": 1,
+      "team": "해당사항없음",
+      "division": "도서출판성우"
     }
   ]
 }
