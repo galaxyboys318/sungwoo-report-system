@@ -175,17 +175,8 @@
 
       <div class="recipient-section">
         <h3>수신자 선택</h3>
-        <div class="checkbox-group">
-          <label class="checkbox-item">
-            <input type="checkbox" id="chk-manager" checked>
-            팀장 / 이사
-            <span class="email-addr" id="addr-manager"></span>
-          </label>
-          <label class="checkbox-item">
-            <input type="checkbox" id="chk-exec" checked>
-            경영진
-            <span class="email-addr" id="addr-exec"></span>
-          </label>
+        <div class="checkbox-group" id="recipient-list">
+          <div style="font-size:13px;color:#888;">수신자 목록 불러오는 중...</div>
         </div>
       </div>
 
@@ -218,8 +209,36 @@
 
     document.getElementById('preview-subject').textContent = data.subject;
     document.getElementById('preview-from').textContent = data.reporterEmail || '';
-    document.getElementById('addr-manager').textContent = data.recipientManager || '';
-    document.getElementById('addr-exec').textContent = data.recipientExec || '';
+
+    // 수신자 목록 동적 로딩
+    (async () => { try {
+      const rRes = await fetch('/api/recipients');
+      const rData = await rRes.json();
+      const list = document.getElementById('recipient-list');
+      if (rData.recipients && rData.recipients.length > 0) {
+        list.innerHTML = rData.recipients.map(u => `
+          <label class="checkbox-item">
+            <input type="checkbox" class="recipient-chk" value="${u.email}" checked>
+            ${u.name} (${u.team || u.role || ''})
+            <span class="email-addr">${u.email}</span>
+          </label>`).join('');
+      } else {
+        // recipients API에 없으면 env 기본값 표시
+        list.innerHTML = `
+          <label class="checkbox-item">
+            <input type="checkbox" class="recipient-chk" value="${data.recipientManager || ''}" checked>
+            팀장 / 이사
+            <span class="email-addr">${data.recipientManager || ''}</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" class="recipient-chk" value="${data.recipientExec || ''}" checked>
+            경영진
+            <span class="email-addr">${data.recipientExec || ''}</span>
+          </label>`;
+      }
+    } catch(e) {
+      console.error('수신자 목록 로드 실패', e);
+    }})();
 
     // HTML 미리보기
     const iframe = document.getElementById('preview-body');
@@ -237,8 +256,9 @@
 
     async function sendReport() {
       const recipients = [];
-      if (document.getElementById('chk-manager').checked) recipients.push('manager');
-      if (document.getElementById('chk-exec').checked) recipients.push('exec');
+      document.querySelectorAll('.recipient-chk:checked').forEach(chk => {
+        recipients.push(chk.value);
+      });
 
       if (recipients.length === 0) {
         alert('수신자를 1명 이상 선택해주세요.');
