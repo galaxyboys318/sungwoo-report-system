@@ -70,6 +70,15 @@ function saveUsers(data) {
   fs.writeFileSync(USERS_PATH, JSON.stringify(data, null, 2), 'utf-8');
 }
 
+app.get('/api/recipients', requireLogin, (req, res) => {
+  const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
+  // 레벨 1~2 (팀장/임원급)만 수신자로 노출, 비밀번호 제외
+  const recipients = data.users
+    .filter(u => u.level <= 2)
+    .map(({ password, ...u }) => u);
+  res.json({ recipients });
+});
+
 app.get('/api/users', requireAdmin, (req, res) => {
   const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
   // 비밀번호 제외하고 응답
@@ -388,11 +397,18 @@ app.post('/report/send', async (req, res) => {
     return res.status(400).json({ error: '잘못된 요청입니다.' });
   }
 
+  // recipients는 이메일 주소 배열 또는 'manager'/'exec' 레거시 키 혼용 지원
+  const usersData = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
   const recipientMap = {
     manager: process.env.RECIPIENT_MANAGER,
     exec: process.env.RECIPIENT_EXEC,
   };
-  const toAddresses = recipients.map(r => recipientMap[r]).filter(Boolean);
+  const toAddresses = recipients.map(r => {
+    // 이메일 형식이면 그대로 사용
+    if (r.includes('@')) return r;
+    // 레거시 키('manager', 'exec')면 env에서 가져오기
+    return recipientMap[r] || null;
+  }).filter(Boolean);
 
   if (toAddresses.length === 0) {
     return res.status(400).json({ error: '유효한 수신자가 없습니다.' });
