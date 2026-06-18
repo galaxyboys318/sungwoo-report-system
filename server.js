@@ -396,7 +396,9 @@ app.post('/report/send', async (req, res) => {
   }
 
   try {
-    await sendReport(report, toAddresses);
+    const reporterName = req.session.user?.name || process.env.REPORTER_NAME;
+    const reporterTeam = req.session.user?.team || process.env.REPORTER_TEAM;
+    await sendReport(report, toAddresses, reporterName, reporterTeam);
 
     const today = new Date().toISOString().slice(0, 10);
     const logPath = path.join(__dirname, 'data', 'reports', `${today}.json`);
