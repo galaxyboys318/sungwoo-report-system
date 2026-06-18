@@ -204,6 +204,13 @@
     .type-qty   { background: #e6f4ea; color: #137333; }
     .type-pct   { background: #fef7e0; color: #b06000; }
     .step-name-label { flex: 1; font-size: 13px; color: #333; }
+    .step-today-chk {
+      width: 14px; height: 14px; accent-color: #1a73e8;
+      cursor: pointer; flex-shrink: 0; margin-right: 2px;
+    }
+    .step-today-chk:checked + .step-type-badge {
+      outline: 1.5px solid #1a73e8;
+    }
     .step-done-check {
       width: 16px; height: 16px;
       accent-color: #1a73e8;
@@ -550,6 +557,7 @@
           return `
             <div class="step-row" id="formsteprow-${step.id}">
               <div class="step-row-top">
+                <input type="checkbox" class="step-today-chk" id="stepchk-${step.id}" title="오늘 보고에 포함">
                 <span class="step-type-badge ${badgeClass}">${badge}</span>
                 <span class="step-name-label">${step.name}</span>
                 ${controlHtml}
@@ -846,15 +854,21 @@
               taskName: task.name,
               memo,
               progress,
-              steps: (task.steps || []).map(s => ({
-                name: s.name,
-                type: s.type,
-                done: s.done,
-                current: s.current,
-                target: s.target,
-                pct: s.pct,
-                memo: document.getElementById(`stepmemo-${s.id}`)?.value.trim() || s.memo || '',
-              })),
+              steps: (task.steps || []).map(s => {
+                // 오늘 체크 여부: step 옆 체크박스 상태로 판단
+                const stepChk = document.getElementById(`stepchk-${s.id}`);
+                const checkedToday = stepChk ? stepChk.checked : false;
+                return {
+                  name: s.name,
+                  type: s.type,
+                  done: s.done,
+                  current: s.current,
+                  target: s.target,
+                  pct: s.pct,
+                  checkedToday,
+                  memo: document.getElementById(`stepmemo-${s.id}`)?.value.trim() || s.memo || '',
+                };
+              }),
             });
           }
         });
