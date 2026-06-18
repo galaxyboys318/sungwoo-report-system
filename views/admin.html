@@ -537,11 +537,31 @@
           <div class="user-sub">${user.email} · ${user.division||''} ${user.team||''}</div>
         </div>
         <span class="level-badge ${levelClass}">${user.position||'팀원'} (Lv.${user.level||4})</span>
+        <select style="font-size:12px;padding:5px 8px;border-radius:6px;border:1px solid #ddd;cursor:pointer;" onchange="changeLevel('${user.email}', this.value)">
+          <option value="1" ${(user.level||4)==1?'selected':''}>Lv.1 회장/대표</option>
+          <option value="2" ${(user.level||4)==2?'selected':''}>Lv.2 이사</option>
+          <option value="3" ${(user.level||4)==3?'selected':''}>Lv.3 팀장</option>
+          <option value="4" ${(user.level||4)==4?'selected':''}>Lv.4 팀원</option>
+        </select>
         <button class="btn btn-gray" style="font-size:12px;padding:6px 10px" onclick="resetPassword('${user.id}')">비번재설정</button>
         <button class="btn btn-red" style="font-size:12px;padding:6px 10px" onclick="deleteUser('${user.id}','${user.name}')">삭제</button>
       `;
       container.appendChild(div);
     });
+  }
+
+  async function changeLevel(email, level) {
+    const res = await fetch('/api/users/level', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, level: parseInt(level) })
+    });
+    if (res.ok) {
+      showToast('레벨이 변경되었습니다.');
+      loadUsers();
+    } else {
+      alert('레벨 변경 실패');
+    }
   }
 
   async function addUser() {
