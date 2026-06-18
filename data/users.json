@@ -16,9 +16,9 @@
       "name": "주성우",
       "email": "sungwoomb@sungwoobook.com",
       "password": "1234",
-      "role": "user",
+      "role": "회장",
       "position": "팀원",
-      "level": 4,
+      "level": 1,
       "team": "해당사항없음",
       "division": "도서출판성우"
     },
