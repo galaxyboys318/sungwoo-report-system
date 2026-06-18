@@ -4,7 +4,7 @@ const session = require('express-session');
 const path = require('path');
 const fs = require('fs');
 const { convertToReport } = require('./report-form');
-const { sendReport, verifyConnection } = require('./mailer');
+const { sendReport, verifyConnection, buildHtmlEmail } = require('./mailer');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -365,8 +365,11 @@ app.post('/report/preview', async (req, res) => {
       reporterTeam
     );
 
+    const htmlBody = buildHtmlEmail(report, reporterName, reporterTeam, checkedTasks);
     res.json({
       ...report,
+      htmlBody,
+      checkedTasks,
       reporterEmail: process.env.REPORTER_EMAIL,
       recipientManager: process.env.RECIPIENT_MANAGER,
       recipientExec: process.env.RECIPIENT_EXEC,
@@ -379,7 +382,7 @@ app.post('/report/preview', async (req, res) => {
 
 // 메일 발송 API
 app.post('/report/send', async (req, res) => {
-  const { report, recipients } = req.body;
+  const { report, recipients, checkedTasks } = req.body;
 
   if (!report || !recipients || recipients.length === 0) {
     return res.status(400).json({ error: '잘못된 요청입니다.' });
@@ -398,7 +401,7 @@ app.post('/report/send', async (req, res) => {
   try {
     const reporterName = req.session.user?.name || process.env.REPORTER_NAME;
     const reporterTeam = req.session.user?.team || process.env.REPORTER_TEAM;
-    await sendReport(report, toAddresses, reporterName, reporterTeam);
+    await sendReport(report, toAddresses, reporterName, reporterTeam, checkedTasks || report.checkedTasks);
 
     const today = new Date().toISOString().slice(0, 10);
     const logPath = path.join(__dirname, 'data', 'reports', `${today}.json`);
