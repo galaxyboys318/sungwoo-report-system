@@ -451,9 +451,12 @@ app.post('/report/send', async (req, res) => {
     const logPath = path.join(__dirname, 'data', 'reports', `${today}.json`);
     const newEntry = {
       timestamp: new Date().toISOString(),
+      reporterEmail: req.session.user?.email || '',
       reporterName: req.session.user?.name || '',
+      reporterTeam: req.session.user?.team || '',
       subject: report.subject,
       body: report.body,
+      htmlBody: buildHtmlEmail(report, reporterName, reporterTeam, checkedTasks || report.checkedTasks),
       sentTo: toAddresses,
     };
     // 기존 기록에 누적 저장 (배열)
@@ -466,6 +469,24 @@ app.post('/report/send', async (req, res) => {
     }
     logs.push(newEntry);
     fs.writeFileSync(logPath, JSON.stringify(logs, null, 2), 'utf-8');
+
+    // GitHub 백업
+    if (process.env.GITHUB_TOKEN) {
+      const ghContent = Buffer.from(JSON.stringify(logs, null, 2), 'utf-8').toString('base64');
+      const ghPath = `data/reports/${today}.json`;
+      fetch(`https://api.github.com/repos/galaxyboys318/sungwoo-report-system/contents/${ghPath}`, {
+        method: 'GET',
+        headers: { 'Authorization': `token ${process.env.GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
+      })
+      .then(r => r.json())
+      .then(fileInfo => fetch(`https://api.github.com/repos/galaxyboys318/sungwoo-report-system/contents/${ghPath}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `token ${process.env.GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: `[자동] ${today} 보고 기록`, content: ghContent, sha: fileInfo.sha || undefined })
+      }))
+      .then(() => console.log('[GitHub] 보고 기록 자동 커밋 완료'))
+      .catch(e => console.error('[GitHub] 보고 기록 커밋 실패:', e.message));
+    }
 
     res.json({ success: true, sentTo: toAddresses, date: report.date });
   } catch (e) {
@@ -504,6 +525,62 @@ app.get('/api/reports/today', requireLogin, (req, res) => {
     res.json({ reporters });
   } catch (e) {
     res.json({ reporters: [] });
+  }
+});
+
+// 내 보고 내역 페이지
+app.get('/my-reports', requireLogin, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'my-reports.html'));
+});
+
+// 내 보고 내역 목록 API (최근 30일)
+app.get('/api/my-reports', requireLogin, (req, res) => {
+  const myEmail = req.session.user?.email;
+  const reportsDir = path.join(__dirname, 'data', 'reports');
+  const result = [];
+  try {
+    const files = fs.readdirSync(reportsDir).filter(f => f.endsWith('.json')).sort().reverse().slice(0, 30);
+    files.forEach(f => {
+      const logs = JSON.parse(fs.readFileSync(path.join(reportsDir, f), 'utf-8'));
+      const entries = Array.isArray(logs) ? logs : [logs];
+      entries.forEach((e, idx) => {
+        if (e.reporterEmail === myEmail || e.reporterName === req.session.user?.name) {
+          result.push({
+            id: `${f.replace('.json','')}_${idx}`,
+            date: f.replace('.json', ''),
+            timestamp: e.timestamp,
+            subject: e.subject,
+            sentTo: e.sentTo,
+          });
+        }
+      });
+    });
+    result.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    res.json({ reports: result });
+  } catch (e) {
+    res.json({ reports: [] });
+  }
+});
+
+// 특정 보고서 상세(HTML) 조회
+app.get('/api/my-reports/:id', requireLogin, (req, res) => {
+  const { id } = req.params;
+  const lastUnderscoreIdx = id.lastIndexOf('_');
+  const date = id.slice(0, lastUnderscoreIdx);
+  const idx = parseInt(id.slice(lastUnderscoreIdx + 1));
+  const logPath = path.join(__dirname, 'data', 'reports', `${date}.json`);
+  try {
+    const logs = JSON.parse(fs.readFileSync(logPath, 'utf-8'));
+    const entries = Array.isArray(logs) ? logs : [logs];
+    const entry = entries[idx];
+    if (!entry) return res.status(404).json({ error: '찾을 수 없습니다.' });
+    // 본인 것만 조회 가능
+    if (entry.reporterEmail !== req.session.user?.email && entry.reporterName !== req.session.user?.name) {
+      return res.status(403).json({ error: '권한이 없습니다.' });
+    }
+    res.json(entry);
+  } catch (e) {
+    res.status(404).json({ error: '찾을 수 없습니다.' });
   }
 });
 
