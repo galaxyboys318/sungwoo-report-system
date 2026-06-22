@@ -133,6 +133,16 @@ app.post('/api/users/level', requireAdmin, (req, res) => {
   res.json({ success: true });
 });
 
+app.post('/api/users/admin', requireAdmin, (req, res) => {
+  const { userId, isAdmin } = req.body;
+  const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
+  const user = data.users.find(u => u.id === userId);
+  if (!user) return res.status(404).json({ error: '사용자 없음' });
+  user.isAdmin = isAdmin;
+  saveUsers(data);
+  res.json({ success: true });
+});
+
 app.post('/api/users/password', requireAdmin, (req, res) => {
   const { userId, newPassword } = req.body;
   const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
