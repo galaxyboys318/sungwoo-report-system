@@ -223,6 +223,11 @@
     document.getElementById('topbar-user').textContent = `${currentUser.name} (${currentUser.position || '관리자'})`;
     await loadProjects();
     await loadUsers();
+
+    // URL 쿼리로 탭 자동 선택 (?tab=users 등)
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab');
+    if (tab) showPage(tab);
   }
 
   async function loadProjects() {
