@@ -562,7 +562,7 @@
           const canEditStep = stepAssignees.length === 0 || stepAssignees.includes(currentUser.name);
           const delBtn = canEditStep ? `<button class="step-del-btn" onclick="deleteStepFromForm('${projectId}','${taskId}','${step.id}')">✕</button>` : '';
           return `
-            <div class="step-row" id="formsteprow-${step.id}">
+            <div class="step-row" id="formsteprow-${step.id}" data-task-id="${taskId}">
               <div class="step-row-top">
                 <input type="checkbox" class="step-today-chk" id="stepchk-${step.id}" title="오늘 보고에 포함" onchange="toggleStepMemo('${step.id}', this.checked)">
                 <span class="step-type-badge ${badgeClass}">${badge}</span>
@@ -725,9 +725,22 @@
     function toggleStepMemo(stepId, checked) {
       const memoEl = document.getElementById(`stepmemo-${stepId}`);
       if (!memoEl) return;
+
       if (checked) {
         memoEl.disabled = false;
         memoEl.focus();
+        // 단계 체크 시 상위 단위업무 체크박스도 자동 활성화
+        const stepRow = document.getElementById(`formsteprow-${stepId}`);
+        if (stepRow) {
+          const taskId = stepRow.dataset.taskId;
+          if (taskId) {
+            const taskChk = document.getElementById(`chk-${taskId}`);
+            if (taskChk && !taskChk.checked) {
+              taskChk.checked = true;
+              taskChk.dispatchEvent(new Event('change'));
+            }
+          }
+        }
       } else {
         memoEl.disabled = true;
         memoEl.value = ''; // 체크 해제 시 오늘 입력값만 초기화 (히스토리는 유지)
