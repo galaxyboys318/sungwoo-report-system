@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>주간보고</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Malgun Gothic',sans-serif;background:#f5f6fa;color:#1a1a2e;}
+.topbar{background:#1a73e8;display:flex;align-items:center;gap:14px;padding:0 24px;height:52px;position:sticky;top:0;z-index:100;}
+.topbar-title{color:#fff;font-size:15px;font-weight:600;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.topbar-user{color:rgba(255,255,255,0.8);font-size:13px;}
+.btn-topbar{background:rgba(255,255,255,0.15);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;}
+.btn-topbar:hover{background:rgba(255,255,255,0.25);}
+.wrap{max-width:720px;margin:0 auto;padding:24px 16px 48px;}
+.section-title{font-size:17px;font-weight:600;color:#1a1a2e;margin:0 0 14px;}
+.card{background:#fff;border-radius:12px;border:0.5px solid #e8e8e8;padding:20px 24px;margin-bottom:14px;}
+
+/* 요약 카드 */
+.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.summary-item{background:#fff;border-radius:10px;border:0.5px solid #e8e8e8;padding:16px;text-align:center;}
+.summary-label{font-size:11px;color:#888;margin-bottom:6px;}
+.summary-value{font-size:28px;font-weight:600;}
+.summary-unit{font-size:11px;color:#aaa;margin-top:3px;}
+.v-blue{color:#1a73e8;} .v-green{color:#34a853;} .v-orange{color:#e67e22;}
+
+/* 프로젝트 카드 */
+.project-card{background:#f8fbff;border-radius:10px;border:1.5px solid #c8d8f8;padding:14px 18px;margin-bottom:10px;}
+.project-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.project-name{font-size:14px;font-weight:600;color:#1a1a2e;}
+.tag{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500;background:#e8f0fe;color:#1558b0;}
+.task-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;}
+.task-name{font-size:12px;color:#444;}
+.task-dates{font-size:10px;color:#aaa;margin-left:6px;}
+.task-pct{font-size:12px;font-weight:500;color:#3498db;}
+.bar-bg{background:#e0e0e0;border-radius:20px;height:5px;overflow:hidden;margin-bottom:8px;}
+.bar-fill{height:5px;border-radius:20px;background:#3498db;}
+
+/* AI 요약 */
+.ai-box{background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;padding:16px 18px;font-size:13px;line-height:1.9;color:#222;white-space:pre-line;min-height:80px;}
+.ai-loading{color:#aaa;display:flex;align-items:center;gap:8px;font-size:13px;}
+.ai-dot{width:6px;height:6px;border-radius:50%;background:#1a73e8;animation:blink 1s infinite;}
+.ai-dot:nth-child(2){animation-delay:0.2s;}
+.ai-dot:nth-child(3){animation-delay:0.4s;}
+@keyframes blink{0%,100%{opacity:0.2;}50%{opacity:1;}}
+
+/* 일자별 내역 */
+.day-row{padding:12px 0;border-bottom:0.5px solid #f0f0f0;}
+.day-row:last-child{border-bottom:none;}
+.day-date{font-size:12px;font-weight:600;color:#1a73e8;margin-bottom:4px;}
+.day-body{font-size:12px;color:#444;line-height:1.8;white-space:pre-line;}
+.day-tasks{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+.day-task-badge{font-size:10px;background:#e8f0fe;color:#1558b0;padding:2px 8px;border-radius:20px;}
+
+/* 빈 상태 */
+.empty{text-align:center;padding:48px 0;color:#bbb;font-size:13px;}
+
+/* 발송 버튼 */
+.send-btn{width:100%;padding:14px;background:#1a73e8;color:#fff;font-size:15px;font-weight:600;border:none;border-radius:10px;cursor:pointer;font-family:inherit;transition:background 0.15s;}
+.send-btn:hover{background:#1558b0;}
+.send-btn:disabled{background:#ccc;cursor:not-allowed;}
+.send-hint{font-size:12px;color:#aaa;text-align:center;margin-top:8px;}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;display:none;z-index:999;}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span class="topbar-title">📋 주간보고</span>
+  <div class="topbar-right">
+    <span class="topbar-user" id="topbar-user"></span>
+    <button class="btn-topbar" onclick="location.href='/report'">← 보고 폼</button>
+    <button class="btn-topbar" onclick="logout()">로그아웃</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div id="main-content">
+    <div class="empty"><div class="ai-loading" style="justify-content:center;"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div><span style="margin-left:6px;">주간 데이터 불러오는 중...</span></div></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const dayNames = ['일','월','화','수','목','금','토'];
+let weeklyData = null;
+let aiSummary = '';
+let currentUser = null;
+
+function fmt(d) { const [y,m,dd] = d.split('-'); return `${y}.${m}.${dd}`; }
+function fmtDay(d) { const dt = new Date(d+'T00:00:00'); return `${fmt(d)} (${dayNames[dt.getDay()]})`; }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2500);
+}
+
+async function init() {
+  const res = await fetch('/api/me');
+  const data = await res.json();
+  if (!data.user) { location.href = '/login'; return; }
+  currentUser = data.user;
+  document.getElementById('topbar-user').textContent = `${currentUser.name} (${currentUser.position || '팀원'})`;
+  await loadWeeklyData();
+}
+
+async function loadWeeklyData() {
+  const res = await fetch('/api/weekly-data');
+  const data = await res.json();
+  weeklyData = data;
+  renderPage();
+  if (data.weeklyDays && data.weeklyDays.length > 0) generateAiSummary();
+}
+
+// 프로젝트별 집계
+function aggregateProjects(weeklyDays) {
+  const map = {};
+  weeklyDays.forEach(day => {
+    day.entries.forEach(entry => {
+      (entry.checkedTasks || []).forEach(task => {
+        if (!map[task.projectName]) map[task.projectName] = { tag: task.projectTag || '', tasks: {} };
+        if (!map[task.projectName].tasks[task.taskName]) {
+          map[task.projectName].tasks[task.taskName] = { dates: [], finalPct: 0 };
+        }
+        map[task.projectName].tasks[task.taskName].dates.push(day.date);
+        map[task.projectName].tasks[task.taskName].finalPct = task.taskProgress || 0;
+      });
+    });
+  });
+  return map;
+}
+
+function renderPage() {
+  const { weeklyDays, weekStart, weekEnd } = weeklyData;
+  const container = document.getElementById('main-content');
+
+  if (!weeklyDays || weeklyDays.length === 0) {
+    container.innerHTML = `
+      <div class="card">
+        <div class="section-title" style="margin-bottom:4px;">📅 ${fmt(weekStart)} ~ ${fmt(weekEnd)}</div>
+        <p style="font-size:12px;color:#aaa;margin-bottom:0;">이번 주 보고 내역이 없습니다.</p>
+      </div>`;
+    return;
+  }
+
+  const projectMap = aggregateProjects(weeklyDays);
+  const totalTasks = weeklyDays.reduce((s,d) => s + d.entries.reduce((ss,e) => ss + (e.checkedTasks?.length || 0), 0), 0);
+
+  // 요약 카드
+  const summaryHtml = `
+    <div class="card" style="margin-bottom:14px;">
+      <div class="section-title" style="margin-bottom:14px;">📅 ${fmt(weekStart)} ~ ${fmt(weekEnd)} 주간보고</div>
+      <div class="summary-grid">
+        <div class="summary-item"><div class="summary-label">보고 일수</div><div class="summary-value v-blue">${weeklyDays.length}</div><div class="summary-unit">일</div></div>
+        <div class="summary-item"><div class="summary-label">총 업무</div><div class="summary-value v-green">${totalTasks}</div><div class="summary-unit">건</div></div>
+        <div class="summary-item"><div class="summary-label">관여 프로젝트</div><div class="summary-value v-orange">${Object.keys(projectMap).length}</div><div class="summary-unit">개</div></div>
+      </div>
+    </div>`;
+
+  // 프로젝트 카드 (checkedTasks 있을 때만)
+  let projectsHtml = '';
+  if (Object.keys(projectMap).length > 0) {
+    const cards = Object.entries(projectMap).map(([pName, pData]) => {
+      const taskRows = Object.entries(pData.tasks).map(([tName, tData]) => `
+        <div class="task-row">
+          <span class="task-name">${tName}<span class="task-dates">${tData.dates.map(fmtDay).join(', ')}</span></span>
+          <span class="task-pct">${tData.finalPct}%</span>
+        </div>
+        <div class="bar-bg"><div class="bar-fill" style="width:${tData.finalPct}%"></div></div>`).join('');
+      return `<div class="project-card">
+        <div class="project-header"><span class="project-name">${pName}</span><span class="tag">${pData.tag}</span></div>
+        ${taskRows}
+      </div>`;
+    }).join('');
+    projectsHtml = `<div class="card"><div class="section-title">프로젝트별 진행 현황</div>${cards}</div>`;
+  }
+
+  // AI 요약 영역
+  const aiHtml = `
+    <div class="card">
+      <div class="section-title" style="margin-bottom:12px;">✨ AI 주간 요약</div>
+      <div class="ai-box" id="ai-summary-box">
+        <div class="ai-loading"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div><span style="margin-left:6px;">AI가 이번 주 업무를 요약하는 중...</span></div>
+      </div>
+    </div>`;
+
+  // 일자별 내역
+  const dayRows = weeklyDays.map(day => {
+    const taskBadges = [...new Set(day.entries.flatMap(e => (e.checkedTasks || []).map(t => t.taskName)))]
+      .map(t => `<span class="day-task-badge">${t}</span>`).join('');
+    const body = day.entries.map(e => e.body).join('\n\n');
+    return `<div class="day-row">
+      <div class="day-date">${fmtDay(day.date)}</div>
+      ${taskBadges ? `<div class="day-tasks">${taskBadges}</div>` : ''}
+      <div class="day-body">${body}</div>
+    </div>`;
+  }).join('');
+  const dayHtml = `<div class="card"><div class="section-title">일자별 상세 내역</div>${dayRows}</div>`;
+
+  // 발송 영역
+  const sendHtml = `
+    <div class="card">
+      <button class="send-btn" id="send-btn" onclick="sendWeekly()">📨 주간보고 발송</button>
+      <div class="send-hint">이사님, 대표이사, 회장님께 발송됩니다.</div>
+    </div>`;
+
+  container.innerHTML = summaryHtml + projectsHtml + aiHtml + dayHtml + sendHtml;
+}
+
+async function generateAiSummary() {
+  const { weeklyDays, weekStart, weekEnd } = weeklyData;
+  const allBodies = weeklyDays.map(d => `[${fmtDay(d.date)}]\n${d.entries.map(e => e.body).join('\n')}`).join('\n\n');
+
+  try {
+    const res = await fetch('/api/gpt-weekly', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ weekStart, weekEnd, bodies: allBodies, user: currentUser }),
+    });
+    const data = await res.json();
+    aiSummary = data.summary || '';
+    const box = document.getElementById('ai-summary-box');
+    if (box) box.textContent = aiSummary;
+  } catch (e) {
+    const box = document.getElementById('ai-summary-box');
+    if (box) box.textContent = 'AI 요약 생성 실패. 발송 시 요약 없이 발송됩니다.';
+  }
+}
+
+async function sendWeekly() {
+  const btn = document.getElementById('send-btn');
+  btn.disabled = true;
+  btn.textContent = '발송 중...';
+
+  try {
+    const res = await fetch('/api/weekly-send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        weekStart: weeklyData.weekStart,
+        weekEnd: weeklyData.weekEnd,
+        weeklyDays: weeklyData.weeklyDays,
+        aiSummary,
+      }),
+    });
+    if (res.ok) {
+      showToast('✅ 주간보고가 발송되었습니다!');
+      btn.textContent = '✅ 발송 완료';
+    } else {
+      const err = await res.json();
+      alert('발송 실패: ' + err.error);
+      btn.disabled = false;
+      btn.textContent = '📨 주간보고 발송';
+    }
+  } catch (e) {
+    alert('발송 중 오류가 발생했습니다.');
+    btn.disabled = false;
+    btn.textContent = '📨 주간보고 발송';
+  }
+}
+
+function logout() { fetch('/logout', { method: 'POST' }).then(() => location.href = '/login'); }
+
+init();
+</script>
+</body>
+</html>
