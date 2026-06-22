@@ -252,6 +252,11 @@
     }
     .step-memo:focus { outline: none; border-color: #1a73e8; height: 54px; }
     .step-memo::placeholder { color: #c0cfe8; }
+    .step-memo:disabled { background: #f5f5f5; color: #bbb; cursor: not-allowed; border-color: #eee; resize: none; }
+    .memo-history { margin-top: 5px; border-left: 2px solid #dde8fb; padding-left: 10px; }
+    .memo-history-item { margin-bottom: 5px; }
+    .memo-history-date { font-size: 10px; color: #1a73e8; font-weight: 500; margin-bottom: 1px; }
+    .memo-history-text { font-size: 11px; color: #888; line-height: 1.5; }
     .task-progress-bar {
       height: 3px;
       background: #e0e0e0;
@@ -559,7 +564,7 @@
           return `
             <div class="step-row" id="formsteprow-${step.id}">
               <div class="step-row-top">
-                <input type="checkbox" class="step-today-chk" id="stepchk-${step.id}" title="오늘 보고에 포함">
+                <input type="checkbox" class="step-today-chk" id="stepchk-${step.id}" title="오늘 보고에 포함" onchange="toggleStepMemo('${step.id}', this.checked)">
                 <span class="step-type-badge ${badgeClass}">${badge}</span>
                 <span class="step-name-label">${step.name}</span>
                 ${controlHtml}
@@ -567,7 +572,19 @@
               </div>
               <textarea class="step-memo" id="stepmemo-${step.id}"
                 placeholder="이 단계 진행 내용 메모 (선택)..."
-                onblur="onStepMemoBlur('${projectId}','${taskId}','${step.id}')">${step.memo || ''}</textarea>
+                onblur="onStepMemoBlur('${projectId}','${taskId}','${step.id}')"
+                disabled></textarea>
+              ${(() => {
+                const history = (step.memoHistory || []).slice().reverse().slice(0, 7);
+                if (!history.length) return '';
+                const items = history.map(h => {
+                  const d = new Date(h.date + 'T00:00:00');
+                  const dayNames = ['일','월','화','수','목','금','토'];
+                  const label = `${h.date.slice(5).replace('-','.')} (${dayNames[d.getDay()]})`;
+                  return `<div class="memo-history-item"><div class="memo-history-date">${label}</div><div class="memo-history-text">${h.memo}</div></div>`;
+                }).join('');
+                return `<div class="memo-history">${items}</div>`;
+              })()}
             </div>`;
         }).join('');
 
@@ -702,6 +719,19 @@
     function onStepPctInput(stepId, val) {
       const el = document.getElementById(`pctval-${stepId}`);
       if (el) el.textContent = `${val}%`;
+    }
+
+    // 오늘 체크 여부에 따라 메모 활성화/비활성화
+    function toggleStepMemo(stepId, checked) {
+      const memoEl = document.getElementById(`stepmemo-${stepId}`);
+      if (!memoEl) return;
+      if (checked) {
+        memoEl.disabled = false;
+        memoEl.focus();
+      } else {
+        memoEl.disabled = true;
+        memoEl.value = ''; // 체크 해제 시 오늘 입력값만 초기화 (히스토리는 유지)
+      }
     }
 
     // 단계 메모만 저장 (blur 시)
