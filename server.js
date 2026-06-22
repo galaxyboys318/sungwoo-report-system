@@ -589,8 +589,57 @@ app.get('/', (req, res) => {
   res.redirect('/login');
 });
 
-app.listen(PORT, () => {
-  console.log(`✅ 일일보고 서버 실행 중: http://localhost:${PORT}/report`);
-  console.log(`   보고자: ${process.env.REPORTER_NAME} (${process.env.REPORTER_TEAM})`);
-  console.log(`   수신자: ${process.env.RECIPIENT_MANAGER}, ${process.env.RECIPIENT_EXEC}`);
+// ─── 서버 시작 시 GitHub에서 최신 데이터 복원 ──────────────
+async function pullDataFromGitHub() {
+  if (!process.env.GITHUB_TOKEN) {
+    console.log('[GitHub] GITHUB_TOKEN 없음 — 데이터 복원 건너뜀');
+    return;
+  }
+
+  const REPO = 'galaxyboys318/sungwoo-report-system';
+  const HEADERS = {
+    'Authorization': `token ${process.env.GITHUB_TOKEN}`,
+    'Accept': 'application/vnd.github.v3+json',
+  };
+
+  async function fetchAndSave(ghPath, localPath) {
+    try {
+      const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${ghPath}`, { headers: HEADERS });
+      if (!res.ok) return;
+      const fileInfo = await res.json();
+      const content = Buffer.from(fileInfo.content, 'base64').toString('utf-8');
+      fs.mkdirSync(path.dirname(localPath), { recursive: true });
+      fs.writeFileSync(localPath, content, 'utf-8');
+      console.log(`[GitHub] 복원 완료: ${ghPath}`);
+    } catch (e) {
+      console.error(`[GitHub] 복원 실패: ${ghPath}`, e.message);
+    }
+  }
+
+  // projects.json, users.json 복원
+  await fetchAndSave('data/projects.json', PROJECTS_PATH);
+  await fetchAndSave('data/users.json', USERS_PATH);
+
+  // data/reports/ 폴더 내 모든 파일 복원
+  try {
+    const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data/reports`, { headers: HEADERS });
+    if (res.ok) {
+      const files = await res.json();
+      const reportsDir = path.join(__dirname, 'data', 'reports');
+      fs.mkdirSync(reportsDir, { recursive: true });
+      await Promise.all(
+        files.filter(f => f.name.endsWith('.json')).map(f =>
+          fetchAndSave(`data/reports/${f.name}`, path.join(reportsDir, f.name))
+        )
+      );
+    }
+  } catch (e) {
+    console.error('[GitHub] reports 폴더 복원 실패:', e.message);
+  }
+}
+
+pullDataFromGitHub().then(() => {
+  app.listen(PORT, () => {
+    console.log(`✅ 일일보고 서버 실행 중: http://localhost:${PORT}/report`);
+  });
 });
