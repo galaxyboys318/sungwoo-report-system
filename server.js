@@ -27,7 +27,7 @@ function requireLogin(req, res, next) {
 }
 
 function requireAdmin(req, res, next) {
-  if (req.session.user?.role === 'admin') return next();
+  if (req.session.user?.role === 'admin' || req.session.user?.isAdmin === true) return next();
   res.status(403).json({ error: '관리자 권한이 필요합니다.' });
 }
 
@@ -54,6 +54,7 @@ app.post('/api/login', (req, res) => {
     position: user.position || '팀원',
     team: user.team || '',
     division: user.division || '',
+    isAdmin: user.isAdmin || false,
   };
   res.json({ success: true, redirect: '/report' });
 });
@@ -106,7 +107,7 @@ app.post('/api/users/add', requireAdmin, (req, res) => {
   if (!name || !email || !password) return res.status(400).json({ error: '필수값 누락' });
   const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
   if (data.users.find(u => u.email === email)) return res.status(400).json({ error: '이미 존재하는 이메일' });
-  data.users.push({ id: `u${Date.now()}`, name, email, password, role: role || 'user', position: position || '팀원', level: level || 4, team: team || '', division: division || '' });
+  data.users.push({ id: `u${Date.now()}`, name, email, password, role: role || '팀원', position: position || '팀원', level: level || 4, isAdmin: false, team: team || '', division: division || '' });
   saveUsers(data);
   res.json({ success: true });
 });
@@ -125,7 +126,7 @@ app.post('/api/users/level', requireAdmin, (req, res) => {
   const user = data.users.find(u => u.email === email);
   if (!user) return res.status(404).json({ error: '사용자를 찾을 수 없습니다.' });
   user.level = parseInt(level);
-  // 레벨에 따라 role 자동 업데이트
+  // 레벨에 따라 role 자동 업데이트 (isAdmin은 별도 관리)
   const roleMap = { 1: '회장', 2: '이사', 3: '팀장', 4: '팀원' };
   user.role = roleMap[user.level] || '팀원';
   saveUsers(data);
