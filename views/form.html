@@ -388,6 +388,7 @@
         <span id="user-name" style="font-size:13px;color:#555;font-weight:600"></span>
         <div style="display:flex;gap:8px">
           <a id="admin-link" href="/admin" style="display:none;font-size:12px;color:#1a73e8;text-decoration:none;border:1px solid #1a73e8;border-radius:5px;padding:4px 10px">관리자</a>
+          <a href="/my-reports" style="font-size:12px;color:#1a73e8;text-decoration:none;border:1px solid #1a73e8;border-radius:5px;padding:4px 10px">내 보고 내역</a>
           <button onclick="doLogout()" style="font-size:12px;color:#888;background:none;border:1px solid #ddd;border-radius:5px;padding:4px 10px;cursor:pointer">로그아웃</button>
         </div>
       </div>
@@ -898,11 +899,19 @@
       } catch (e) {
         alert('오류가 발생했습니다: ' + e.message);
         btn.disabled = false;
+      loading.style.display = 'none';
         loading.style.display = 'none';
       }
     }
 
     loadProjects();
+  // 뒤로가기로 돌아올 때 버튼/로딩 초기화
+  window.addEventListener('pageshow', function() {
+    const btn = document.getElementById('submit-btn');
+    const loading = document.getElementById('loading');
+    if (btn) btn.disabled = false;
+    if (loading) loading.style.display = 'none';
+  });
   </script>
 </body>
 </html>
