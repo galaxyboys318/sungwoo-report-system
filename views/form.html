@@ -573,9 +573,10 @@
               <textarea class="step-memo" id="stepmemo-${step.id}"
                 placeholder="이 단계 진행 내용 메모 (선택)..."
                 onblur="onStepMemoBlur('${projectId}','${taskId}','${step.id}')"
-                disabled></textarea>
+                disabled>${(() => { const t = new Date().toISOString().slice(0,10); const h = (step.memoHistory||[]).find(m=>m.date===t); return h ? h.memo : ''; })()}</textarea>
               ${(() => {
-                const history = (step.memoHistory || []).slice().reverse().slice(0, 7);
+                const today = new Date().toISOString().slice(0, 10);
+                const history = (step.memoHistory || []).filter(h => h.date !== today).slice().reverse().slice(0, 7);
                 if (!history.length) return '';
                 const items = history.map(h => {
                   const d = new Date(h.date + 'T00:00:00');
