@@ -8,6 +8,7 @@
       "role": "팀원",
       "position": "팀원",
       "level": 4,
+      "isAdmin": true,
       "team": "솔루션개발팀",
       "division": "초등콘텐츠사업부"
     },
@@ -17,8 +18,9 @@
       "email": "sungwoomb@sungwoobook.com",
       "password": "1234",
       "role": "회장",
-      "position": "팀원",
+      "position": "회장",
       "level": 1,
+      "isAdmin": false,
       "team": "해당사항없음",
       "division": "도서출판성우"
     },
@@ -27,9 +29,10 @@
       "name": "주영웅",
       "email": "p4jyoung@sungwoobook.com",
       "password": "1234",
-      "role": "admin",
+      "role": "대표이사",
       "position": "대표이사",
       "level": 1,
+      "isAdmin": false,
       "team": "해당사항없음",
       "division": "도서출판성우"
     },
@@ -38,9 +41,10 @@
       "name": "권호상",
       "email": "khs386@sungwoobook.com",
       "password": "1234",
-      "role": "admin",
+      "role": "이사",
       "position": "이사",
       "level": 2,
+      "isAdmin": false,
       "team": "초등편집팀, 디자인팀, 솔루션개발팀",
       "division": ""
     }
