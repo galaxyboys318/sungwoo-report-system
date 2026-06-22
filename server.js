@@ -344,9 +344,15 @@ app.post('/api/projects/step/update', (req, res) => {
     }
     step.pct = value;
   }
-  // 메모 저장 (type=memo 이거나 memo 필드가 있을 때)
-  if (req.body.memo !== undefined) step.memo = req.body.memo;
-  if (memo !== undefined) step.memo = memo;
+  // 메모 저장 — 날짜별 누적 (memoHistory)
+  if (memo !== undefined && memo.trim() !== '') {
+    if (!step.memoHistory) step.memoHistory = [];
+    const today = new Date().toISOString().slice(0, 10);
+    const existing = step.memoHistory.find(m => m.date === today);
+    if (existing) existing.memo = memo;
+    else step.memoHistory.push({ date: today, memo });
+    step.memo = memo; // 호환성 유지
+  }
   saveProjects(data);
   res.json({ success: true });
 });
@@ -711,6 +717,19 @@ app.post('/api/weekly-send', requireLogin, async (req, res) => {
   try {
     const { sendWeeklyReport } = require('./mailer');
     await sendWeeklyReport({ weekStart, weekEnd, weeklyDays, aiSummary }, toAddresses, user.name, user.team);
+
+    // 주간보고 발송 후 memoHistory 초기화
+    const projData = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
+    projData.projects.forEach(p => {
+      (p.tasks || []).forEach(t => {
+        (t.steps || []).forEach(s => {
+          s.memoHistory = [];
+          s.memo = '';
+        });
+      });
+    });
+    saveProjects(projData);
+
     res.json({ success: true });
   } catch (e) {
     console.error('주간보고 발송 실패:', e.message);
