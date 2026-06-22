@@ -429,7 +429,7 @@
 
       // 유저 이름 표시
       document.getElementById('user-name').textContent = `${currentUser.name}님`;
-      if (currentUser.role === 'admin') {
+      if (currentUser.role === 'admin' || currentUser.isAdmin === true) {
         document.getElementById('admin-link').style.display = 'inline';
       }
 
