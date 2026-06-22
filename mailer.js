@@ -68,28 +68,21 @@ function formatDate() {
 
 // ── HTML 이메일 생성 ─────────────────────────────────────
 function buildHtmlEmail(report, reporterName, reporterTeam, checkedTasksRaw) {
-  const dateStr = formatDate();
   const now = new Date();
   const dateShort = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
 
-  // checkedTasksRaw: [{ projectName, projectTag, taskName, progress, steps, memo }]
   // 프로젝트별 그룹핑
   const projectMap = {};
   (checkedTasksRaw || []).forEach(t => {
     if (!projectMap[t.projectName]) {
-      projectMap[t.projectName] = {
-        name: t.projectName,
-        tag: t.projectTag || '',
-        targetDate: t.targetDate || null,
-        tasks: []
-      };
+      projectMap[t.projectName] = { name: t.projectName, tag: t.projectTag || '', targetDate: t.targetDate || null, tasks: [] };
     }
     projectMap[t.projectName].tasks.push(t);
   });
   const projects = Object.values(projectMap);
-
-  // 요약 집계
   const totalTasks = (checkedTasksRaw || []).length;
+
+  // 가장 빠른 마감
   const nearestDday = projects.reduce((min, p) => {
     const d = calcDday(p.targetDate);
     if (d === null) return min;
@@ -97,162 +90,174 @@ function buildHtmlEmail(report, reporterName, reporterTeam, checkedTasksRaw) {
   }, null);
   const nearestProject = projects.find(p => calcDday(p.targetDate) === nearestDday);
 
-  // 본문 텍스트 → HTML (줄바꿈 처리)
+  // 본문 HTML
   const normalizedBody = (report.body || '').replace(/\\n/g, '\n');
-  const bodyLines = normalizedBody.split('\n');
-  const bodyHtml = bodyLines.map(line => {
+  const bodyHtml = normalizedBody.split('\n').map(line => {
     const indent = line.match(/^( +)/);
     const paddingLeft = indent ? indent[1].length * 6 : 0;
     const content = line.trim();
     if (!content) return '<div style="min-height:0.6em">&nbsp;</div>';
     const isMain = /^\d+\./.test(content);
-    const fontWeight = isMain ? '700' : '400';
-    const color = isMain ? '#1a1a2e' : '#444';
-    return `<div style="padding-left:${paddingLeft}px;min-height:1.7em;font-weight:${fontWeight};color:${color};">${content}</div>`;
+    return `<div style="padding-left:${paddingLeft}px;min-height:1.7em;font-weight:${isMain?'600':'400'};color:${isMain?'#1a1a2e':'#444'};">${content}</div>`;
   }).join('');
 
-  // 프로젝트 진행률 카드 HTML
-  const PROJECT_COLORS = ['#4285f4','#34a853','#ea4335','#fbbc04','#9c27b0'];
-  let projectBarsHtml = '';
-  projects.forEach((proj, pi) => {
-    const pcolor = PROJECT_COLORS[pi % PROJECT_COLORS.length];
+  // 프로젝트별 진행 현황 카드 (오늘 보고한 것만)
+  const PROJECT_COLORS = [
+    { bg:'#f8fbff', border:'#c8d8f8', proj:'#4285f4', task:'#3498db' },
+    { bg:'#f6fff8', border:'#b2dfdb', proj:'#34a853', task:'#3498db' },
+    { bg:'#fff8f0', border:'#ffe0b2', proj:'#e67e22', task:'#3498db' },
+    { bg:'#fdf0ff', border:'#e1bee7', proj:'#9c27b0', task:'#3498db' },
+  ];
+
+  const projectCardsHtml = projects.map((proj, pi) => {
+    const c = PROJECT_COLORS[pi % PROJECT_COLORS.length];
     const projProgress = Math.round(
-      proj.tasks.reduce((s, t) => {
-        const p = t.progress !== undefined ? t.progress : 0;
-        return s + p;
-      }, 0) / Math.max(proj.tasks.length, 1)
+      proj.tasks.reduce((s, t) => s + (t.taskProgress || t.progress || 0), 0) / Math.max(proj.tasks.length, 1)
     );
-    const barHeight = Math.max(4, Math.round(projProgress * 2.2));
     const dday = calcDday(proj.targetDate);
-    const ddayStr = dday !== null ? `D-${dday}` : '';
 
-    projectBarsHtml += `
-      <td style="text-align:center;vertical-align:bottom;padding:0 6px;">
-        <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:${pcolor};">${projProgress}%</p>
-        <table width="60%" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
-          <tr><td style="background:${pcolor};height:${barHeight}px;border-radius:6px 6px 0 0;min-height:4px;display:block;"></td></tr>
+    // 단위업무별 행
+    const taskRows = proj.tasks.map(t => {
+      const tp = t.taskProgress || t.progress || 0;
+
+      // 오늘 체크한 단계만 필터
+      const todaySteps = (t.steps || []).filter(s => s.checkedToday || (s.memo && s.memo.trim()));
+      const stepRows = todaySteps.map(s => {
+        let statusStr = '';
+        let statusColor = '#e67e22';
+        let barPct = 0;
+        if (s.type === 'check') {
+          statusStr = s.done ? '완료' : '미완';
+          statusColor = s.done ? '#34a853' : '#aaa';
+          barPct = s.done ? 100 : 0;
+        } else if (s.type === 'pct') {
+          statusStr = `${s.pct || 0}%`;
+          barPct = s.pct || 0;
+        } else if (s.type === 'qty') {
+          statusStr = `${s.current || 0} / ${s.target || 0}`;
+          barPct = s.target ? Math.round((s.current || 0) / s.target * 100) : 0;
+          statusColor = '#34a853';
+        }
+        const stepBarColor = s.done || barPct >= 100 ? '#34a853' : '#e67e22';
+        const memoHtml = s.memo ? `<div style="font-size:10px;color:#888;padding-left:18px;margin-top:1px;line-height:1.5;">${s.memo}</div>` : '';
+        return `
+          <tr>
+            <td style="padding:4px 0 0 14px;font-size:11px;color:#666;">${s.name}</td>
+            <td align="right" style="padding:4px 0 0;font-size:11px;font-weight:500;color:${statusColor};white-space:nowrap;">${statusStr}</td>
+          </tr>
+          <tr><td colspan="2" style="padding:2px 0 6px 14px;">
+            <div style="background:#e0e0e0;border-radius:20px;height:3px;overflow:hidden;">
+              <div style="width:${barPct}%;background:${stepBarColor};height:3px;border-radius:20px;"></div>
+            </div>
+            ${memoHtml}
+          </td></tr>`;
+      }).join('');
+
+      const stepsBox = todaySteps.length > 0 ? `
+        <tr><td colspan="2" style="padding:4px 0 6px 0;">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border-radius:6px;border:0.5px solid ${c.border};padding:6px 10px;">
+            <tr><td colspan="2" style="padding:4px 0 2px;font-size:10px;font-weight:600;color:${c.proj};">단계별 진행</td></tr>
+            ${stepRows}
+          </table>
+        </td></tr>` : '';
+
+      return `
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:10px;">
+          <tr>
+            <td style="font-size:13px;font-weight:500;color:#1a1a2e;padding-bottom:3px;">${t.taskName}</td>
+            <td align="right" style="font-size:13px;font-weight:600;color:${c.task};padding-bottom:3px;">${tp}%</td>
+          </tr>
+          <tr><td colspan="2" style="padding-bottom:${todaySteps.length>0?'6':'0'}px;">
+            <div style="background:#e0e0e0;border-radius:20px;height:5px;overflow:hidden;">
+              <div style="width:${tp}%;background:${c.task};height:5px;border-radius:20px;"></div>
+            </div>
+          </td></tr>
+          ${stepsBox}
+        </table>`;
+    }).join('');
+
+    return `
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:10px;background:${c.bg};border-radius:10px;border:1.5px solid ${c.border};">
+      <tr><td style="padding:14px 18px;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:8px;">
+          <tr>
+            <td>
+              <span style="font-size:14px;font-weight:500;color:#1a1a2e;">${proj.name}</span>
+              <span style="margin-left:8px;font-size:10px;background:#e8f0fe;color:#1558b0;padding:2px 7px;border-radius:20px;font-weight:500;">${proj.tag}</span>
+              ${dday !== null ? `<span style="margin-left:6px;font-size:10px;color:${ddayColor(dday)};">D-${dday}</span>` : ''}
+            </td>
+            <td align="right" style="font-size:16px;font-weight:600;color:${c.proj};">${projProgress}%</td>
+          </tr>
         </table>
-        <p style="margin:4px 0 0;font-size:11px;color:#555;word-break:keep-all;">${proj.name}</p>
-        ${ddayStr ? `<p style="margin:2px 0 0;font-size:11px;color:${ddayColor(dday)};">${ddayStr}</p>` : ''}
-      </td>`;
-  });
-
-  // 단위업무 진행률 바 HTML (steps 있는 것만)
-  let taskBarsHtml = '';
-  let hasTaskBars = false;
-  (checkedTasksRaw || []).forEach(t => {
-    if (t.progress === undefined || t.progress === null || !t.steps || !t.steps.length) return;
-    hasTaskBars = true;
-    const p = t.progress;
-    const bc = barColor(p);
-    taskBarsHtml += `
-      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:18px;">
-        <tr>
-          <td style="font-size:15px;font-weight:600;color:#1a1a2e;padding-bottom:6px;">${t.taskName}</td>
-          <td align="right" style="font-size:15px;font-weight:700;color:${bc};padding-bottom:6px;">${p}%</td>
-        </tr>
-        <tr>
-          <td colspan="2" style="background:#e8e8e8;border-radius:20px;height:22px;padding:0;overflow:hidden;">
-            <div style="width:${p}%;background:${bc};height:22px;border-radius:20px;"></div>
-          </td>
-        </tr>
-      </table>`;
-  });
+        <div style="background:#e0e0e0;border-radius:20px;height:6px;overflow:hidden;margin-bottom:12px;">
+          <div style="width:${projProgress}%;background:${c.proj};height:6px;border-radius:20px;"></div>
+        </div>
+        ${taskRows}
+      </td></tr></table>`;
+  }).join('');
 
   return `<!DOCTYPE html>
 <html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-</head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
 <body style="margin:0;padding:0;background:#f5f6fa;font-family:'Malgun Gothic','맑은 고딕',sans-serif;">
 
-<!-- 헤더 바 -->
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#1a73e8;">
-  <tr><td style="padding:16px 32px;">
-    <span style="color:#fff;font-size:17px;font-weight:700;">도서출판 성우 &nbsp;·&nbsp; 일일업무보고</span>
+  <tr><td style="padding:14px 28px;">
+    <span style="color:#fff;font-size:15px;font-weight:500;">도서출판 성우 &nbsp;·&nbsp; 일일업무보고</span>
   </td></tr>
 </table>
 
-<!-- 외부 컨테이너 -->
-<table width="920" cellpadding="0" cellspacing="0" border="0" bgcolor="#f5f6fa" style="margin:24px auto;border-radius:14px;">
-<tr><td style="padding:20px;">
-<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="border-radius:14px;box-shadow:0 2px 14px rgba(0,0,0,0.08);">
-<tr><td style="padding:46px;">
+<table width="660" cellpadding="0" cellspacing="0" border="0" bgcolor="#f5f6fa" style="margin:20px auto;border-radius:14px;">
+<tr><td style="padding:16px;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="border-radius:12px;">
+<tr><td style="padding:28px 32px;">
 
-<!-- 제목 + 부제목 -->
-<p style="margin:0 0 8px;font-size:34px;font-weight:700;color:#1a1a2e;">일일 업무 보고서</p>
-<p style="margin:0 0 36px;font-size:17px;color:#888;">${dateStr} &nbsp;·&nbsp; 도서출판 성우 &nbsp;·&nbsp; ${reporterName || ''}</p>
+<p style="margin:0 0 24px;font-size:22px;font-weight:500;color:#1a1a2e;">일일 업무 보고서</p>
 
-<!-- 요약 카드 4개 -->
-<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:36px;"><tr>
-  <td width="23%" style="background:#f0f4ff;border-radius:12px;padding:26px 18px;text-align:center;">
-    <p style="margin:0;font-size:15px;color:#666;">보고자</p>
-    <p style="margin:10px 0 4px;font-size:28px;font-weight:700;color:#1a1a2e;">${reporterName || '-'}</p>
-    <p style="margin:0;font-size:13px;color:#888;">${reporterTeam || ''}</p>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;"><tr>
+  <td width="23%" style="background:#f0f4ff;border-radius:10px;padding:16px 12px;text-align:center;">
+    <p style="margin:0;font-size:11px;color:#666;">보고자</p>
+    <p style="margin:7px 0 2px;font-size:17px;font-weight:500;color:#1a1a2e;">${reporterName||'-'}</p>
+    <p style="margin:0;font-size:10px;color:#888;">${reporterTeam||''}</p>
   </td><td width="2%"></td>
-  <td width="23%" style="background:#f0fff4;border-radius:12px;padding:26px 18px;text-align:center;">
-    <p style="margin:0;font-size:15px;color:#666;">오늘 업무</p>
-    <p style="margin:10px 0 4px;font-size:54px;font-weight:700;color:#639922;">${totalTasks}</p>
-    <p style="margin:0;font-size:13px;color:#888;">건</p>
+  <td width="23%" style="background:#f0fff4;border-radius:10px;padding:16px 12px;text-align:center;">
+    <p style="margin:0;font-size:11px;color:#666;">오늘 업무</p>
+    <p style="margin:7px 0 2px;font-size:32px;font-weight:500;color:#639922;">${totalTasks}</p>
+    <p style="margin:0;font-size:10px;color:#888;">건</p>
   </td><td width="2%"></td>
-  <td width="23%" style="background:#f0f7ff;border-radius:12px;padding:26px 18px;text-align:center;">
-    <p style="margin:0;font-size:15px;color:#666;">보고 일자</p>
-    <p style="margin:10px 0 4px;font-size:20px;font-weight:700;color:#378ADD;">${dateShort}</p>
-    <p style="margin:0;font-size:13px;color:#888;">오늘</p>
+  <td width="23%" style="background:#f0f7ff;border-radius:10px;padding:16px 12px;text-align:center;">
+    <p style="margin:0;font-size:11px;color:#666;">보고 일자</p>
+    <p style="margin:7px 0 2px;font-size:14px;font-weight:500;color:#378ADD;">${dateShort}</p>
+    <p style="margin:0;font-size:10px;color:#888;">오늘</p>
   </td><td width="2%"></td>
-  <td width="25%" style="background:#fff0f0;border-radius:12px;padding:26px 18px;text-align:center;border:2px solid #e74c3c;">
-    <p style="margin:0;font-size:15px;color:#666;">가장 빠른 마감</p>
-    <p style="margin:10px 0 6px;font-size:42px;font-weight:700;color:#e74c3c;">${nearestDday !== null ? `D-${nearestDday}` : '-'}</p>
-    <p style="margin:0;font-size:13px;color:#e74c3c;">${nearestProject ? nearestProject.name : '-'}</p>
+  <td width="25%" style="background:#fff0f0;border-radius:10px;padding:16px 12px;text-align:center;border:1.5px solid #e74c3c;">
+    <p style="margin:0;font-size:11px;color:#666;">가장 빠른 마감</p>
+    <p style="margin:7px 0 4px;font-size:26px;font-weight:500;color:#e74c3c;">${nearestDday!==null?`D-${nearestDday}`:'-'}</p>
+    <p style="margin:0;font-size:10px;color:#e74c3c;">${nearestProject?nearestProject.name:'-'}</p>
   </td>
 </tr></table>
 
-<!-- 보고 내용 -->
-<hr style="border:none;border-top:1px solid #eee;margin:0 0 24px;">
-<p style="margin:0 0 16px;font-size:21px;font-weight:700;color:#1a1a2e;">보고 내용</p>
-<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:32px;">
-  <tr><td style="background:#f8f9fa;border-radius:10px;border:1px solid #e8e8e8;padding:24px;font-size:14px;line-height:1.9;color:#222;">
+<hr style="border:none;border-top:0.5px solid #eee;margin:0 0 18px;">
+<p style="margin:0 0 14px;font-size:15px;font-weight:500;color:#1a1a2e;">프로젝트 진행 현황</p>
+${projectCardsHtml || '<p style="font-size:13px;color:#aaa;">진행 중인 프로젝트가 없습니다.</p>'}
+
+<hr style="border:none;border-top:0.5px solid #eee;margin:4px 0 18px;">
+<p style="margin:0 0 12px;font-size:15px;font-weight:500;color:#1a1a2e;">보고 내용</p>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+  <tr><td style="background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;padding:16px 18px;font-size:13px;line-height:1.9;color:#222;">
     ${bodyHtml}
   </td></tr>
 </table>
 
-<!-- 단위업무 진행률 | 프로젝트별 진행률 -->
-<hr style="border:none;border-top:1px solid #eee;margin:0 0 28px;">
-<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:18px;">
-<tr>
-  <td width="46%"><p style="margin:0;font-size:21px;font-weight:700;color:#1a1a2e;">단위업무 진행률</p></td>
-  <td width="8%"></td>
-  <td width="46%"><p style="margin:0;font-size:21px;font-weight:700;color:#1a1a2e;">프로젝트별 진행률</p></td>
-</tr>
-</table>
-
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-<tr valign="top">
-  <td width="46%">
-    ${hasTaskBars ? taskBarsHtml : '<p style="font-size:14px;color:#aaa;">단계 정보가 있는 업무가 없습니다.</p>'}
-  </td>
-  <td width="8%"></td>
-  <td width="46%" valign="bottom">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-      <tr valign="bottom">
-        ${projectBarsHtml || '<td><p style="font-size:14px;color:#aaa;">-</p></td>'}
-      </tr>
-    </table>
-  </td>
-</tr>
-</table>
-
-<!-- 푸터 -->
-<hr style="border:none;border-top:1px solid #eee;margin:24px 0 16px;">
-<p style="margin:0;font-size:13px;color:#aaa;text-align:center;">이 보고서는 일일보고 자동화 시스템에서 발송되었습니다. &nbsp;·&nbsp; 도서출판 성우 ${reporterTeam || ''}</p>
+<hr style="border:none;border-top:0.5px solid #eee;margin:0 0 12px;">
+<p style="margin:0;font-size:11px;color:#aaa;text-align:center;">이 보고서는 일일보고 자동화 시스템에서 발송되었습니다. &nbsp;·&nbsp; 도서출판 성우 ${reporterTeam||''}</p>
 
 </td></tr></table>
 </td></tr></table>
 
-</body>
-</html>`;
+</body></html>`;
 }
+
 
 async function sendReport(report, recipients, reporterName, reporterTeam, checkedTasksRaw) {
   const htmlBody = buildHtmlEmail(report, reporterName, reporterTeam, checkedTasksRaw);
