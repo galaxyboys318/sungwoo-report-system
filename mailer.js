@@ -270,4 +270,129 @@ async function verifyConnection() {
   return transporter.verify();
 }
 
-module.exports = { sendReport, verifyConnection, buildHtmlEmail };
+// exports는 하단에서 통합 관리
+
+// ─── 주간보고 이메일 ───────────────────────────────────────
+function buildWeeklyHtmlEmail(data, reporterName, reporterTeam) {
+  const { weekStart, weekEnd, weeklyDays, aiSummary } = data;
+  const fmt = d => { const [y,m,dd] = d.split('-'); return `${y}.${m}.${dd}`; };
+  const dayNames = ['일','월','화','수','목','금','토'];
+  const fmtDate = d => { const dt = new Date(d+'T00:00:00'); return `${fmt(d)} (${dayNames[dt.getDay()]})`; };
+  const totalDays = weeklyDays.length;
+  const totalTasks = weeklyDays.reduce((s, d) => s + d.entries.reduce((ss, e) => ss + (e.checkedTasks?.length || 0), 0), 0);
+
+  // 프로젝트별 주간 집계
+  const projectMap = {};
+  weeklyDays.forEach(day => {
+    day.entries.forEach(entry => {
+      (entry.checkedTasks || []).forEach(task => {
+        if (!projectMap[task.projectName]) projectMap[task.projectName] = { tasks: {}, tag: task.projectTag || '' };
+        if (!projectMap[task.projectName].tasks[task.taskName]) {
+          projectMap[task.projectName].tasks[task.taskName] = { dates: [], finalPct: 0 };
+        }
+        projectMap[task.projectName].tasks[task.taskName].dates.push(day.date);
+        projectMap[task.projectName].tasks[task.taskName].finalPct = task.taskProgress || 0;
+      });
+    });
+  });
+
+  const projectCards = Object.entries(projectMap).map(([pName, pData]) => {
+    const taskRows = Object.entries(pData.tasks).map(([tName, tData]) => `
+      <tr>
+        <td style="font-size:12px;color:#444;padding:6px 0 6px 14px;border-bottom:0.5px solid #f0f0f0;">
+          ${tName}
+          <span style="font-size:10px;color:#aaa;margin-left:6px;">${tData.dates.map(d => fmtDate(d)).join(', ')}</span>
+        </td>
+        <td align="right" style="font-size:12px;font-weight:500;color:#3498db;padding:6px 0;border-bottom:0.5px solid #f0f0f0;">
+          ${tData.finalPct}%
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="padding:0 0 8px 14px;">
+          <div style="background:#e0e0e0;border-radius:20px;height:4px;overflow:hidden;">
+            <div style="width:${tData.finalPct}%;background:#3498db;height:4px;border-radius:20px;"></div>
+          </div>
+        </td>
+      </tr>`).join('');
+    return `
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:10px;background:#f8fbff;border-radius:10px;border:1.5px solid #c8d8f8;">
+        <tr><td style="padding:14px 18px;">
+          <p style="margin:0 0 10px;font-size:14px;font-weight:500;color:#1a1a2e;">${pName}
+            <span style="margin-left:8px;font-size:10px;background:#e8f0fe;color:#1558b0;padding:2px 7px;border-radius:20px;">${pData.tag}</span>
+          </p>
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">${taskRows}</table>
+        </td></tr>
+      </table>`;
+  }).join('');
+
+  const dayRows = weeklyDays.map(day => `
+    <tr>
+      <td style="padding:10px 0;border-bottom:0.5px solid #f0f0f0;vertical-align:top;">
+        <p style="margin:0 0 4px;font-size:12px;font-weight:500;color:#1a73e8;">${fmtDate(day.date)}</p>
+        ${day.entries.map(e => `<p style="margin:0;font-size:12px;color:#444;white-space:pre-line;line-height:1.8;">${e.body}</p>`).join('')}
+      </td>
+    </tr>`).join('');
+
+  return `
+<table width="660" cellpadding="0" cellspacing="0" border="0" bgcolor="#f5f6fa" style="margin:24px auto;border-radius:14px;font-family:'Malgun Gothic',sans-serif;">
+<tr><td style="background:#1a73e8;border-radius:14px 14px 0 0;padding:14px 28px;">
+  <span style="color:#fff;font-size:15px;font-weight:500;">도서출판 성우 &nbsp;·&nbsp; 주간업무보고</span>
+</td></tr>
+<tr><td style="background:#fff;border-radius:0 0 14px 14px;padding:28px 32px;">
+
+  <p style="margin:0 0 4px;font-size:22px;font-weight:500;color:#1a1a2e;">주간 업무 보고서</p>
+  <p style="margin:0 0 24px;font-size:12px;color:#aaa;">${fmt(weekStart)} ~ ${fmt(weekEnd)} &nbsp;·&nbsp; ${reporterName} &nbsp;·&nbsp; ${reporterTeam}</p>
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;"><tr>
+    <td width="30%" style="background:#f0f4ff;border-radius:10px;padding:16px;text-align:center;">
+      <p style="margin:0;font-size:11px;color:#666;">보고 일수</p>
+      <p style="margin:8px 0 2px;font-size:30px;font-weight:500;color:#1a73e8;">${totalDays}</p>
+      <p style="margin:0;font-size:10px;color:#888;">일</p>
+    </td>
+    <td width="4%"></td>
+    <td width="30%" style="background:#f0fff4;border-radius:10px;padding:16px;text-align:center;">
+      <p style="margin:0;font-size:11px;color:#666;">총 업무</p>
+      <p style="margin:8px 0 2px;font-size:30px;font-weight:500;color:#639922;">${totalTasks}</p>
+      <p style="margin:0;font-size:10px;color:#888;">건</p>
+    </td>
+    <td width="4%"></td>
+    <td width="32%" style="background:#fef7e0;border-radius:10px;padding:16px;text-align:center;">
+      <p style="margin:0;font-size:11px;color:#666;">관여 프로젝트</p>
+      <p style="margin:8px 0 2px;font-size:30px;font-weight:500;color:#b06000;">${Object.keys(projectMap).length}</p>
+      <p style="margin:0;font-size:10px;color:#888;">개</p>
+    </td>
+  </tr></table>
+
+  <hr style="border:none;border-top:0.5px solid #eee;margin:0 0 18px;">
+  <p style="margin:0 0 14px;font-size:15px;font-weight:500;color:#1a1a2e;">프로젝트별 주간 진행 현황</p>
+  ${projectCards}
+
+  <hr style="border:none;border-top:0.5px solid #eee;margin:4px 0 18px;">
+  <p style="margin:0 0 14px;font-size:15px;font-weight:500;color:#1a1a2e;">AI 주간 요약</p>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+    <tr><td style="background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;padding:16px 18px;font-size:13px;line-height:1.9;color:#222;white-space:pre-line;">${aiSummary || '요약 없음'}</td></tr>
+  </table>
+
+  <hr style="border:none;border-top:0.5px solid #eee;margin:0 0 14px;">
+  <p style="margin:0 0 14px;font-size:15px;font-weight:500;color:#1a1a2e;">일자별 상세 내역</p>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">${dayRows}</table>
+
+  <hr style="border:none;border-top:0.5px solid #eee;margin:0 0 12px;">
+  <p style="margin:0;font-size:11px;color:#aaa;text-align:center;">이 보고서는 일일보고 자동화 시스템에서 발송되었습니다. &nbsp;·&nbsp; 도서출판 성우 솔루션개발팀</p>
+
+</td></tr></table>`;
+}
+
+async function sendWeeklyReport(data, recipients, reporterName, reporterTeam) {
+  const { weekStart, weekEnd } = data;
+  const fmt = d => { const [y,m,dd] = d.split('-'); return `${m}.${dd}`; };
+  const htmlBody = buildWeeklyHtmlEmail(data, reporterName, reporterTeam);
+  return transporter.sendMail({
+    from: `"${reporterName} (${reporterTeam})" <${process.env.SMTP_USER}>`,
+    to: recipients.join(', '),
+    subject: `[주간보고] ${reporterTeam} ${reporterName} (${fmt(weekStart)}~${fmt(weekEnd)})`,
+    html: htmlBody,
+  });
+}
+
+module.exports = { sendReport, sendWeeklyReport, verifyConnection, buildHtmlEmail, buildWeeklyHtmlEmail };

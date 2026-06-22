@@ -654,3 +654,98 @@ pullDataFromGitHub().then(() => {
     console.log(`✅ 일일보고 서버 실행 중: http://localhost:${PORT}/report`);
   });
 });
+
+// ─── 주간보고 ───────────────────────────────────────────────
+app.get('/weekly', requireLogin, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'weekly.html'));
+});
+
+// 이번 주 월~오늘 날짜 범위 계산 헬퍼
+function getWeekRange() {
+  const today = new Date();
+  const day = today.getDay(); // 0=일, 1=월
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - (day === 0 ? 6 : day - 1));
+  const dates = [];
+  for (let d = new Date(monday); d <= today; d.setDate(d.getDate() + 1)) {
+    dates.push(d.toISOString().slice(0, 10));
+  }
+  return { dates, weekStart: monday.toISOString().slice(0, 10), weekEnd: today.toISOString().slice(0, 10) };
+}
+
+// 주간 데이터 조회 API
+app.get('/api/weekly-data', requireLogin, (req, res) => {
+  const user = req.session.user;
+  const reportsDir = path.join(__dirname, 'data', 'reports');
+  const { dates, weekStart, weekEnd } = getWeekRange();
+
+  const weeklyDays = [];
+  dates.forEach(date => {
+    const filePath = path.join(reportsDir, `${date}.json`);
+    if (!fs.existsSync(filePath)) return;
+    try {
+      const raw = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+      const entries = Array.isArray(raw) ? raw : [raw];
+      const mine = entries.filter(e =>
+        e.reporterEmail === user.email || e.reporterName === user.name
+      );
+      if (mine.length > 0) weeklyDays.push({ date, entries: mine });
+    } catch (e) {}
+  });
+
+  res.json({ weeklyDays, weekStart, weekEnd, user });
+});
+
+// 주간보고 발송 API
+app.post('/api/weekly-send', requireLogin, async (req, res) => {
+  const { weekStart, weekEnd, weeklyDays, aiSummary } = req.body;
+  const user = req.session.user;
+
+  const usersData = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
+  const toAddresses = usersData.users
+    .filter(u => u.level <= 2 && u.email !== user.email)
+    .map(u => u.email);
+
+  if (toAddresses.length === 0) return res.status(400).json({ error: '수신자 없음' });
+
+  try {
+    const { sendWeeklyReport } = require('./mailer');
+    await sendWeeklyReport({ weekStart, weekEnd, weeklyDays, aiSummary }, toAddresses, user.name, user.team);
+    res.json({ success: true });
+  } catch (e) {
+    console.error('주간보고 발송 실패:', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// GPT 주간 요약 API
+app.post('/api/gpt-weekly', requireLogin, async (req, res) => {
+  const { weekStart, weekEnd, bodies, user } = req.body;
+  try {
+    const OpenAI = require('openai');
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        {
+          role: 'system',
+          content: `당신은 회사 업무보고 작성 전문가입니다. 일일보고 내용을 바탕으로 간결하고 전문적인 주간 업무 요약을 작성해주세요.
+- 3~5개의 핵심 성과/진행 사항을 항목별로 정리
+- 각 항목은 구체적인 진행 내용과 결과 중심으로 작성
+- 불필요한 수식어 없이 간결하게
+- 마지막에 차주 계획 1~2줄 추가
+- 경어체 사용`
+        },
+        {
+          role: 'user',
+          content: `${user.name} (${user.team}) 님의 ${weekStart} ~ ${weekEnd} 주간 업무 내역입니다:\n\n${bodies}\n\n위 내용을 주간 업무 요약으로 정리해주세요.`
+        }
+      ],
+      max_tokens: 600,
+    });
+    res.json({ summary: completion.choices[0].message.content });
+  } catch (e) {
+    console.error('[GPT 주간 요약 오류]', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
