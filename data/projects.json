@@ -270,7 +270,17 @@
           "assignees": [
             "함흥우"
           ],
-          "steps": []
+          "steps": [
+            {
+              "id": "s1782181730841",
+              "name": "요청사항 입수 후 영상원본위치확인",
+              "type": "check",
+              "assignees": [
+                "함흥우"
+              ],
+              "done": false
+            }
+          ]
         }
       ]
     }
