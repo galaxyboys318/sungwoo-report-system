@@ -278,7 +278,14 @@
               "assignees": [
                 "함흥우"
               ],
-              "done": false
+              "done": false,
+              "memoHistory": [
+                {
+                  "date": "2026-06-23",
+                  "memo": "초등팀"
+                }
+              ],
+              "memo": "초등팀"
             },
             {
               "id": "s1782181874393",
