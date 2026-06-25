@@ -447,6 +447,40 @@
       renderProjects();
     }
 
+    // 체크 상태 저장/복원
+    function saveCheckState() {
+      const state = { tasks: {}, steps: {}, stepMemos: {} };
+      document.querySelectorAll('[id^="chk-"]').forEach(el => {
+        state.tasks[el.id] = el.checked;
+      });
+      document.querySelectorAll('[id^="stepchk-"]').forEach(el => {
+        state.steps[el.id] = el.checked;
+      });
+      document.querySelectorAll('[id^="stepmemo-"]').forEach(el => {
+        state.stepMemos[el.id] = el.value;
+      });
+      return state;
+    }
+
+    function restoreCheckState(state) {
+      Object.entries(state.tasks).forEach(([id, checked]) => {
+        const el = document.getElementById(id);
+        if (el) el.checked = checked;
+      });
+      Object.entries(state.steps).forEach(([id, checked]) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.checked = checked;
+          const stepId = id.replace('stepchk-', '');
+          toggleStepMemo(stepId, checked);
+        }
+      });
+      Object.entries(state.stepMemos).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el && !el.disabled) el.value = val;
+      });
+    }
+
     function renderProjects() {
       const container = document.getElementById('project-list');
       container.innerHTML = '';
@@ -692,11 +726,13 @@
       });
       const result = await res.json();
       if (result.success) {
-        // projectData 갱신 후 재렌더
+        // 체크 상태 저장 후 재렌더, 복원
+        const checkState = saveCheckState();
         const fullRes = await fetch('/api/projects');
         const fullData = await fullRes.json();
         projectData = fullData.projects || [];
         renderProjects();
+        restoreCheckState(checkState);
       }
     }
 
@@ -710,10 +746,12 @@
       });
       const result = await res.json();
       if (result.success) {
+        const checkState = saveCheckState();
         const fullRes = await fetch('/api/projects');
         const fullData = await fullRes.json();
         projectData = fullData.projects || [];
         renderProjects();
+        restoreCheckState(checkState);
       }
     }
 
