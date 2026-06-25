@@ -121,7 +121,7 @@ function buildHtmlEmail(report, reporterName, reporterTeam, checkedTasksRaw) {
       const tp = t.taskProgress || t.progress || 0;
 
       // 오늘 체크한 단계만 필터
-      const todaySteps = (t.steps || []).filter(s => s.checkedToday || (s.memo && s.memo.trim()));
+      const todaySteps = (t.steps || []).filter(s => s.checkedToday);
       const stepRows = todaySteps.map(s => {
         let statusStr = '';
         let statusColor = '#e67e22';
