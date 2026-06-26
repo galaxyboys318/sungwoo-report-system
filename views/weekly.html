@@ -38,7 +38,10 @@ body{font-family:'Malgun Gothic',sans-serif;background:#f5f6fa;color:#1a1a2e;}
 .bar-fill{height:5px;border-radius:20px;background:#3498db;}
 
 /* AI 요약 */
-.ai-box{background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;padding:16px 18px;font-size:13px;line-height:1.9;color:#222;white-space:pre-line;min-height:80px;}
+.ai-box{width:100%;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;padding:16px 18px;font-size:13px;line-height:1.9;color:#222;min-height:120px;resize:vertical;font-family:inherit;outline:none;box-sizing:border-box;}
+    .ai-box:focus{border-color:#1a73e8;background:#fff;}
+    .ai-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+    .ai-hint{font-size:11px;color:#aaa;}
 .ai-loading{color:#aaa;display:flex;align-items:center;gap:8px;font-size:13px;}
 .ai-dot{width:6px;height:6px;border-radius:50%;background:#1a73e8;animation:blink 1s infinite;}
 .ai-dot:nth-child(2){animation-delay:0.2s;}
@@ -182,9 +185,11 @@ function renderPage() {
   const aiHtml = `
     <div class="card">
       <div class="section-title" style="margin-bottom:12px;">✨ AI 주간 요약</div>
-      <div class="ai-box" id="ai-summary-box">
-        <div class="ai-loading"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div><span style="margin-left:6px;">AI가 이번 주 업무를 요약하는 중...</span></div>
+      <div class="ai-header">
+        <span style="font-size:11px;color:#1a73e8;">✨ AI가 작성한 초안입니다. 직접 수정 후 발송하세요.</span>
+        <span class="ai-hint" id="ai-status">요약 생성 중...</span>
       </div>
+      <textarea class="ai-box" id="ai-summary-box" placeholder="AI 요약이 생성되면 여기에 표시됩니다. 내용을 직접 수정할 수 있어요."></textarea>
     </div>`;
 
   // 일자별 내역
@@ -223,10 +228,14 @@ async function generateAiSummary() {
     const data = await res.json();
     aiSummary = data.summary || '';
     const box = document.getElementById('ai-summary-box');
-    if (box) box.textContent = aiSummary;
+    if (box) box.value = aiSummary;
+    const status = document.getElementById('ai-status');
+    if (status) status.textContent = '✅ 생성 완료 — 내용을 수정할 수 있습니다.';
   } catch (e) {
     const box = document.getElementById('ai-summary-box');
-    if (box) box.textContent = 'AI 요약 생성 실패. 발송 시 요약 없이 발송됩니다.';
+    if (box) box.value = '';
+    const status = document.getElementById('ai-status');
+    if (status) status.textContent = '⚠️ 생성 실패 — 직접 입력해주세요.';
   }
 }
 
@@ -243,7 +252,7 @@ async function sendWeekly() {
         weekStart: weeklyData.weekStart,
         weekEnd: weeklyData.weekEnd,
         weeklyDays: weeklyData.weeklyDays,
-        aiSummary,
+        aiSummary: document.getElementById('ai-summary-box')?.value || aiSummary,
       }),
     });
     if (res.ok) {
