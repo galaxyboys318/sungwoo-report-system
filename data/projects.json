@@ -3,12 +3,12 @@
     {
       "id": "p1",
       "name": "뒤집기솔루션",
-      "tag": "신규사업1",
+      "tag": "신규사업",
       "division": "초등콘텐츠사업부",
       "team": "솔루션개발팀",
       "manager": "함흥우",
       "startDate": "2026-01-01",
-      "targetDate": "2026-10-31",
+      "targetDate": "2026-12-31",
       "tasks": [
         {
           "id": "p1t1",
@@ -18,43 +18,92 @@
           ],
           "steps": [
             {
-              "id": "s1782715694255",
-              "name": "기획서 작성 및 검토후 보고",
+              "id": "s1781765466052",
+              "name": "로컬PC에서 작업 진행(임시)",
               "type": "check",
               "assignees": [
                 "함흥우"
               ],
-              "done": false,
-              "memoHistory": [],
-              "memo": ""
+              "done": true,
+              "memo": "",
+              "memoHistory": []
             },
             {
-              "id": "s1782715745724",
-              "name": "기획서에 필요한 자료수집 업체 10곳 수집",
-              "type": "qty",
+              "id": "s1781765494858",
+              "name": "스토리보드작성",
+              "type": "check",
               "assignees": [
                 "함흥우"
               ],
-              "target": 10,
-              "current": 2,
-              "memoHistory": [],
-              "memo": ""
+              "done": true,
+              "memo": "",
+              "memoHistory": []
             },
             {
-              "id": "s1782715792212",
-              "name": "업체 10곳 미팅 진행",
+              "id": "s1781765531762",
+              "name": "담당자 미팅 후 견적서 입수",
               "type": "pct",
               "assignees": [
                 "함흥우"
               ],
-              "pct": 30,
+              "pct": 100,
               "history": [
                 {
-                  "date": "2026-06-29",
+                  "date": "2026-06-18",
                   "from": 0,
-                  "to": 30
+                  "to": 50
+                },
+                {
+                  "date": "2026-06-24",
+                  "from": 50,
+                  "to": 70
+                },
+                {
+                  "date": "2026-06-25",
+                  "from": 70,
+                  "to": 100
                 }
               ],
+              "memo": "",
+              "memoHistory": []
+            },
+            {
+              "id": "s1781765576940",
+              "name": "견적서 검토/보고 후 품의서작성(진행사항에 따라 비율기재)",
+              "type": "pct",
+              "assignees": [
+                "함흥우"
+              ],
+              "pct": 60,
+              "memoHistory": [],
+              "memo": "",
+              "history": [
+                {
+                  "date": "2026-06-25",
+                  "from": 0,
+                  "to": 60
+                }
+              ]
+            },
+            {
+              "id": "s1781771332799",
+              "name": "연결작업 및 검수진행",
+              "type": "pct",
+              "assignees": [
+                "함흥우"
+              ],
+              "pct": 0,
+              "memoHistory": [],
+              "memo": ""
+            },
+            {
+              "id": "s1781771352913",
+              "name": "검수결과 수정",
+              "type": "pct",
+              "assignees": [
+                "함흥우"
+              ],
+              "pct": 0,
               "memoHistory": [],
               "memo": ""
             }
