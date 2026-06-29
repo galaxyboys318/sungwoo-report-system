@@ -24,7 +24,14 @@
               "assignees": [
                 "함흥우"
               ],
-              "done": false
+              "done": false,
+              "memoHistory": [
+                {
+                  "date": "2026-06-29",
+                  "memo": "기획서 초안 작성후 권이사님께 보고"
+                }
+              ],
+              "memo": "기획서 초안 작성후 권이사님께 보고"
             }
           ]
         },
