@@ -2,13 +2,13 @@
   "projects": [
     {
       "id": "p1",
-      "name": "뒤집기솔루션",
-      "tag": "신규사업",
+      "name": "AI활용전반",
+      "tag": "신규사업2",
       "division": "초등콘텐츠사업부",
       "team": "솔루션개발팀",
       "manager": "함흥우",
-      "startDate": "2026-01-01",
-      "targetDate": "2026-12-31",
+      "startDate": "2026-06-29",
+      "targetDate": "2026-07-03",
       "tasks": [
         {
           "id": "p1t1",
