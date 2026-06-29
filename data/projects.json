@@ -18,17 +18,6 @@
           ],
           "steps": [
             {
-              "id": "s1781765466052",
-              "name": "로컬PC에서 작업 진행(임시)",
-              "type": "check",
-              "assignees": [
-                "함흥우"
-              ],
-              "done": true,
-              "memo": "",
-              "memoHistory": []
-            },
-            {
               "id": "s1781765494858",
               "name": "스토리보드작성",
               "type": "check",
