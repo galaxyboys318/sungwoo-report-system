@@ -740,9 +740,34 @@ async function pullDataFromGitHub() {
     }
   }
 
-  // projects.json, users.json 복원
+  // projects.json 복원
   await fetchAndSave('data/projects.json', PROJECTS_PATH);
-  await fetchAndSave('data/users.json', USERS_PATH);
+
+  // users.json 복원 — 비밀번호는 기존 로컬값 유지
+  try {
+    const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data/users.json`, { headers: HEADERS });
+    if (res.ok) {
+      const fileInfo = await res.json();
+      const ghData = JSON.parse(Buffer.from(fileInfo.content, 'base64').toString('utf-8'));
+
+      // 로컬에 기존 파일이 있으면 비밀번호 보존
+      if (fs.existsSync(USERS_PATH)) {
+        const localData = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
+        const localPasswords = {};
+        (localData.users || []).forEach(u => { localPasswords[u.id] = u.password; });
+
+        // GitHub 데이터에 로컬 비밀번호 덮어쓰기
+        (ghData.users || []).forEach(u => {
+          if (localPasswords[u.id]) u.password = localPasswords[u.id];
+        });
+      }
+
+      fs.writeFileSync(USERS_PATH, JSON.stringify(ghData, null, 2), 'utf-8');
+      console.log('[GitHub] 복원 완료: data/users.json (비밀번호 보존)');
+    }
+  } catch (e) {
+    console.error('[GitHub] users.json 복원 실패:', e.message);
+  }
 
   // data/reports/ 폴더 내 모든 파일 복원
   try {
