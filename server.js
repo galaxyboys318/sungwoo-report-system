@@ -198,6 +198,24 @@ app.get('/api/projects', (req, res) => {
 
 // ─── 프로젝트 수정 API ──────────────────────────────────
 
+// GitHub 범용 저장 헬퍼
+async function saveToGitHub(ghPath, data) {
+  if (!process.env.GITHUB_TOKEN) return;
+  const REPO = 'galaxyboys318/sungwoo-report-system';
+  const HEADERS = {
+    'Authorization': `token ${process.env.GITHUB_TOKEN}`,
+    'Accept': 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json',
+  };
+  const ghContent = Buffer.from(JSON.stringify(data, null, 2), 'utf-8').toString('base64');
+  const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${ghPath}`, { headers: HEADERS });
+  const fileInfo = getRes.ok ? await getRes.json() : {};
+  await fetch(`https://api.github.com/repos/${REPO}/contents/${ghPath}`, {
+    method: 'PUT', headers: HEADERS,
+    body: JSON.stringify({ message: `[자동] ${ghPath}`, content: ghContent, sha: fileInfo.sha }),
+  });
+}
+
 function saveProjects(data) {
   fs.writeFileSync(PROJECTS_PATH, JSON.stringify(data, null, 2), 'utf-8');
   // GitHub 자동 커밋 (비동기, 실패해도 서버 동작에 영향 없음)
@@ -718,6 +736,57 @@ app.post('/api/weekly-send', requireLogin, async (req, res) => {
     const { sendWeeklyReport } = require('./mailer');
     await sendWeeklyReport({ weekStart, weekEnd, weeklyDays, aiSummary }, toAddresses, user.name, user.team);
 
+    // 주간보고 data/weekly/에 저장 + GitHub 백업
+    const weeklyDir = path.join(__dirname, 'data', 'weekly');
+    if (!fs.existsSync(weeklyDir)) fs.mkdirSync(weeklyDir, { recursive: true });
+
+    // ISO 주차 계산
+    function getISOWeek(d) {
+      const date = new Date(d); date.setHours(0,0,0,0);
+      date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+      const week1 = new Date(date.getFullYear(), 0, 4);
+      return 1 + Math.round(((date - week1) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+    }
+    function getISOYear(d) {
+      const date = new Date(d); date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+      return date.getFullYear();
+    }
+
+    const wDate = new Date(weekEnd);
+    const isoYear = getISOYear(wDate);
+    const isoWeek = getISOWeek(wDate);
+    const weekKey = `${isoYear}-W${String(isoWeek).padStart(2,'0')}`;
+
+    // 프로젝트별 진행률 스냅샷
+    const projData2 = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
+    const projectSnapshot = {};
+    (projData2.projects || []).forEach(p => {
+      const tasks = {};
+      (p.tasks || []).forEach(t => {
+        const stepsDone = (t.steps || []).filter(s => s.done || (s.pct || 0) >= 100 || ((s.current || 0) >= (s.target || 1))).length;
+        const totalSteps = (t.steps || []).length;
+        tasks[t.name] = { progress: t.progress || 0, stepsDone, totalSteps };
+      });
+      projectSnapshot[p.name] = { tag: p.tag || '', tasks };
+    });
+
+    const weeklyRecord = {
+      weekKey, weekStart, weekEnd, isoYear, isoWeek,
+      reporter: user.name, team: user.team, email: user.email,
+      sentAt: new Date().toISOString(),
+      sentTo: toAddresses,
+      aiSummary,
+      weeklyDays,
+      projectSnapshot,
+    };
+
+    const weeklyFilePath = path.join(weeklyDir, `${weekKey}-${user.id || user.email}.json`);
+    fs.writeFileSync(weeklyFilePath, JSON.stringify(weeklyRecord, null, 2), 'utf-8');
+
+    // GitHub 백업
+    const ghWeeklyPath = `data/weekly/${weekKey}-${user.id || user.email}.json`;
+    saveToGitHub(ghWeeklyPath, weeklyRecord).catch(e => console.error('[GitHub weekly 백업 실패]', e.message));
+
     // 주간보고 발송 후 memoHistory 초기화
     const projData = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
     projData.projects.forEach(p => {
@@ -739,7 +808,7 @@ app.post('/api/weekly-send', requireLogin, async (req, res) => {
 
 // GPT 주간 요약 API
 app.post('/api/gpt-weekly', requireLogin, async (req, res) => {
-  const { weekStart, weekEnd, bodies, user } = req.body;
+  const { weekStart, weekEnd, bodies, stepSummary, user } = req.body;
   try {
     const OpenAI = require('openai');
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -760,7 +829,15 @@ app.post('/api/gpt-weekly', requireLogin, async (req, res) => {
         },
         {
           role: 'user',
-          content: `${user.name} (${user.team}) 님의 ${weekStart} ~ ${weekEnd} 주간 업무 내역입니다:\n\n${bodies}\n\n위 내용을 주간 업무 요약으로 정리해주세요.`
+          content: `${user.name} (${user.team}) 님의 ${weekStart} ~ ${weekEnd} 주간 업무 내역입니다.
+
+[단계별 실제 진행 데이터 - 이 수치를 기준으로 작성]
+${(stepSummary || []).join('\n') || '없음'}
+
+[일일보고 원문]
+${bodies}
+
+위 데이터를 바탕으로 주간 업무 요약을 작성해주세요. 단계별 진행 데이터의 수치를 반드시 그대로 사용하세요.`
         }
       ],
       max_tokens: 600,
@@ -768,6 +845,173 @@ app.post('/api/gpt-weekly', requireLogin, async (req, res) => {
     res.json({ summary: completion.choices[0].message.content });
   } catch (e) {
     console.error('[GPT 주간 요약 오류]', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ─── 분기보고 ─────────────────────────────────────────────
+app.get('/quarterly', requireLogin, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'quarterly.html'));
+});
+
+// 분기 데이터 집계 API
+app.get('/api/quarterly-data', requireLogin, (req, res) => {
+  const user = req.session.user;
+  const { year, quarter } = req.query;
+  const y = parseInt(year) || new Date().getFullYear();
+  const q = parseInt(quarter) || Math.ceil((new Date().getMonth() + 1) / 3);
+
+  // 해당 분기 주차 범위
+  const qStartMonth = (q - 1) * 3;
+  const qStart = new Date(y, qStartMonth, 1);
+  const qEnd = new Date(y, qStartMonth + 3, 0);
+
+  // data/weekly/ 에서 해당 분기 파일 읽기
+  const weeklyDir = path.join(__dirname, 'data', 'weekly');
+  const weeklyRecords = [];
+  if (fs.existsSync(weeklyDir)) {
+    fs.readdirSync(weeklyDir).forEach(f => {
+      if (!f.endsWith('.json')) return;
+      try {
+        const rec = JSON.parse(fs.readFileSync(path.join(weeklyDir, f), 'utf-8'));
+        if (rec.reporter !== user.name && rec.email !== user.email) return;
+        const wEnd = new Date(rec.weekEnd);
+        if (wEnd >= qStart && wEnd <= qEnd) weeklyRecords.push(rec);
+      } catch (e) {}
+    });
+  }
+  weeklyRecords.sort((a, b) => a.weekStart.localeCompare(b.weekStart));
+
+  // 프로젝트별 주간 진행률 추이
+  const projectTrend = {};
+  weeklyRecords.forEach(rec => {
+    Object.entries(rec.projectSnapshot || {}).forEach(([pName, pData]) => {
+      if (!projectTrend[pName]) projectTrend[pName] = { tag: pData.tag, weeks: [] };
+      const avgProgress = Object.values(pData.tasks || {}).reduce((s, t) => s + (t.progress || 0), 0) / Math.max(Object.keys(pData.tasks || {}).length, 1);
+      projectTrend[pName].weeks.push({ weekKey: rec.weekKey, progress: Math.round(avgProgress) });
+    });
+  });
+
+  res.json({ year: y, quarter: q, weeklyRecords, projectTrend, user });
+});
+
+// 분기보고 GPT 요약
+app.post('/api/gpt-quarterly', requireLogin, async (req, res) => {
+  const { year, quarter, weeklyRecords, user } = req.body;
+  try {
+    const OpenAI = require('openai');
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const summaries = (weeklyRecords || []).map(r => `[${r.weekKey}] ${r.aiSummary || ''}`).join('\n');
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: `분기 업무보고 요약 전문가입니다. 주간보고 요약들을 바탕으로 분기 성과를 간결하게 정리해주세요.
+- 실제 내용에 있는 것만 작성, 없는 내용 추측 금지
+- 주요 성과 3~5개 항목별 정리
+- 수치는 그대로 사용
+- 경어체, 과장 금지` },
+        { role: 'user', content: `${user.name} (${user.team}) ${year}년 ${quarter}분기 주간보고 요약:\n\n${summaries}\n\n분기 업무 요약을 작성해주세요.` }
+      ],
+      max_tokens: 600,
+    });
+    res.json({ summary: completion.choices[0].message.content });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// 분기보고 발송
+app.post('/api/quarterly-send', requireLogin, async (req, res) => {
+  const { year, quarter, weeklyRecords, projectTrend, aiSummary } = req.body;
+  const user = req.session.user;
+  const usersData = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
+  const toAddresses = usersData.users.filter(u => u.level <= 2 && u.email !== user.email).map(u => u.email);
+  if (toAddresses.length === 0) return res.status(400).json({ error: '수신자 없음' });
+
+  try {
+    const { sendQuarterlyReport } = require('./mailer');
+    await sendQuarterlyReport({ year, quarter, weeklyRecords, projectTrend, aiSummary }, toAddresses, user.name, user.team);
+
+    // 저장
+    const qDir = path.join(__dirname, 'data', 'quarterly');
+    if (!fs.existsSync(qDir)) fs.mkdirSync(qDir, { recursive: true });
+    const qKey = `${year}-Q${quarter}`;
+    const qRecord = { qKey, year, quarter, reporter: user.name, team: user.team, email: user.email, sentAt: new Date().toISOString(), sentTo: toAddresses, aiSummary, weeklyRecords, projectTrend };
+    fs.writeFileSync(path.join(qDir, `${qKey}-${user.id || user.email}.json`), JSON.stringify(qRecord, null, 2), 'utf-8');
+    saveToGitHub(`data/quarterly/${qKey}-${user.id || user.email}.json`, qRecord).catch(e => console.error('[GitHub quarterly 백업 실패]', e.message));
+
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ─── 연말보고 ─────────────────────────────────────────────
+app.get('/annual', requireLogin, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'annual.html'));
+});
+
+app.get('/api/annual-data', requireLogin, (req, res) => {
+  const user = req.session.user;
+  const year = parseInt(req.query.year) || new Date().getFullYear();
+  const qDir = path.join(__dirname, 'data', 'quarterly');
+  const quarterlyRecords = [];
+  if (fs.existsSync(qDir)) {
+    fs.readdirSync(qDir).forEach(f => {
+      if (!f.endsWith('.json')) return;
+      try {
+        const rec = JSON.parse(fs.readFileSync(path.join(qDir, f), 'utf-8'));
+        if ((rec.reporter !== user.name && rec.email !== user.email) || rec.year !== year) return;
+        quarterlyRecords.push(rec);
+      } catch (e) {}
+    });
+  }
+  quarterlyRecords.sort((a, b) => a.quarter - b.quarter);
+  res.json({ year, quarterlyRecords, user });
+});
+
+app.post('/api/gpt-annual', requireLogin, async (req, res) => {
+  const { year, quarterlyRecords, user } = req.body;
+  try {
+    const OpenAI = require('openai');
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const summaries = (quarterlyRecords || []).map(r => `[${r.year}년 ${r.quarter}분기] ${r.aiSummary || ''}`).join('\n\n');
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: `연간 업무보고 요약 전문가입니다. 분기별 보고를 바탕으로 연간 성과를 간결하게 정리해주세요.
+- 실제 내용에 있는 것만 작성, 없는 내용 추측 금지
+- 분기별 주요 성과 요약 후 연간 총평
+- 수치 그대로 사용, 경어체, 과장 금지` },
+        { role: 'user', content: `${user.name} (${user.team}) ${year}년 분기별 보고 요약:\n\n${summaries}\n\n연간 업무 요약을 작성해주세요.` }
+      ],
+      max_tokens: 800,
+    });
+    res.json({ summary: completion.choices[0].message.content });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/api/annual-send', requireLogin, async (req, res) => {
+  const { year, quarterlyRecords, aiSummary } = req.body;
+  const user = req.session.user;
+  const usersData = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
+  const toAddresses = usersData.users.filter(u => u.level <= 2 && u.email !== user.email).map(u => u.email);
+  if (toAddresses.length === 0) return res.status(400).json({ error: '수신자 없음' });
+
+  try {
+    const { sendAnnualReport } = require('./mailer');
+    await sendAnnualReport({ year, quarterlyRecords, aiSummary }, toAddresses, user.name, user.team);
+
+    const aDir = path.join(__dirname, 'data', 'annual');
+    if (!fs.existsSync(aDir)) fs.mkdirSync(aDir, { recursive: true });
+    const aRecord = { year, reporter: user.name, team: user.team, email: user.email, sentAt: new Date().toISOString(), sentTo: toAddresses, aiSummary, quarterlyRecords };
+    fs.writeFileSync(path.join(aDir, `${year}-${user.id || user.email}.json`), JSON.stringify(aRecord, null, 2), 'utf-8');
+    saveToGitHub(`data/annual/${year}-${user.id || user.email}.json`, aRecord).catch(e => console.error('[GitHub annual 백업 실패]', e.message));
+
+    res.json({ success: true });
+  } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });

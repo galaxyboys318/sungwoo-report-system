@@ -400,4 +400,134 @@ async function sendWeeklyReport(data, recipients, reporterName, reporterTeam) {
   });
 }
 
-module.exports = { sendReport, sendWeeklyReport, verifyConnection, buildHtmlEmail, buildWeeklyHtmlEmail };
+// exports 통합 관리 (하단)
+
+// ─── 분기보고 이메일 ───────────────────────────────────────
+function buildQuarterlyHtmlEmail(data, reporterName, reporterTeam) {
+  const { year, quarter, weeklyRecords, projectTrend, aiSummary } = data;
+  const qLabel = `${year}년 ${quarter}분기`;
+  const totalWeeks = (weeklyRecords || []).length;
+  const totalDays = (weeklyRecords || []).reduce((s, r) => s + (r.weeklyDays || []).length, 0);
+
+  const projectRows = Object.entries(projectTrend || {}).map(([pName, pData]) => {
+    const weeks = pData.weeks || [];
+    const first = weeks[0]?.progress ?? 0;
+    const last = weeks[weeks.length - 1]?.progress ?? 0;
+    const diff = last - first;
+    const diffStr = diff > 0 ? `▲${diff}%` : diff < 0 ? `▼${Math.abs(diff)}%` : '–';
+    const diffColor = diff > 0 ? '#16a34a' : diff < 0 ? '#dc2626' : '#888';
+    return `<tr>
+      <td style="padding:8px 12px;border:0.5px solid #e8e8e8;font-size:13px;color:#1a1a2e;">${pName}</td>
+      <td style="padding:8px 12px;border:0.5px solid #e8e8e8;font-size:11px;color:#888;">${pData.tag || ''}</td>
+      <td style="padding:8px 12px;border:0.5px solid #e8e8e8;font-size:13px;font-weight:500;color:#2563eb;">${last}%</td>
+      <td style="padding:8px 12px;border:0.5px solid #e8e8e8;font-size:12px;font-weight:500;color:${diffColor};">${diffStr}</td>
+      <td style="padding:8px 12px;border:0.5px solid #e8e8e8;font-size:11px;color:#888;">${totalWeeks}주</td>
+    </tr>`;
+  }).join('');
+
+  const weekRows = (weeklyRecords || []).map(r => `
+    <tr>
+      <td style="padding:7px 12px;border:0.5px solid #e8e8e8;font-size:12px;color:#555;">${r.weekKey}</td>
+      <td style="padding:7px 12px;border:0.5px solid #e8e8e8;font-size:12px;color:#444;line-height:1.7;">${(r.aiSummary || '').replace(/\n/g,'<br>')}</td>
+    </tr>`).join('');
+
+  return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f5f6fa;font-family:'Malgun Gothic',sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#2563eb;"><tr><td style="padding:14px 28px;">
+  <span style="color:#fff;font-size:15px;font-weight:500;">도서출판 성우 &nbsp;·&nbsp; 분기업무보고</span>
+</td></tr></table>
+<table width="660" cellpadding="0" cellspacing="0" style="margin:20px auto;background:#fff;border-radius:12px;">
+<tr><td style="padding:28px 32px;">
+<p style="margin:0 0 4px;font-size:22px;font-weight:500;color:#1a1a2e;">${qLabel} 업무 보고서</p>
+<p style="margin:0 0 22px;font-size:12px;color:#aaa;">${reporterName} &nbsp;·&nbsp; ${reporterTeam}</p>
+<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:22px;"><tr>
+  <td width="30%" style="background:#f0f4ff;border-radius:10px;padding:14px;text-align:center;"><p style="margin:0;font-size:11px;color:#666;">보고 주수</p><p style="margin:6px 0;font-size:26px;font-weight:500;color:#2563eb;">${totalWeeks}</p><p style="margin:0;font-size:10px;color:#888;">주</p></td>
+  <td width="5%"></td>
+  <td width="30%" style="background:#f0fff4;border-radius:10px;padding:14px;text-align:center;"><p style="margin:0;font-size:11px;color:#666;">총 보고 일수</p><p style="margin:6px 0;font-size:26px;font-weight:500;color:#16a34a;">${totalDays}</p><p style="margin:0;font-size:10px;color:#888;">일</p></td>
+  <td width="5%"></td>
+  <td width="30%" style="background:#fef7e0;border-radius:10px;padding:14px;text-align:center;"><p style="margin:0;font-size:11px;color:#666;">관여 프로젝트</p><p style="margin:6px 0;font-size:26px;font-weight:500;color:#b06000;">${Object.keys(projectTrend||{}).length}</p><p style="margin:0;font-size:10px;color:#888;">개</p></td>
+</tr></table>
+<hr style="border:none;border-top:0.5px solid #eee;margin:0 0 16px;">
+<p style="margin:0 0 10px;font-size:14px;font-weight:500;color:#1a1a2e;">프로젝트별 분기 진행 현황</p>
+<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;border-collapse:collapse;">
+  <tr style="background:#f8f9fa;"><th style="padding:8px 12px;border:0.5px solid #e8e8e8;font-size:11px;text-align:left;color:#666;">프로젝트</th><th style="padding:8px 12px;border:0.5px solid #e8e8e8;font-size:11px;color:#666;">구분</th><th style="padding:8px 12px;border:0.5px solid #e8e8e8;font-size:11px;color:#666;">현재</th><th style="padding:8px 12px;border:0.5px solid #e8e8e8;font-size:11px;color:#666;">분기 변화</th><th style="padding:8px 12px;border:0.5px solid #e8e8e8;font-size:11px;color:#666;">기간</th></tr>
+  ${projectRows || '<tr><td colspan="5" style="padding:12px;text-align:center;color:#aaa;font-size:12px;">데이터 없음</td></tr>'}
+</table>
+<hr style="border:none;border-top:0.5px solid #eee;margin:0 0 16px;">
+<p style="margin:0 0 10px;font-size:14px;font-weight:500;color:#1a1a2e;">주차별 요약</p>
+<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;border-collapse:collapse;">
+  <tr style="background:#f8f9fa;"><th style="padding:8px 12px;border:0.5px solid #e8e8e8;font-size:11px;text-align:left;color:#666;width:15%;">주차</th><th style="padding:8px 12px;border:0.5px solid #e8e8e8;font-size:11px;text-align:left;color:#666;">내용</th></tr>
+  ${weekRows || '<tr><td colspan="2" style="padding:12px;text-align:center;color:#aaa;font-size:12px;">주간보고 데이터 없음</td></tr>'}
+</table>
+<hr style="border:none;border-top:0.5px solid #eee;margin:0 0 16px;">
+<p style="margin:0 0 10px;font-size:14px;font-weight:500;color:#1a1a2e;">AI 분기 요약</p>
+<div style="background:#f8f9fa;border-radius:8px;padding:16px;font-size:13px;line-height:1.9;color:#222;white-space:pre-line;">${aiSummary || '요약 없음'}</div>
+<hr style="border:none;border-top:0.5px solid #eee;margin:18px 0 12px;">
+<p style="margin:0;font-size:11px;color:#aaa;text-align:center;">도서출판 성우 ${reporterTeam} · 일일보고 자동화 시스템</p>
+</td></tr></table></body></html>`;
+}
+
+async function sendQuarterlyReport(data, recipients, reporterName, reporterTeam) {
+  const { year, quarter } = data;
+  const html = buildQuarterlyHtmlEmail(data, reporterName, reporterTeam);
+  return transporter.sendMail({
+    from: `"${reporterName} (${reporterTeam})" <${process.env.SMTP_USER}>`,
+    to: recipients.join(', '),
+    subject: `[분기보고] ${reporterTeam} ${reporterName} (${year}년 ${quarter}분기)`,
+    html,
+  });
+}
+
+// ─── 연말보고 이메일 ───────────────────────────────────────
+function buildAnnualHtmlEmail(data, reporterName, reporterTeam) {
+  const { year, quarterlyRecords, aiSummary } = data;
+  const qRows = (quarterlyRecords || []).map(r => `
+    <tr>
+      <td style="padding:8px 12px;border:0.5px solid #e8e8e8;font-size:13px;color:#1a1a2e;font-weight:500;">${r.year}년 ${r.quarter}분기</td>
+      <td style="padding:8px 12px;border:0.5px solid #e8e8e8;font-size:12px;color:#444;line-height:1.7;">${(r.aiSummary || '').replace(/\n/g,'<br>')}</td>
+    </tr>`).join('');
+
+  const totalWeeks = (quarterlyRecords || []).reduce((s, r) => s + (r.weeklyRecords || []).length, 0);
+
+  return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f5f6fa;font-family:'Malgun Gothic',sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#1e1e2e;"><tr><td style="padding:14px 28px;">
+  <span style="color:#fff;font-size:15px;font-weight:500;">도서출판 성우 &nbsp;·&nbsp; 연간업무보고</span>
+</td></tr></table>
+<table width="660" cellpadding="0" cellspacing="0" style="margin:20px auto;background:#fff;border-radius:12px;">
+<tr><td style="padding:28px 32px;">
+<p style="margin:0 0 4px;font-size:22px;font-weight:500;color:#1a1a2e;">${year}년 연간 업무 보고서</p>
+<p style="margin:0 0 22px;font-size:12px;color:#aaa;">${reporterName} &nbsp;·&nbsp; ${reporterTeam}</p>
+<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:22px;"><tr>
+  <td width="30%" style="background:#f0f4ff;border-radius:10px;padding:14px;text-align:center;"><p style="margin:0;font-size:11px;color:#666;">보고 분기</p><p style="margin:6px 0;font-size:26px;font-weight:500;color:#1e1e2e;">${(quarterlyRecords||[]).length}</p><p style="margin:0;font-size:10px;color:#888;">분기</p></td>
+  <td width="5%"></td>
+  <td width="30%" style="background:#f0fff4;border-radius:10px;padding:14px;text-align:center;"><p style="margin:0;font-size:11px;color:#666;">총 보고 주수</p><p style="margin:6px 0;font-size:26px;font-weight:500;color:#16a34a;">${totalWeeks}</p><p style="margin:0;font-size:10px;color:#888;">주</p></td>
+  <td width="5%"></td>
+  <td width="30%" style="background:#fef7e0;border-radius:10px;padding:14px;text-align:center;"><p style="margin:0;font-size:11px;color:#666;">보고 연도</p><p style="margin:6px 0;font-size:26px;font-weight:500;color:#b06000;">${year}</p><p style="margin:0;font-size:10px;color:#888;">년</p></td>
+</tr></table>
+<hr style="border:none;border-top:0.5px solid #eee;margin:0 0 16px;">
+<p style="margin:0 0 10px;font-size:14px;font-weight:500;color:#1a1a2e;">분기별 요약</p>
+<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;border-collapse:collapse;">
+  <tr style="background:#f8f9fa;"><th style="padding:8px 12px;border:0.5px solid #e8e8e8;font-size:11px;text-align:left;color:#666;width:18%;">분기</th><th style="padding:8px 12px;border:0.5px solid #e8e8e8;font-size:11px;text-align:left;color:#666;">주요 성과</th></tr>
+  ${qRows || '<tr><td colspan="2" style="padding:12px;text-align:center;color:#aaa;font-size:12px;">분기보고 데이터 없음</td></tr>'}
+</table>
+<hr style="border:none;border-top:0.5px solid #eee;margin:0 0 16px;">
+<p style="margin:0 0 10px;font-size:14px;font-weight:500;color:#1a1a2e;">AI 연간 요약</p>
+<div style="background:#f8f9fa;border-radius:8px;padding:16px;font-size:13px;line-height:1.9;color:#222;white-space:pre-line;">${aiSummary || '요약 없음'}</div>
+<hr style="border:none;border-top:0.5px solid #eee;margin:18px 0 12px;">
+<p style="margin:0;font-size:11px;color:#aaa;text-align:center;">도서출판 성우 ${reporterTeam} · 일일보고 자동화 시스템</p>
+</td></tr></table></body></html>`;
+}
+
+async function sendAnnualReport(data, recipients, reporterName, reporterTeam) {
+  const { year } = data;
+  const html = buildAnnualHtmlEmail(data, reporterName, reporterTeam);
+  return transporter.sendMail({
+    from: `"${reporterName} (${reporterTeam})" <${process.env.SMTP_USER}>`,
+    to: recipients.join(', '),
+    subject: `[연간보고] ${reporterTeam} ${reporterName} (${year}년)`,
+    html,
+  });
+}
+
+module.exports = { sendReport, sendWeeklyReport, sendQuarterlyReport, sendAnnualReport, verifyConnection, buildHtmlEmail, buildWeeklyHtmlEmail, buildQuarterlyHtmlEmail, buildAnnualHtmlEmail };
