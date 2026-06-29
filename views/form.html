@@ -390,7 +390,7 @@
         <div class="date" id="today-date"></div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-        <span id="user-name" style="font-size:13px;color:#555;font-weight:600"></span>
+        <span id="user-name" onclick="openPwModal()" style="font-size:13px;color:#555;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px;" title="비밀번호 변경"></span>
         <div style="display:flex;gap:8px">
           <a id="admin-link" href="/admin" style="display:none;font-size:12px;color:#1a73e8;text-decoration:none;border:1px solid #1a73e8;border-radius:5px;padding:4px 10px">관리자</a>
           <a href="/weekly" style="font-size:12px;color:#34a853;text-decoration:none;border:1px solid #34a853;border-radius:5px;padding:4px 10px;font-weight:500;">📋 주간보고</a>
@@ -999,5 +999,72 @@
     if (loading) loading.style.display = 'none';
   });
   </script>
+<!-- 비밀번호 변경 모달 -->
+<div id="pw-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;display:flex;align-items:center;justify-content:center;display:none;">
+  <div style="background:#fff;border-radius:14px;padding:28px 28px 24px;width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
+    <div style="font-size:16px;font-weight:600;color:#1a1a2e;margin-bottom:20px;">🔒 비밀번호 변경</div>
+    <div style="margin-bottom:12px;">
+      <label style="font-size:12px;color:#666;display:block;margin-bottom:5px;">현재 비밀번호</label>
+      <input type="password" id="pw-current" placeholder="현재 비밀번호 입력" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:inherit;outline:none;" oninput="clearPwError()">
+    </div>
+    <div style="margin-bottom:12px;">
+      <label style="font-size:12px;color:#666;display:block;margin-bottom:5px;">새 비밀번호</label>
+      <input type="password" id="pw-new" placeholder="새 비밀번호 (4자 이상)" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:inherit;outline:none;" oninput="clearPwError()">
+    </div>
+    <div style="margin-bottom:18px;">
+      <label style="font-size:12px;color:#666;display:block;margin-bottom:5px;">새 비밀번호 확인</label>
+      <input type="password" id="pw-confirm" placeholder="새 비밀번호 다시 입력" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:inherit;outline:none;" oninput="clearPwError()">
+    </div>
+    <div id="pw-error" style="font-size:12px;color:#e74c3c;margin-bottom:12px;display:none;"></div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="closePwModal()" style="flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:13px;cursor:pointer;font-family:inherit;color:#666;">취소</button>
+      <button onclick="submitPwChange()" style="flex:1;padding:10px;border:none;border-radius:8px;background:#1a73e8;color:#fff;font-size:13px;cursor:pointer;font-family:inherit;font-weight:500;">변경하기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openPwModal() {
+  document.getElementById('pw-modal').style.display = 'flex';
+  document.getElementById('pw-current').value = '';
+  document.getElementById('pw-new').value = '';
+  document.getElementById('pw-confirm').value = '';
+  clearPwError();
+  setTimeout(() => document.getElementById('pw-current').focus(), 100);
+}
+function closePwModal() {
+  document.getElementById('pw-modal').style.display = 'none';
+}
+function clearPwError() {
+  document.getElementById('pw-error').style.display = 'none';
+}
+function showPwError(msg) {
+  const el = document.getElementById('pw-error');
+  el.textContent = msg; el.style.display = 'block';
+}
+async function submitPwChange() {
+  const cur = document.getElementById('pw-current').value;
+  const nw = document.getElementById('pw-new').value;
+  const cf = document.getElementById('pw-confirm').value;
+  if (!cur || !nw || !cf) { showPwError('모든 항목을 입력해주세요.'); return; }
+  if (nw !== cf) { showPwError('새 비밀번호가 일치하지 않습니다.'); return; }
+  if (nw.length < 4) { showPwError('비밀번호는 4자 이상이어야 합니다.'); return; }
+  const res = await fetch('/api/users/my-password', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ currentPassword: cur, newPassword: nw }),
+  });
+  if (res.ok) {
+    closePwModal();
+    alert('✅ 비밀번호가 변경되었습니다.');
+  } else {
+    const err = await res.json();
+    showPwError(err.error || '변경 실패');
+  }
+}
+document.getElementById('pw-modal').addEventListener('click', function(e) {
+  if (e.target === this) closePwModal();
+});
+</script>
+
 </body>
 </html>
