@@ -16,9 +16,8 @@ body{font-family:'Malgun Gothic',sans-serif;background:#f5f6fa;color:#1a1a2e;}
 .wrap{max-width:720px;margin:0 auto;padding:24px 16px 48px;}
 .card{background:#fff;border-radius:12px;border:0.5px solid #e8e8e8;padding:20px 24px;margin-bottom:14px;}
 .section-title{font-size:15px;font-weight:500;color:#1a1a2e;margin:0 0 14px;}
-.quarter-selector{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
-.q-btn{padding:7px 18px;border-radius:20px;border:0.5px solid #ddd;background:#fff;font-size:13px;cursor:pointer;font-family:inherit;color:#555;}
-.q-btn.active{background:#2563eb;color:#fff;border-color:#2563eb;font-weight:500;}
+.quarter-select{padding:8px 12px;border:0.5px solid #ddd;border-radius:8px;font-size:13px;font-family:inherit;color:#1a1a2e;background:#fff;cursor:pointer;min-width:160px;outline:none;}
+
 .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
 .s-card{background:#f8f9fa;border-radius:10px;border:0.5px solid #e8e8e8;padding:14px;text-align:center;}
 .s-num{font-size:24px;font-weight:500;color:#2563eb;margin:4px 0;}
@@ -59,7 +58,7 @@ body{font-family:'Malgun Gothic',sans-serif;background:#f5f6fa;color:#1a1a2e;}
 <div class="wrap">
   <div class="card">
     <div class="section-title">분기 선택</div>
-    <div class="quarter-selector" id="quarter-selector"></div>
+    <select class="quarter-select" id="quarter-selector" onchange="onQuarterChange(this.value)"></select>
   </div>
   <div id="main-content">
     <div class="empty">분기를 선택해주세요.</div>
@@ -96,19 +95,24 @@ async function init() {
 function renderQuarterSelector() {
   const sel = document.getElementById('quarter-selector');
   let html = '';
-  for (let y = thisYear; y >= thisYear - 1; y--) {
+  for (let y = thisYear; y >= thisYear - 4; y--) {
     for (let q = 4; q >= 1; q--) {
       if (y === thisYear && q > thisQ) continue;
-      const active = y === selectedYear && q === selectedQ ? 'active' : '';
-      html += `<button class="q-btn ${active}" onclick="selectQuarter(${y},${q})">${y}년 ${q}분기</button>`;
+      const val = `${y}-${q}`;
+      const selected = y === selectedYear && q === selectedQ ? 'selected' : '';
+      html += `<option value="${val}" ${selected}>${y}년 ${q}분기</option>`;
     }
   }
   sel.innerHTML = html;
 }
 
+function onQuarterChange(val) {
+  const [y, q] = val.split('-').map(Number);
+  selectQuarter(y, q);
+}
+
 async function selectQuarter(y, q) {
   selectedYear = y; selectedQ = q;
-  renderQuarterSelector();
   await loadData();
 }
 

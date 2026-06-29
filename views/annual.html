@@ -16,9 +16,8 @@ body{font-family:'Malgun Gothic',sans-serif;background:#f5f6fa;color:#1a1a2e;}
 .wrap{max-width:720px;margin:0 auto;padding:24px 16px 48px;}
 .card{background:#fff;border-radius:12px;border:0.5px solid #e8e8e8;padding:20px 24px;margin-bottom:14px;}
 .section-title{font-size:15px;font-weight:500;color:#1a1a2e;margin:0 0 14px;}
-.year-selector{display:flex;gap:8px;margin-bottom:20px;}
-.y-btn{padding:7px 20px;border-radius:20px;border:0.5px solid #ddd;background:#fff;font-size:13px;cursor:pointer;font-family:inherit;color:#555;}
-.y-btn.active{background:#1e1e2e;color:#fff;border-color:#1e1e2e;font-weight:500;}
+.year-select{padding:8px 12px;border:0.5px solid #ddd;border-radius:8px;font-size:13px;font-family:inherit;color:#1a1a2e;background:#fff;cursor:pointer;min-width:120px;outline:none;}
+
 .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
 .s-card{background:#f8f9fa;border-radius:10px;border:0.5px solid #e8e8e8;padding:14px;text-align:center;}
 .s-num{font-size:24px;font-weight:500;color:#1e1e2e;margin:4px 0;}
@@ -55,7 +54,7 @@ body{font-family:'Malgun Gothic',sans-serif;background:#f5f6fa;color:#1a1a2e;}
 <div class="wrap">
   <div class="card">
     <div class="section-title">연도 선택</div>
-    <div class="year-selector" id="year-selector"></div>
+    <select class="year-select" id="year-selector" onchange="selectYear(Number(this.value))"></select>
   </div>
   <div id="main-content">
     <div class="empty">연도를 선택해주세요.</div>
@@ -90,16 +89,15 @@ async function init() {
 function renderYearSelector() {
   const sel = document.getElementById('year-selector');
   let html = '';
-  for (let y = thisYear; y >= thisYear - 2; y--) {
-    const active = y === selectedYear ? 'active' : '';
-    html += `<button class="y-btn ${active}" onclick="selectYear(${y})">${y}년</button>`;
+  for (let y = thisYear; y >= thisYear - 9; y--) {
+    const selected = y === selectedYear ? 'selected' : '';
+    html += `<option value="${y}" ${selected}>${y}년</option>`;
   }
   sel.innerHTML = html;
 }
 
 async function selectYear(y) {
   selectedYear = y;
-  renderYearSelector();
   await loadData();
 }
 
