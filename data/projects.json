@@ -16,7 +16,17 @@
           "assignees": [
             "함흥우"
           ],
-          "steps": []
+          "steps": [
+            {
+              "id": "s1782715694255",
+              "name": "기획서 작성 및 검토후 보고",
+              "type": "check",
+              "assignees": [
+                "함흥우"
+              ],
+              "done": false
+            }
+          ]
         },
         {
           "id": "p1t2",
