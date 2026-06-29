@@ -143,6 +143,20 @@ app.post('/api/users/admin', requireAdmin, (req, res) => {
   res.json({ success: true });
 });
 
+// 본인 비밀번호 변경
+app.post('/api/users/my-password', requireLogin, (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  if (!currentPassword || !newPassword) return res.status(400).json({ error: '필수값 누락' });
+  if (newPassword.length < 4) return res.status(400).json({ error: '비밀번호는 4자 이상이어야 합니다.' });
+  const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
+  const user = data.users.find(u => u.email === req.session.user.email);
+  if (!user) return res.status(404).json({ error: '사용자 없음' });
+  if (user.password !== currentPassword) return res.status(400).json({ error: '현재 비밀번호가 맞지 않습니다.' });
+  user.password = newPassword;
+  saveUsers(data);
+  res.json({ success: true });
+});
+
 app.post('/api/users/password', requireAdmin, (req, res) => {
   const { userId, newPassword } = req.body;
   const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
