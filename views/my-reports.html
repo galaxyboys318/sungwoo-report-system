@@ -33,6 +33,10 @@
   @keyframes spin { to { transform: rotate(360deg); } }
 
   .detail-iframe { width: 100%; min-height: 700px; border: none; display: block; }
+  .report-item-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .report-info { flex: 1; min-width: 0; }
+  .del-btn { flex-shrink: 0; padding: 4px 10px; background: none; border: 1px solid #e74c3c; color: #e74c3c; border-radius: 5px; font-size: 11px; cursor: pointer; opacity: 0; transition: opacity 0.15s; }
+  .report-item:hover .del-btn { opacity: 1; }
   .detail-empty { padding: 80px 20px; text-align: center; color: #aaa; font-size: 14px; }
 </style>
 </head>
@@ -86,9 +90,14 @@
 
     list.innerHTML = data.reports.map(r => `
       <div class="report-item" id="item-${r.id}" onclick="viewReport('${r.id}')">
-        <div class="report-date">${formatDate(r.timestamp)}</div>
-        <div class="report-subject">${r.subject}</div>
-        <div class="report-sentto">수신: ${(r.sentTo || []).join(', ')}</div>
+        <div class="report-item-header">
+          <div class="report-info">
+            <div class="report-date">${formatDate(r.timestamp)}</div>
+            <div class="report-subject">${r.subject}</div>
+            <div class="report-sentto">수신: ${(r.sentTo || []).join(', ')}</div>
+          </div>
+          <button class="del-btn" onclick="event.stopPropagation(); deleteReport('${r.id}', '${r.date}')">삭제</button>
+        </div>
       </div>
     `).join('');
 
@@ -121,6 +130,23 @@
       }
     } catch (e) {
       detailArea.innerHTML = '<div class="detail-empty">불러오기 실패</div>';
+    }
+  }
+
+  async function deleteReport(id, date) {
+    if (!confirm(`[${date}] 일일보고를 삭제하시겠습니까?\n\n⚠️ 이미 발송된 이메일은 취소되지 않습니다.\n삭제 시 해당 기록이 보고 내역에서 제거됩니다.`)) return;
+    const res = await fetch(`/api/my-reports/${id}`, { method: 'DELETE' });
+    if (res.ok) {
+      // 목록 새로고침
+      const item = document.getElementById(`item-${id}`);
+      if (item) {
+        item.style.opacity = '0';
+        item.style.transition = 'opacity 0.2s';
+        setTimeout(() => loadReports(), 200);
+      }
+    } else {
+      const err = await res.json();
+      alert('삭제 실패: ' + (err.error || ''));
     }
   }
 
