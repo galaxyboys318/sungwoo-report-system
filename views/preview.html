@@ -219,7 +219,8 @@
         list.innerHTML = rData.recipients.map(u => `
           <label class="checkbox-item">
             <input type="checkbox" class="recipient-chk" value="${u.email}" checked>
-            ${u.name} (${u.team || u.role || ''})
+            ${u.name} (${u.position || u.role || ''})
+            ${u.level === 1 ? '<span style="font-size:10px;background:#e8f0fe;color:#1558b0;padding:1px 7px;border-radius:20px;font-weight:500;margin-left:4px;">경영진</span>' : ''}
             <span class="email-addr">${u.email}</span>
           </label>`).join('');
       } else {
