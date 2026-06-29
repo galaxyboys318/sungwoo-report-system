@@ -394,6 +394,8 @@
         <div style="display:flex;gap:8px">
           <a id="admin-link" href="/admin" style="display:none;font-size:12px;color:#1a73e8;text-decoration:none;border:1px solid #1a73e8;border-radius:5px;padding:4px 10px">관리자</a>
           <a href="/weekly" style="font-size:12px;color:#34a853;text-decoration:none;border:1px solid #34a853;border-radius:5px;padding:4px 10px;font-weight:500;">📋 주간보고</a>
+          <a href="/quarterly" style="font-size:12px;color:#2563eb;text-decoration:none;border:1px solid #2563eb;border-radius:5px;padding:4px 10px;font-weight:500;">📊 분기보고</a>
+          <a href="/annual" style="font-size:12px;color:#1e1e2e;text-decoration:none;border:1px solid #1e1e2e;border-radius:5px;padding:4px 10px;font-weight:500;">📈 연간보고</a>
           <a href="/my-reports" style="font-size:12px;color:#1a73e8;text-decoration:none;border:1px solid #1a73e8;border-radius:5px;padding:4px 10px">내 보고 내역</a>
           <button onclick="doLogout()" style="font-size:12px;color:#888;background:none;border:1px solid #ddd;border-radius:5px;padding:4px 10px;cursor:pointer">로그아웃</button>
         </div>
@@ -938,21 +940,22 @@
               taskName: task.name,
               memo,
               progress,
-              steps: (task.steps || []).map(s => {
-                // 오늘 체크 여부: step 옆 체크박스 상태로 판단
-                const stepChk = document.getElementById(`stepchk-${s.id}`);
-                const checkedToday = stepChk ? stepChk.checked : false;
-                return {
+              steps: (task.steps || [])
+                .filter(s => {
+                  // 오늘 체크한 step만 포함
+                  const stepChk = document.getElementById(`stepchk-${s.id}`);
+                  return stepChk && stepChk.checked;
+                })
+                .map(s => ({
                   name: s.name,
                   type: s.type,
                   done: s.done,
                   current: s.current,
                   target: s.target,
                   pct: s.pct,
-                  checkedToday,
-                  memo: document.getElementById(`stepmemo-${s.id}`)?.value.trim() || s.memo || '',
-                };
-              }),
+                  checkedToday: true,
+                  memo: document.getElementById(`stepmemo-${s.id}`)?.value.trim() || '',
+                })),
             });
           }
         });

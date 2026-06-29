@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>분기보고</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Malgun Gothic',sans-serif;background:#f5f6fa;color:#1a1a2e;}
+.topbar{background:#2563eb;display:flex;align-items:center;gap:14px;padding:0 24px;height:52px;position:sticky;top:0;z-index:100;}
+.topbar-title{color:#fff;font-size:15px;font-weight:600;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.topbar-user{color:rgba(255,255,255,0.8);font-size:13px;}
+.btn-topbar{background:rgba(255,255,255,0.15);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;}
+.btn-topbar:hover{background:rgba(255,255,255,0.25);}
+.wrap{max-width:720px;margin:0 auto;padding:24px 16px 48px;}
+.card{background:#fff;border-radius:12px;border:0.5px solid #e8e8e8;padding:20px 24px;margin-bottom:14px;}
+.section-title{font-size:15px;font-weight:500;color:#1a1a2e;margin:0 0 14px;}
+.quarter-selector{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.q-btn{padding:7px 18px;border-radius:20px;border:0.5px solid #ddd;background:#fff;font-size:13px;cursor:pointer;font-family:inherit;color:#555;}
+.q-btn.active{background:#2563eb;color:#fff;border-color:#2563eb;font-weight:500;}
+.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.s-card{background:#f8f9fa;border-radius:10px;border:0.5px solid #e8e8e8;padding:14px;text-align:center;}
+.s-num{font-size:24px;font-weight:500;color:#2563eb;margin:4px 0;}
+.s-label{font-size:11px;color:#aaa;}
+.proj-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:6px;}
+.proj-table th{padding:8px 12px;background:#f8f9fa;border:0.5px solid #e8e8e8;font-weight:500;color:#666;font-size:11px;text-align:left;}
+.proj-table td{padding:8px 12px;border:0.5px solid #e8e8e8;color:#1a1a2e;}
+.proj-table tr:nth-child(even) td{background:#fafafa;}
+.up{color:#16a34a;font-weight:500;} .down{color:#dc2626;font-weight:500;}
+.week-item{padding:10px 0;border-bottom:0.5px solid #f0f0f0;}
+.week-item:last-child{border-bottom:none;}
+.week-key{font-size:12px;font-weight:500;color:#2563eb;margin-bottom:3px;}
+.week-summary{font-size:12px;color:#555;line-height:1.8;}
+.ai-box{width:100%;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;padding:14px;font-size:13px;line-height:1.9;color:#222;min-height:100px;resize:vertical;font-family:inherit;outline:none;}
+.ai-box:focus{border-color:#2563eb;background:#fff;}
+.ai-hint{font-size:11px;color:#aaa;margin-bottom:8px;}
+.send-btn{width:100%;padding:13px;background:#2563eb;color:#fff;font-size:14px;font-weight:500;border:none;border-radius:10px;cursor:pointer;font-family:inherit;}
+.send-btn:hover{background:#1d4ed8;}
+.send-btn:disabled{background:#ccc;cursor:not-allowed;}
+.empty{text-align:center;padding:40px;color:#bbb;font-size:13px;}
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#2563eb;animation:blink 1s infinite;}
+.dot:nth-child(2){animation-delay:0.2s;} .dot:nth-child(3){animation-delay:0.4s;}
+@keyframes blink{0%,100%{opacity:0.2;}50%{opacity:1;}}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;display:none;z-index:999;}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span class="topbar-title">📊 분기보고</span>
+  <div class="topbar-right">
+    <span class="topbar-user" id="topbar-user"></span>
+    <button class="btn-topbar" onclick="location.href='/report'">← 보고 폼</button>
+    <button class="btn-topbar" onclick="location.href='/weekly'">주간보고</button>
+    <button class="btn-topbar" onclick="logout()">로그아웃</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="card">
+    <div class="section-title">분기 선택</div>
+    <div class="quarter-selector" id="quarter-selector"></div>
+  </div>
+  <div id="main-content">
+    <div class="empty">분기를 선택해주세요.</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let currentUser = null;
+let currentData = null;
+let aiSummary = '';
+const thisYear = new Date().getFullYear();
+const thisQ = Math.ceil((new Date().getMonth() + 1) / 3);
+let selectedYear = thisYear;
+let selectedQ = thisQ;
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2500);
+}
+
+async function init() {
+  const res = await fetch('/api/me');
+  const data = await res.json();
+  if (!data.user) { location.href = '/login'; return; }
+  currentUser = data.user;
+  document.getElementById('topbar-user').textContent = `${currentUser.name} (${currentUser.position || '팀원'})`;
+  renderQuarterSelector();
+  await loadData();
+}
+
+function renderQuarterSelector() {
+  const sel = document.getElementById('quarter-selector');
+  let html = '';
+  for (let y = thisYear; y >= thisYear - 1; y--) {
+    for (let q = 4; q >= 1; q--) {
+      if (y === thisYear && q > thisQ) continue;
+      const active = y === selectedYear && q === selectedQ ? 'active' : '';
+      html += `<button class="q-btn ${active}" onclick="selectQuarter(${y},${q})">${y}년 ${q}분기</button>`;
+    }
+  }
+  sel.innerHTML = html;
+}
+
+async function selectQuarter(y, q) {
+  selectedYear = y; selectedQ = q;
+  renderQuarterSelector();
+  await loadData();
+}
+
+async function loadData() {
+  document.getElementById('main-content').innerHTML = `<div class="empty"><div style="display:flex;justify-content:center;gap:5px;margin-bottom:8px;"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>데이터 불러오는 중...</div>`;
+  const res = await fetch(`/api/quarterly-data?year=${selectedYear}&quarter=${selectedQ}`);
+  currentData = await res.json();
+  renderPage();
+  if ((currentData.weeklyRecords || []).length > 0) generateAiSummary();
+}
+
+function renderPage() {
+  const { weeklyRecords, projectTrend } = currentData;
+  if (!weeklyRecords || weeklyRecords.length === 0) {
+    document.getElementById('main-content').innerHTML = `
+      <div class="card"><div class="empty">${selectedYear}년 ${selectedQ}분기 주간보고 데이터가 없습니다.<br><small style="color:#bbb;margin-top:6px;display:block;">주간보고를 먼저 발송하면 자동으로 집계됩니다.</small></div></div>`;
+    return;
+  }
+  const totalDays = weeklyRecords.reduce((s, r) => s + (r.weeklyDays || []).length, 0);
+  const projCount = Object.keys(projectTrend || {}).length;
+
+  const projRows = Object.entries(projectTrend || {}).map(([pName, pData]) => {
+    const weeks = pData.weeks || [];
+    const first = weeks[0]?.progress ?? 0;
+    const last = weeks[weeks.length-1]?.progress ?? 0;
+    const diff = last - first;
+    const diffStr = diff > 0 ? `<span class="up">▲${diff}%</span>` : diff < 0 ? `<span class="down">▼${Math.abs(diff)}%</span>` : '–';
+    return `<tr><td>${pName}</td><td style="color:#888;font-size:11px;">${pData.tag||''}</td><td style="font-weight:500;color:#2563eb;">${last}%</td><td>${diffStr}</td></tr>`;
+  }).join('');
+
+  const weekItems = weeklyRecords.map(r => `
+    <div class="week-item">
+      <div class="week-key">${r.weekKey} (${r.weekStart} ~ ${r.weekEnd})</div>
+      <div class="week-summary">${(r.aiSummary||'요약 없음').replace(/\n/g,'<br>')}</div>
+    </div>`).join('');
+
+  document.getElementById('main-content').innerHTML = `
+    <div class="card">
+      <div class="summary-grid">
+        <div class="s-card"><div class="s-label">보고 주수</div><div class="s-num">${weeklyRecords.length}</div><div class="s-label">주</div></div>
+        <div class="s-card"><div class="s-label">총 보고 일수</div><div class="s-num">${totalDays}</div><div class="s-label">일</div></div>
+        <div class="s-card"><div class="s-label">관여 프로젝트</div><div class="s-num">${projCount}</div><div class="s-label">개</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title">프로젝트별 분기 현황</div>
+      <table class="proj-table">
+        <tr><th>프로젝트</th><th>구분</th><th>현재 진행률</th><th>분기 변화</th></tr>
+        ${projRows || '<tr><td colspan="4" style="text-align:center;color:#aaa;padding:12px;">없음</td></tr>'}
+      </table>
+    </div>
+    <div class="card">
+      <div class="section-title">주차별 요약</div>
+      ${weekItems}
+    </div>
+    <div class="card">
+      <div class="section-title">✨ AI 분기 요약</div>
+      <p class="ai-hint">AI가 작성한 초안입니다. 직접 수정 후 발송하세요.</p>
+      <textarea class="ai-box" id="ai-summary-box" placeholder="AI 요약 생성 중..."></textarea>
+    </div>
+    <div class="card">
+      <button class="send-btn" id="send-btn" onclick="sendReport()">📨 ${selectedYear}년 ${selectedQ}분기 보고 발송</button>
+    </div>`;
+}
+
+async function generateAiSummary() {
+  try {
+    const res = await fetch('/api/gpt-quarterly', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ year: selectedYear, quarter: selectedQ, weeklyRecords: currentData.weeklyRecords, user: currentUser }),
+    });
+    const data = await res.json();
+    aiSummary = data.summary || '';
+    const box = document.getElementById('ai-summary-box');
+    if (box) box.value = aiSummary;
+  } catch (e) {
+    const box = document.getElementById('ai-summary-box');
+    if (box) box.placeholder = 'AI 요약 생성 실패. 직접 입력해주세요.';
+  }
+}
+
+async function sendReport() {
+  const btn = document.getElementById('send-btn');
+  btn.disabled = true; btn.textContent = '발송 중...';
+  try {
+    const res = await fetch('/api/quarterly-send', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        year: selectedYear, quarter: selectedQ,
+        weeklyRecords: currentData.weeklyRecords,
+        projectTrend: currentData.projectTrend,
+        aiSummary: document.getElementById('ai-summary-box')?.value || aiSummary,
+      }),
+    });
+    if (res.ok) { showToast('✅ 분기보고 발송 완료!'); btn.textContent = '✅ 발송 완료'; }
+    else { const e = await res.json(); alert('발송 실패: ' + e.error); btn.disabled = false; btn.textContent = '📨 발송'; }
+  } catch (e) { alert('오류 발생'); btn.disabled = false; btn.textContent = '📨 발송'; }
+}
+
+function logout() { fetch('/logout', { method: 'POST' }).then(() => location.href = '/login'); }
+init();
+</script>
+</body>
+</html>
