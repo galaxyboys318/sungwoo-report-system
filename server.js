@@ -654,6 +654,60 @@ app.get('/api/my-reports/:id', requireLogin, (req, res) => {
   }
 });
 
+// 일일보고 삭제
+app.delete('/api/my-reports/:id', requireLogin, (req, res) => {
+  const { id } = req.params;
+  const user = req.session.user;
+  const lastUnderscoreIdx = id.lastIndexOf('_');
+  const date = id.slice(0, lastUnderscoreIdx);
+  const idx = parseInt(id.slice(lastUnderscoreIdx + 1));
+
+  if (isNaN(idx) || !date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    return res.status(400).json({ error: '잘못된 요청' });
+  }
+
+  const logPath = path.join(__dirname, 'data', 'reports', `${date}.json`);
+  if (!fs.existsSync(logPath)) return res.status(404).json({ error: '파일 없음' });
+
+  const logs = JSON.parse(fs.readFileSync(logPath, 'utf-8'));
+  const entries = Array.isArray(logs) ? logs : [logs];
+  const entry = entries[idx];
+
+  if (!entry) return res.status(404).json({ error: '보고서 없음' });
+  if (entry.reporterEmail !== user.email && entry.reporterName !== user.name) {
+    return res.status(403).json({ error: '권한 없음' });
+  }
+
+  // 해당 entry 제거
+  entries.splice(idx, 1);
+
+  const ghPath = `data/reports/${date}.json`;
+  if (entries.length === 0) {
+    // 파일에 내 것만 있었으면 파일 삭제
+    fs.unlinkSync(logPath);
+    if (process.env.GITHUB_TOKEN) {
+      const REPO = 'galaxyboys318/sungwoo-report-system';
+      const HEADERS = { 'Authorization': `token ${process.env.GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' };
+      fetch(`https://api.github.com/repos/${REPO}/contents/${ghPath}`, { headers: HEADERS })
+        .then(r => r.ok ? r.json() : null)
+        .then(info => {
+          if (info?.sha) {
+            fetch(`https://api.github.com/repos/${REPO}/contents/${ghPath}`, {
+              method: 'DELETE', headers: { ...HEADERS, 'Content-Type': 'application/json' },
+              body: JSON.stringify({ message: `[삭제] ${ghPath}`, sha: info.sha }),
+            });
+          }
+        }).catch(e => console.error('[GitHub 일일보고 삭제 실패]', e.message));
+    }
+  } else {
+    // 다른 사람 것도 있으면 파일 유지, 해당 entry만 제거 후 저장
+    fs.writeFileSync(logPath, JSON.stringify(entries, null, 2), 'utf-8');
+    saveToGitHub(ghPath, entries).catch(e => console.error('[GitHub 일일보고 업데이트 실패]', e.message));
+  }
+
+  res.json({ success: true });
+});
+
 app.get('/', (req, res) => {
   if (req.session.user) return res.redirect('/report');
   res.redirect('/login');
@@ -854,6 +908,69 @@ app.post('/api/weekly-send', requireLogin, async (req, res) => {
     console.error('주간보고 발송 실패:', e.message);
     res.status(500).json({ error: e.message });
   }
+});
+
+// 내 주간보고 목록 조회
+app.get('/api/weekly-list', requireLogin, (req, res) => {
+  const user = req.session.user;
+  const weeklyDir = path.join(__dirname, 'data', 'weekly');
+  const records = [];
+  if (fs.existsSync(weeklyDir)) {
+    fs.readdirSync(weeklyDir).forEach(f => {
+      if (!f.endsWith('.json')) return;
+      try {
+        const rec = JSON.parse(fs.readFileSync(path.join(weeklyDir, f), 'utf-8'));
+        if (rec.email !== user.email && rec.reporter !== user.name) return;
+        records.push({ fileName: f, weekKey: rec.weekKey, weekStart: rec.weekStart, weekEnd: rec.weekEnd, sentAt: rec.sentAt, sentTo: rec.sentTo, aiSummary: rec.aiSummary });
+      } catch (e) {}
+    });
+  }
+  records.sort((a, b) => b.weekStart.localeCompare(a.weekStart));
+  res.json({ records });
+});
+
+// 주간보고 삭제 (분기집계에서 제외)
+app.delete('/api/weekly-delete/:fileName', requireLogin, (req, res) => {
+  const user = req.session.user;
+  const fileName = req.params.fileName;
+  // 파일명 검증 (경로 탐색 방지)
+  if (!fileName.endsWith('.json') || fileName.includes('/') || fileName.includes('..')) {
+    return res.status(400).json({ error: '잘못된 파일명' });
+  }
+  const filePath = path.join(__dirname, 'data', 'weekly', fileName);
+  if (!fs.existsSync(filePath)) return res.status(404).json({ error: '파일 없음' });
+
+  // 본인 파일인지 확인
+  const rec = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  if (rec.email !== user.email && rec.reporter !== user.name) {
+    return res.status(403).json({ error: '권한 없음' });
+  }
+
+  fs.unlinkSync(filePath);
+
+  // GitHub에서도 삭제
+  if (process.env.GITHUB_TOKEN) {
+    const REPO = 'galaxyboys318/sungwoo-report-system';
+    const HEADERS = {
+      'Authorization': `token ${process.env.GITHUB_TOKEN}`,
+      'Accept': 'application/vnd.github.v3+json',
+    };
+    const ghPath = `data/weekly/${fileName}`;
+    fetch(`https://api.github.com/repos/${REPO}/contents/${ghPath}`, { headers: HEADERS })
+      .then(r => r.ok ? r.json() : null)
+      .then(info => {
+        if (info?.sha) {
+          return fetch(`https://api.github.com/repos/${REPO}/contents/${ghPath}`, {
+            method: 'DELETE',
+            headers: { ...HEADERS, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: `[삭제] ${ghPath}`, sha: info.sha }),
+          });
+        }
+      })
+      .catch(e => console.error('[GitHub 주간보고 삭제 실패]', e.message));
+  }
+
+  res.json({ success: true });
 });
 
 // GPT 주간 요약 API
