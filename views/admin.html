@@ -551,10 +551,56 @@
         </select>
         <button class="btn ${user.isAdmin ? 'btn-gray' : 'btn-blue'}" style="font-size:12px;padding:6px 10px" onclick="toggleAdmin('${user.id}', ${user.isAdmin})">${user.isAdmin ? '관리자 해제' : '관리자 지정'}</button>
         <button class="btn btn-gray" style="font-size:12px;padding:6px 10px" onclick="resetPassword('${user.id}')">비번재설정</button>
+        <button class="btn btn-blue" style="font-size:12px;padding:6px 10px;background:#9333ea;border-color:#9333ea;" onclick="openReportsToModal('${user.id}','${user.name}')">보고대상 설정</button>
         <button class="btn btn-red" style="font-size:12px;padding:6px 10px" onclick="deleteUser('${user.id}','${user.name}')">삭제</button>
       `;
       container.appendChild(div);
     });
+  }
+
+  // ─── 보고 대상 설정 모달 ─────────────────────────
+  function openReportsToModal(userId, userName) {
+    const allUsers = userData.filter(u => u.id !== userId);
+    const targetUser = userData.find(u => u.id === userId);
+    const currentReportsTo = targetUser?.reportsTo || [];
+
+    const modalHtml = `
+      <div id="reports-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;display:flex;align-items:center;justify-content:center;">
+        <div style="background:#fff;border-radius:14px;padding:28px;width:420px;max-width:90vw;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
+          <div style="font-size:16px;font-weight:600;color:#1a1a2e;margin-bottom:6px;">${userName}님의 보고 대상 설정</div>
+          <div style="font-size:12px;color:#888;margin-bottom:20px;">이 직원이 보고서를 발송할 상급자를 선택하세요.</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+            ${allUsers.map(u => `
+              <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;cursor:pointer;">
+                <input type="checkbox" value="${u.id}" ${currentReportsTo.includes(u.id) ? 'checked' : ''} style="width:16px;height:16px;accent-color:#9333ea;">
+                <span style="font-size:13px;font-weight:500;color:#1a1a2e;flex:1;">${u.name}</span>
+                <span style="font-size:11px;color:#888;">${u.position||u.role||''}</span>
+                <span style="font-size:11px;color:#aaa;">${u.email}</span>
+              </label>`).join('')}
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="document.getElementById('reports-modal').remove()" style="flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:13px;cursor:pointer;color:#666;">취소</button>
+            <button onclick="saveReportsTo('${userId}')" style="flex:1;padding:10px;border:none;border-radius:8px;background:#9333ea;color:#fff;font-size:13px;cursor:pointer;font-weight:500;">저장</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+  }
+
+  async function saveReportsTo(userId) {
+    const checked = [...document.querySelectorAll('#reports-modal input[type=checkbox]:checked')].map(el => el.value);
+    const res = await fetch('/api/users/reportsTo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, reportsTo: checked }),
+    });
+    if (res.ok) {
+      document.getElementById('reports-modal').remove();
+      showToast('보고 대상이 저장되었습니다.');
+      loadUsers();
+    } else {
+      alert('저장 실패');
+    }
   }
 
   async function toggleAdmin(userId, currentIsAdmin) {
