@@ -18,17 +18,6 @@
           ],
           "steps": [
             {
-              "id": "s1781765494858",
-              "name": "스토리보드작성",
-              "type": "check",
-              "assignees": [
-                "함흥우"
-              ],
-              "done": true,
-              "memo": "",
-              "memoHistory": []
-            },
-            {
               "id": "s1781765531762",
               "name": "담당자 미팅 후 견적서 입수",
               "type": "pct",
