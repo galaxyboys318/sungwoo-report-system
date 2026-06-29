@@ -88,11 +88,32 @@ function saveUsers(data) {
 
 app.get('/api/recipients', requireLogin, (req, res) => {
   const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
-  // 레벨 1~2 (팀장/임원급)만 수신자로 노출, 비밀번호 제외
-  const recipients = data.users
-    .filter(u => u.level <= 2)
-    .map(({ password, ...u }) => u);
+  const me = data.users.find(u => u.email === req.session.user.email);
+  const myReportsTo = me?.reportsTo || [];
+
+  // reportsTo가 설정된 경우 해당 대상만, 없으면 level<=2 전체
+  let recipients;
+  if (myReportsTo.length > 0) {
+    recipients = data.users
+      .filter(u => myReportsTo.includes(u.id))
+      .map(({ password, ...u }) => u);
+  } else {
+    recipients = data.users
+      .filter(u => u.level <= 2 && u.id !== me?.id)
+      .map(({ password, ...u }) => u);
+  }
   res.json({ recipients });
+});
+
+// reportsTo 변경 API (관리자)
+app.post('/api/users/reportsTo', requireAdmin, (req, res) => {
+  const { userId, reportsTo } = req.body;
+  const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
+  const user = data.users.find(u => u.id === userId);
+  if (!user) return res.status(404).json({ error: '사용자 없음' });
+  user.reportsTo = Array.isArray(reportsTo) ? reportsTo : [];
+  saveUsers(data);
+  res.json({ success: true });
 });
 
 app.get('/api/users', requireAdmin, (req, res) => {
@@ -736,13 +757,28 @@ app.get('/api/weekly-data', requireLogin, (req, res) => {
 
 // 주간보고 발송 API
 app.post('/api/weekly-send', requireLogin, async (req, res) => {
-  const { weekStart, weekEnd, weeklyDays, aiSummary } = req.body;
+  const { weekStart, weekEnd, weeklyDays, aiSummary, recipients } = req.body;
   const user = req.session.user;
 
+  // 클라이언트에서 선택한 수신자 사용, 없으면 reportsTo 기반 자동
   const usersData = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
-  const toAddresses = usersData.users
-    .filter(u => u.level <= 2 && u.email !== user.email)
-    .map(u => u.email);
+  let toAddresses;
+  if (recipients && recipients.length > 0) {
+    const validEmails = usersData.users.map(u => u.email);
+    toAddresses = recipients.filter(e => validEmails.includes(e));
+  } else {
+    const me = usersData.users.find(u => u.email === user.email);
+    const myReportsTo = me?.reportsTo || [];
+    if (myReportsTo.length > 0) {
+      toAddresses = usersData.users
+        .filter(u => myReportsTo.includes(u.id))
+        .map(u => u.email);
+    } else {
+      toAddresses = usersData.users
+        .filter(u => u.level <= 2 && u.email !== user.email)
+        .map(u => u.email);
+    }
+  }
 
   if (toAddresses.length === 0) return res.status(400).json({ error: '수신자 없음' });
 
