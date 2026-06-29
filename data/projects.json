@@ -16,19 +16,7 @@
           "assignees": [
             "함흥우"
           ],
-          "steps": [
-            {
-              "id": "s1781771352913",
-              "name": "검수결과 수정",
-              "type": "pct",
-              "assignees": [
-                "함흥우"
-              ],
-              "pct": 0,
-              "memoHistory": [],
-              "memo": ""
-            }
-          ]
+          "steps": []
         },
         {
           "id": "p1t2",
