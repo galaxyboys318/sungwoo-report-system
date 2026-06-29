@@ -91,18 +91,18 @@ app.get('/api/recipients', requireLogin, (req, res) => {
   const me = data.users.find(u => u.email === req.session.user.email);
   const myReportsTo = me?.reportsTo || [];
 
-  // reportsTo가 설정된 경우 해당 대상만, 없으면 level<=2 전체
-  let recipients;
-  if (myReportsTo.length > 0) {
-    recipients = data.users
-      .filter(u => myReportsTo.includes(u.id))
-      .map(({ password, ...u }) => u);
-  } else {
-    recipients = data.users
-      .filter(u => u.level <= 2 && u.id !== me?.id)
-      .map(({ password, ...u }) => u);
-  }
-  res.json({ recipients });
+  const result = [];
+  data.users.forEach(u => {
+    if (u.id === me?.id) return;
+    const { password, ...user } = u;
+    // 경영진(level 1) 또는 직속 상급자(reportsTo) 모두 체크박스에 표시
+    if (u.level === 1 || myReportsTo.includes(u.id)) {
+      result.push({ ...user });
+    }
+  });
+  // 경영진 먼저, 직속 상급자 그 다음 순서
+  result.sort((a, b) => (a.level || 4) - (b.level || 4));
+  res.json({ recipients: result });
 });
 
 // reportsTo 변경 API (관리자)
@@ -502,9 +502,7 @@ app.post('/report/send', async (req, res) => {
     exec: process.env.RECIPIENT_EXEC,
   };
   const toAddresses = recipients.map(r => {
-    // 이메일 형식이면 그대로 사용
     if (r.includes('@')) return r;
-    // 레거시 키('manager', 'exec')면 env에서 가져오기
     return recipientMap[r] || null;
   }).filter(Boolean);
 
@@ -848,15 +846,11 @@ app.post('/api/weekly-send', requireLogin, async (req, res) => {
   } else {
     const me = usersData.users.find(u => u.email === user.email);
     const myReportsTo = me?.reportsTo || [];
-    if (myReportsTo.length > 0) {
-      toAddresses = usersData.users
-        .filter(u => myReportsTo.includes(u.id))
-        .map(u => u.email);
-    } else {
-      toAddresses = usersData.users
-        .filter(u => u.level <= 2 && u.email !== user.email)
-        .map(u => u.email);
-    }
+    const reportsToEmails = usersData.users
+      .filter(u => myReportsTo.includes(u.id) || u.level === 1)
+      .filter(u => u.email !== user.email)
+      .map(u => u.email);
+    toAddresses = reportsToEmails;
   }
 
   if (toAddresses.length === 0) return res.status(400).json({ error: '수신자 없음' });
