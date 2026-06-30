@@ -213,7 +213,8 @@ app.get('/api/projects', (req, res) => {
         if (level === 1) return true; // 대표이사/회장: 전체
         if (level === 2) return project.division === division || stepAssignees.length === 0 || stepAssignees.includes(name); // 이사: 부서 전체
         if (level === 3) return project.team === team || stepAssignees.length === 0 || stepAssignees.includes(name); // 팀장: 팀 전체
-        return stepAssignees.length === 0 || stepAssignees.includes(name); // 팀원: 본인만
+        // 팀원: 본인 팀 프로젝트 내에서만 + (담당자 미지정 또는 본인 포함)
+        return project.team === team && (stepAssignees.length === 0 || stepAssignees.includes(name));
       });
 
       return { ...task, steps: filteredSteps };
@@ -222,7 +223,8 @@ app.get('/api/projects', (req, res) => {
       if (level === 1) return true;
       if (level === 2) return project.division === division || assignees.length === 0 || assignees.includes(name);
       if (level === 3) return project.team === team || assignees.length === 0 || assignees.includes(name);
-      return assignees.length === 0 || assignees.includes(name);
+      // 팀원: 본인 팀 프로젝트 내에서만 + (담당자 미지정 또는 본인 포함)
+      return project.team === team && (assignees.length === 0 || assignees.includes(name));
     });
 
     return { ...project, tasks: filteredTasks };
