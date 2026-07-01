@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>팀 주간 취합보고</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Malgun Gothic',sans-serif;background:#f5f6fa;color:#1a1a2e;}
+.topbar{background:#2563eb;display:flex;align-items:center;gap:14px;padding:0 24px;height:52px;position:sticky;top:0;z-index:100;}
+.topbar-title{color:#fff;font-size:15px;font-weight:600;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.topbar-user{color:rgba(255,255,255,0.8);font-size:13px;}
+.btn-topbar{background:rgba(255,255,255,0.15);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;}
+.btn-topbar:hover{background:rgba(255,255,255,0.25);}
+.wrap{max-width:760px;margin:0 auto;padding:24px 16px 48px;}
+.card{background:#fff;border-radius:12px;border:0.5px solid #e8e8e8;padding:20px 24px;margin-bottom:14px;}
+.section-title{font-size:15px;font-weight:500;color:#1a1a2e;margin:0 0 14px;}
+.week-info{font-size:13px;color:#666;margin-bottom:14px;}
+.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.s-card{background:#f8f9fa;border-radius:10px;border:0.5px solid #e8e8e8;padding:14px;text-align:center;}
+.s-num{font-size:24px;font-weight:500;margin:4px 0;}
+.s-label{font-size:11px;color:#aaa;}
+
+.missing-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#fff8e1;border-radius:8px;border:0.5px solid #ffe082;margin-bottom:8px;}
+.missing-name{font-size:13px;font-weight:500;color:#92400e;}
+.remind-btn{padding:6px 12px;background:#fff;border:1px solid #f59e0b;color:#b45309;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;}
+.remind-btn:hover{background:#fef3c7;}
+.remind-btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+.member-card{border:0.5px solid #e8e8e8;border-radius:10px;margin-bottom:12px;overflow:hidden;}
+.member-header{background:#f0f7ff;padding:10px 16px;font-size:13px;font-weight:600;color:#2563eb;}
+.member-body{padding:14px 16px;}
+.member-textarea{width:100%;min-height:120px;border:0.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:13px;font-family:inherit;line-height:1.7;resize:vertical;outline:none;}
+.member-textarea:focus{border-color:#2563eb;}
+
+.warn-box{background:#fff8e1;border:1px solid #ffe082;border-radius:8px;padding:14px 16px;margin-bottom:16px;font-size:13px;color:#7b5e00;}
+.recipient-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.recipient-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;cursor:pointer;}
+.recipient-item input{width:16px;height:16px;accent-color:#2563eb;cursor:pointer;}
+.recipient-name{font-size:13px;font-weight:500;flex:1;}
+.recipient-email{font-size:11px;color:#aaa;}
+
+.send-btn{width:100%;padding:13px;background:#2563eb;color:#fff;font-size:14px;font-weight:500;border:none;border-radius:10px;cursor:pointer;font-family:inherit;}
+.send-btn:hover{background:#1d4ed8;}
+.send-btn:disabled{background:#ccc;cursor:not-allowed;}
+.send-hint{font-size:12px;color:#aaa;text-align:center;margin-top:8px;}
+.empty{text-align:center;padding:30px;color:#bbb;font-size:13px;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;display:none;z-index:999;}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span class="topbar-title">👥 팀 주간 취합보고</span>
+  <div class="topbar-right">
+    <span class="topbar-user" id="topbar-user"></span>
+    <button class="btn-topbar" onclick="location.href='/report'">← 보고 폼</button>
+    <button class="btn-topbar" onclick="location.href='/team-daily'">일일 취합</button>
+    <button class="btn-topbar" onclick="logout()">로그아웃</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="card">
+    <div class="section-title">이번 주 취합 현황</div>
+    <div class="week-info" id="week-info"></div>
+    <div class="summary-grid" id="summary-grid"></div>
+  </div>
+
+  <div id="missing-section"></div>
+  <div id="members-section"></div>
+  <div id="send-section"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let currentUser = null;
+let statusData = null;
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2500);
+}
+
+async function init() {
+  const res = await fetch('/api/me');
+  const data = await res.json();
+  if (!data.user) { location.href = '/login'; return; }
+  currentUser = data.user;
+  document.getElementById('topbar-user').textContent = `${currentUser.name} (${currentUser.team})`;
+  await loadStatus();
+}
+
+async function loadStatus() {
+  const res = await fetch('/api/team-weekly-status');
+  statusData = await res.json();
+
+  const fmt = d => { if (!d) return ''; const [y,m,dd] = d.split('-'); return `${y}.${m}.${dd}`; };
+  document.getElementById('week-info').textContent =
+    `${statusData.weekKey}${statusData.weekStart ? ` (${fmt(statusData.weekStart)} ~ ${fmt(statusData.weekEnd)})` : ''}`;
+
+  renderSummary();
+  renderMissing();
+  renderMembers();
+  renderSendSection();
+}
+
+function renderSummary() {
+  document.getElementById('summary-grid').innerHTML = `
+    <div class="s-card"><div class="s-label">팀원 수</div><div class="s-num" style="color:#2563eb;">${statusData.totalMembers}</div></div>
+    <div class="s-card"><div class="s-label">제출 완료</div><div class="s-num" style="color:#16a34a;">${statusData.submitted.length}</div></div>
+    <div class="s-card"><div class="s-label">미제출</div><div class="s-num" style="color:${statusData.missing.length>0?'#dc2626':'#aaa'};">${statusData.missing.length}</div></div>
+  `;
+}
+
+function renderMissing() {
+  const section = document.getElementById('missing-section');
+  if (statusData.missing.length === 0) { section.innerHTML = ''; return; }
+  const items = statusData.missing.map(m => `
+    <div class="missing-item">
+      <span class="missing-name">⚠ ${m.name} — 아직 주간보고를 제출하지 않았습니다</span>
+      <button class="remind-btn" onclick="sendRemind('${m.email}','${m.name}', this)">알림 보내기</button>
+    </div>`).join('');
+  section.innerHTML = `<div class="card"><div class="section-title">미제출 팀원</div>${items}</div>`;
+}
+
+async function sendRemind(email, name, btn) {
+  btn.disabled = true; btn.textContent = '전송 중...';
+  const res = await fetch('/api/team-weekly-remind', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ email, name }),
+  });
+  if (res.ok) { btn.textContent = '✅ 알림 발송됨'; showToast(`${name}님에게 알림을 보냈습니다.`); }
+  else { btn.disabled = false; btn.textContent = '알림 보내기'; alert('알림 전송 실패'); }
+}
+
+function renderMembers() {
+  const section = document.getElementById('members-section');
+  if (statusData.submitted.length === 0) {
+    section.innerHTML = `<div class="card"><div class="empty">제출된 주간보고가 없습니다.</div></div>`;
+    return;
+  }
+  const cards = statusData.submitted.map((m, i) => `
+    <div class="member-card">
+      <div class="member-header">${m.reporter}</div>
+      <div class="member-body">
+        <textarea class="member-textarea" id="member-summary-${i}" data-email="${m.email}" data-name="${m.reporter}">${m.aiSummary || ''}</textarea>
+      </div>
+    </div>`).join('');
+  section.innerHTML = `<div class="card"><div class="section-title">제출된 주간 요약 (수정 가능)</div>${cards}</div>`;
+}
+
+async function renderSendSection() {
+  const section = document.getElementById('send-section');
+  if (statusData.submitted.length === 0) { section.innerHTML = ''; return; }
+
+  const res = await fetch('/api/recipients');
+  const rData = await res.json();
+  const recipients = rData.recipients || [];
+
+  const recipientHtml = recipients.map(r => `
+    <label class="recipient-item">
+      <input type="checkbox" class="team-recipient-chk" value="${r.email}" checked>
+      <span class="recipient-name">${r.name} (${r.position||r.role||''})</span>
+      ${r.level === 1 ? '<span style="font-size:10px;background:#e8f0fe;color:#1558b0;padding:1px 7px;border-radius:20px;">경영진</span>' : ''}
+      <span class="recipient-email">${r.email}</span>
+    </label>`).join('');
+
+  const missingWarn = statusData.missing.length > 0
+    ? `<div class="warn-box">⚠ 아직 ${statusData.missing.length}명이 주간보고를 제출하지 않았습니다. 알림을 보내고 기다리거나, 제출된 인원만으로 취합 발송할 수 있습니다.</div>`
+    : '';
+
+  section.innerHTML = `
+    <div class="card">
+      <div class="section-title">발송 설정</div>
+      ${missingWarn}
+      <div style="font-size:13px;font-weight:500;margin-bottom:10px;">수신자 선택</div>
+      <div class="recipient-list">${recipientHtml || '<div style="font-size:12px;color:#aaa;">수신 가능한 상급자가 없습니다.</div>'}</div>
+      <button class="send-btn" id="send-btn" onclick="sendTeamWeekly()">📨 취합 발송 (${statusData.submitted.length}명)</button>
+      <div class="send-hint">발송 후에는 취소할 수 없습니다.</div>
+    </div>`;
+}
+
+async function sendTeamWeekly() {
+  const recipients = [...document.querySelectorAll('.team-recipient-chk:checked')].map(el => el.value);
+  if (recipients.length === 0) { alert('수신자를 1명 이상 선택해주세요.'); return; }
+
+  const members = statusData.submitted.map((m, i) => {
+    const ta = document.getElementById(`member-summary-${i}`);
+    return { email: m.email, reporter: m.reporter, aiSummary: ta.value };
+  });
+
+  if (!confirm(`${statusData.team} 주간 취합보고를 발송하시겠습니까?\\n\\n참여 인원: ${members.length}명\\n수신자: ${recipients.length}명\\n\\n발송 후 취소할 수 없습니다.`)) return;
+
+  const btn = document.getElementById('send-btn');
+  btn.disabled = true; btn.textContent = '발송 중...';
+
+  const res = await fetch('/api/team-weekly-send', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ weekKey: statusData.weekKey, weekStart: statusData.weekStart, weekEnd: statusData.weekEnd, members, recipients }),
+  });
+
+  if (res.ok) { showToast('✅ 취합보고가 발송되었습니다!'); btn.textContent = '✅ 발송 완료'; }
+  else { const err = await res.json(); alert('발송 실패: ' + err.error); btn.disabled = false; btn.textContent = '📨 취합 발송'; }
+}
+
+function logout() { fetch('/logout', { method: 'POST' }).then(() => location.href = '/login'); }
+init();
+</script>
+</body>
+</html>

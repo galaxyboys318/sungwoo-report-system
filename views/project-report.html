@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>프로젝트 취합보고</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Malgun Gothic',sans-serif;background:#f5f6fa;color:#1a1a2e;}
+.topbar{background:#1a73e8;display:flex;align-items:center;gap:14px;padding:0 24px;height:52px;position:sticky;top:0;z-index:100;}
+.topbar-title{color:#fff;font-size:15px;font-weight:600;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.topbar-user{color:rgba(255,255,255,0.8);font-size:13px;}
+.btn-topbar{background:rgba(255,255,255,0.15);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;}
+.btn-topbar:hover{background:rgba(255,255,255,0.25);}
+.wrap{max-width:760px;margin:0 auto;padding:24px 16px 48px;}
+.card{background:#fff;border-radius:12px;border:0.5px solid #e8e8e8;padding:20px 24px;margin-bottom:14px;}
+.section-title{font-size:15px;font-weight:500;color:#1a1a2e;margin:0 0 14px;}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.select-input{padding:7px 12px;border:0.5px solid #ddd;border-radius:8px;font-size:13px;font-family:inherit;min-width:200px;}
+.date-input{padding:7px 12px;border:0.5px solid #ddd;border-radius:8px;font-size:13px;font-family:inherit;}
+.btn-load{padding:7px 16px;background:#1a73e8;color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;}
+.btn-load:hover{background:#1558b0;}
+
+/* 단위업무 카드 */
+.task-block{border:0.5px solid #e8e8e8;border-radius:10px;margin-bottom:12px;overflow:hidden;}
+.task-header{background:#f0f4ff;padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:0.5px solid #e8e8e8;}
+.task-name{font-size:14px;font-weight:600;color:#1a1a2e;flex:1;}
+.task-assignees{font-size:11px;color:#888;}
+.task-pct{font-size:14px;font-weight:500;color:#1a73e8;}
+.prog-wrap{padding:6px 16px 0;background:#f0f4ff;}
+.prog-bg{height:4px;background:#d1d9f0;border-radius:2px;}
+.prog-fill{height:4px;background:#1a73e8;border-radius:2px;}
+
+/* 단계 테이블 */
+.step-table{width:100%;border-collapse:collapse;font-size:12px;}
+.step-table th{padding:7px 12px;background:#f8f9fa;border-bottom:0.5px solid #e8e8e8;font-size:11px;color:#666;text-align:left;font-weight:500;}
+.step-table td{padding:8px 12px;border-bottom:0.5px solid #f0f0f0;vertical-align:top;}
+.step-table tr:last-child td{border-bottom:none;}
+.step-name{font-size:12px;color:#1a1a2e;}
+.step-pct{font-size:12px;font-weight:500;color:#1a73e8;}
+.memo-item{padding:3px 0;border-bottom:0.5px solid #f5f5f5;font-size:11px;color:#555;}
+.memo-item:last-child{border-bottom:none;}
+.memo-author{font-weight:500;color:#1a73e8;}
+.memo-text-input{width:100%;border:0.5px solid #ddd;border-radius:6px;padding:5px 8px;font-size:11px;font-family:inherit;resize:none;outline:none;line-height:1.6;}
+.memo-text-input:focus{border-color:#1a73e8;}
+.no-memo{font-size:11px;color:#ccc;}
+
+/* 요약 */
+.summary-box{width:100%;min-height:100px;border:0.5px solid #ddd;border-radius:8px;padding:12px;font-size:13px;font-family:inherit;line-height:1.8;resize:vertical;outline:none;}
+.summary-box:focus{border-color:#1a73e8;}
+
+/* 수신자 */
+.recipient-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.recipient-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;cursor:pointer;}
+.recipient-item input{width:16px;height:16px;accent-color:#1a73e8;}
+.recipient-name{font-size:13px;font-weight:500;flex:1;}
+.recipient-email{font-size:11px;color:#aaa;}
+
+.send-btn{width:100%;padding:13px;background:#1a73e8;color:#fff;font-size:14px;font-weight:500;border:none;border-radius:10px;cursor:pointer;font-family:inherit;}
+.send-btn:hover{background:#1558b0;}
+.send-btn:disabled{background:#ccc;cursor:not-allowed;}
+.send-hint{font-size:12px;color:#aaa;text-align:center;margin-top:8px;}
+.empty{text-align:center;padding:30px;color:#bbb;font-size:13px;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;display:none;z-index:999;}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span class="topbar-title">📊 프로젝트 취합보고</span>
+  <div class="topbar-right">
+    <span class="topbar-user" id="topbar-user"></span>
+    <button class="btn-topbar" onclick="location.href='/report'">← 보고 폼</button>
+    <button class="btn-topbar" onclick="location.href='/team-daily'">일일 취합</button>
+    <button class="btn-topbar" onclick="location.href='/team-weekly'">주간 취합</button>
+    <button class="btn-topbar" onclick="logout()">로그아웃</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <!-- 프로젝트 & 날짜 선택 -->
+  <div class="card">
+    <div class="section-title">프로젝트 선택</div>
+    <div class="row">
+      <select class="select-input" id="project-select">
+        <option value="">프로젝트를 선택하세요</option>
+      </select>
+      <input type="date" class="date-input" id="date-picker">
+      <button class="btn-load" onclick="loadData()">불러오기</button>
+    </div>
+  </div>
+
+  <div id="main-content"></div>
+  <div id="send-section"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let currentUser = null;
+let reportData = null;
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2500);
+}
+
+async function init() {
+  const res = await fetch('/api/me');
+  const data = await res.json();
+  if (!data.user) { location.href = '/login'; return; }
+  currentUser = data.user;
+  document.getElementById('topbar-user').textContent = `${currentUser.name} (${currentUser.team})`;
+
+  const today = new Date().toISOString().slice(0, 10);
+  document.getElementById('date-picker').value = today;
+
+  await loadProjects();
+}
+
+async function loadProjects() {
+  const res = await fetch('/api/projects');
+  const data = await res.json();
+  const sel = document.getElementById('project-select');
+  (data.projects || []).forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id; opt.textContent = `${p.name} (${p.tag || ''})`;
+    sel.appendChild(opt);
+  });
+}
+
+async function loadData() {
+  const projectId = document.getElementById('project-select').value;
+  const date = document.getElementById('date-picker').value;
+  if (!projectId) { alert('프로젝트를 선택해주세요.'); return; }
+
+  document.getElementById('main-content').innerHTML = '<div class="card"><div class="empty">불러오는 중...</div></div>';
+  document.getElementById('send-section').innerHTML = '';
+
+  const res = await fetch(`/api/project-report-data?projectId=${projectId}&date=${date}`);
+  if (!res.ok) { document.getElementById('main-content').innerHTML = '<div class="card"><div class="empty">데이터를 불러올 수 없습니다.</div></div>'; return; }
+  reportData = await res.json();
+  renderTasks();
+  renderSendSection();
+}
+
+function getProgressStr(step) {
+  if (step.type === 'check') return step.done ? '✅ 완료' : '⬜ 미완료';
+  if (step.type === 'qty') return `${step.current || 0} / ${step.target || 1}`;
+  return `${step.pct || 0}%`;
+}
+
+function renderTasks() {
+  const { project, date, tasks } = reportData;
+  const fmt = d => { if (!d) return ''; const [y,m,dd] = d.split('-'); return `${y}.${m}.${dd}`; };
+
+  if (!tasks || tasks.length === 0) {
+    document.getElementById('main-content').innerHTML = '<div class="card"><div class="empty">단위업무가 없습니다.</div></div>';
+    return;
+  }
+
+  const taskBlocks = tasks.map((task, ti) => {
+    const barW = Math.min(task.progress || 0, 100);
+    const assigneesStr = (task.assignees || []).join(', ') || '미지정';
+
+    const stepRows = (task.steps || []).map((step, si) => {
+      const stepAssigneesStr = (step.assignees || []).join(', ') || '미지정';
+      const memoHtml = (step.todayMemos || []).length > 0
+        ? step.todayMemos.map(m => `
+            <div class="memo-item">
+              <span class="memo-author">${m.name}</span>: 
+              <textarea class="memo-text-input" rows="2" id="memo-${ti}-${si}-${m.name}" data-ti="${ti}" data-si="${si}" data-name="${m.name}">${m.memo}</textarea>
+            </div>`).join('')
+        : '<div class="no-memo">오늘 메모 없음</div>';
+
+      return `<tr>
+        <td style="padding-left:20px;"><div class="step-name">${step.name}</div></td>
+        <td><span style="font-size:11px;color:#888;">${stepAssigneesStr}</span></td>
+        <td><span class="step-pct">${getProgressStr(step)}</span></td>
+        <td>${memoHtml}</td>
+      </tr>`;
+    }).join('');
+
+    return `
+      <div class="task-block">
+        <div class="task-header">
+          <span class="task-name">${task.name}</span>
+          <span class="task-assignees">${assigneesStr}</span>
+          <span class="task-pct">${task.progress || 0}%</span>
+        </div>
+        <div class="prog-wrap">
+          <div class="prog-bg"><div class="prog-fill" style="width:${barW}%"></div></div>
+        </div>
+        <table class="step-table">
+          <tr><th>단계</th><th>담당자</th><th>진행률</th><th>오늘 작업 내역 (수정 가능)</th></tr>
+          ${stepRows}
+        </table>
+      </div>`;
+  }).join('');
+
+  document.getElementById('main-content').innerHTML = `
+    <div class="card">
+      <div class="section-title">${project.name} &nbsp;<span style="font-size:12px;color:#aaa;font-weight:400;">${fmt(date)}</span></div>
+      ${taskBlocks}
+    </div>
+    <div class="card">
+      <div class="section-title">✨ 프로젝트 요약 (선택)</div>
+      <textarea class="summary-box" id="project-summary" placeholder="프로젝트 전체 요약을 입력하세요 (선택사항)"></textarea>
+    </div>`;
+}
+
+async function renderSendSection() {
+  const res = await fetch('/api/recipients');
+  const rData = await res.json();
+  const recipients = rData.recipients || [];
+
+  const recipientHtml = recipients.map(r => `
+    <label class="recipient-item">
+      <input type="checkbox" class="proj-recipient-chk" value="${r.email}" checked>
+      <span class="recipient-name">${r.name} (${r.position || r.role || ''})</span>
+      ${r.level === 1 ? '<span style="font-size:10px;background:#e8f0fe;color:#1558b0;padding:1px 7px;border-radius:20px;">경영진</span>' : ''}
+      <span class="recipient-email">${r.email}</span>
+    </label>`).join('');
+
+  document.getElementById('send-section').innerHTML = `
+    <div class="card">
+      <div class="section-title">발송 설정</div>
+      <div style="font-size:13px;font-weight:500;margin-bottom:10px;">수신자 선택</div>
+      <div class="recipient-list">${recipientHtml || '<div style="font-size:12px;color:#aaa;">수신 가능한 상급자가 없습니다.</div>'}</div>
+      <button class="send-btn" id="send-btn" onclick="sendReport()">📨 프로젝트 취합보고 발송</button>
+      <div class="send-hint">발송 후에는 취소할 수 없습니다.</div>
+    </div>`;
+}
+
+async function sendReport() {
+  if (!reportData) { alert('먼저 데이터를 불러오세요.'); return; }
+  const recipients = [...document.querySelectorAll('.proj-recipient-chk:checked')].map(el => el.value);
+  if (recipients.length === 0) { alert('수신자를 1명 이상 선택해주세요.'); return; }
+
+  // 수정된 메모 반영
+  const tasks = reportData.tasks.map((task, ti) => ({
+    ...task,
+    steps: (task.steps || []).map((step, si) => ({
+      ...step,
+      todayMemos: (step.todayMemos || []).map(m => {
+        const el = document.getElementById(`memo-${ti}-${si}-${m.name}`);
+        return { name: m.name, memo: el ? el.value : m.memo };
+      }),
+    })),
+  }));
+
+  const summary = document.getElementById('project-summary')?.value || '';
+
+  if (!confirm(`프로젝트 취합보고를 발송하시겠습니까?\n\n프로젝트: ${reportData.project.name}\n수신자: ${recipients.length}명\n\n발송 후 취소할 수 없습니다.`)) return;
+
+  const btn = document.getElementById('send-btn');
+  btn.disabled = true; btn.textContent = '발송 중...';
+
+  const res = await fetch('/api/project-report-send', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ projectId: reportData.project.id, date: reportData.date, tasks, recipients, summary }),
+  });
+
+  if (res.ok) { showToast('✅ 프로젝트 취합보고가 발송되었습니다!'); btn.textContent = '✅ 발송 완료'; }
+  else { const err = await res.json(); alert('발송 실패: ' + err.error); btn.disabled = false; btn.textContent = '📨 프로젝트 취합보고 발송'; }
+}
+
+function logout() { fetch('/logout', { method: 'POST' }).then(() => location.href = '/login'); }
+init();
+</script>
+</body>
+</html>

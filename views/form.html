@@ -392,6 +392,8 @@
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
         <span id="user-name" onclick="openPwModal()" style="font-size:13px;color:#555;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px;" title="비밀번호 변경"></span>
         <div style="display:flex;gap:8px">
+          <a id="team-daily-link" href="/team-daily" style="display:none;font-size:12px;color:#16a34a;text-decoration:none;border:1px solid #16a34a;border-radius:5px;padding:4px 10px;font-weight:500;">👥 팀 취합</a>
+          <a id="project-report-link" href="/project-report" style="display:none;font-size:12px;color:#9333ea;text-decoration:none;border:1px solid #9333ea;border-radius:5px;padding:4px 10px;font-weight:500;">📊 프로젝트 취합</a>
           <a id="admin-link" href="/admin" style="display:none;font-size:12px;color:#1a73e8;text-decoration:none;border:1px solid #1a73e8;border-radius:5px;padding:4px 10px">관리자</a>
           <a href="/weekly" style="font-size:12px;color:#34a853;text-decoration:none;border:1px solid #34a853;border-radius:5px;padding:4px 10px;font-weight:500;">📋 주간보고</a>
           <a href="/quarterly" style="font-size:12px;color:#2563eb;text-decoration:none;border:1px solid #2563eb;border-radius:5px;padding:4px 10px;font-weight:500;">📊 분기보고</a>
@@ -439,6 +441,10 @@
       document.getElementById('user-name').textContent = `${currentUser.name}님`;
       if (currentUser.role === 'admin' || currentUser.isAdmin === true) {
         document.getElementById('admin-link').style.display = 'inline';
+      }
+      if ((currentUser.level || 4) <= 3) {
+        document.getElementById('team-daily-link').style.display = 'inline';
+        document.getElementById('project-report-link').style.display = 'inline';
       }
 
       const res = await fetch('/api/projects');
