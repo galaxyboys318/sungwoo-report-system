@@ -1011,15 +1011,15 @@
     <div style="font-size:16px;font-weight:600;color:#1a1a2e;margin-bottom:20px;">🔒 비밀번호 변경</div>
     <div style="margin-bottom:12px;">
       <label style="font-size:12px;color:#666;display:block;margin-bottom:5px;">현재 비밀번호</label>
-      <input type="password" id="pw-current" placeholder="현재 비밀번호 입력" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:inherit;outline:none;" oninput="clearPwError()">
+      <input type="password" id="pw-current" autocomplete="current-password" placeholder="현재 비밀번호 입력" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:inherit;outline:none;" oninput="clearPwError()">
     </div>
     <div style="margin-bottom:12px;">
       <label style="font-size:12px;color:#666;display:block;margin-bottom:5px;">새 비밀번호</label>
-      <input type="password" id="pw-new" placeholder="새 비밀번호 (4자 이상)" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:inherit;outline:none;" oninput="clearPwError()">
+      <input type="password" id="pw-new" autocomplete="new-password" placeholder="새 비밀번호 (4자 이상)" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:inherit;outline:none;" oninput="clearPwError()">
     </div>
     <div style="margin-bottom:18px;">
       <label style="font-size:12px;color:#666;display:block;margin-bottom:5px;">새 비밀번호 확인</label>
-      <input type="password" id="pw-confirm" placeholder="새 비밀번호 다시 입력" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:inherit;outline:none;" oninput="clearPwError()">
+      <input type="password" id="pw-confirm" autocomplete="new-password" placeholder="새 비밀번호 다시 입력" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:inherit;outline:none;" oninput="clearPwError()">
     </div>
     <div id="pw-error" style="font-size:12px;color:#e74c3c;margin-bottom:12px;display:none;"></div>
     <div style="display:flex;gap:8px;">
