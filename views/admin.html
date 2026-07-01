@@ -544,7 +544,7 @@
           <div class="user-name">${user.name}</div>
           <div class="user-sub">${user.email} · ${user.division||''} ${user.team||''}</div>
         </div>
-        <span class="level-badge ${levelClass}">${user.position||'팀원'} (Lv.${user.level||4})</span>
+        <span class="level-badge ${levelClass}" onclick="editPosition('${user.id}', '${user.position||'팀원'}')" title="클릭하여 직급 변경" style="cursor:pointer;">${user.position||'팀원'} (Lv.${user.level||4}) ✏️</span>
         ${user.isAdmin ? `<span style="font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700;background:${scopeColor.bg};color:${scopeColor.text};">${scopeLabel}${scope!=='system' && (user.managedTeams||[]).length ? ` · ${user.managedTeams.join(', ')}` : ''}</span>` : ''}
         <select style="font-size:12px;padding:5px 8px;border-radius:6px;border:1px solid #ddd;cursor:pointer;" onchange="changeLevel('${user.email}', this.value)">
           <option value="1" ${(user.level||4)==1?'selected':''}>Lv.1 회장/대표</option>
@@ -560,6 +560,47 @@
       `;
       container.appendChild(div);
     });
+  }
+
+  // ─── 직급 변경 모달 ──────────────────────────────
+  async function editPosition(userId, currentPosition) {
+    const positions = ['회장', '대표이사', '이사', '부장', '차장', '과장', '대리', '주임', '사원', '팀장', '팀원'];
+    const modalHtml = `
+      <div id="pos-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;display:flex;align-items:center;justify-content:center;">
+        <div style="background:#fff;border-radius:14px;padding:28px;width:360px;max-width:90vw;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
+          <div style="font-size:16px;font-weight:600;color:#1a1a2e;margin-bottom:16px;">직급 변경</div>
+          <div style="margin-bottom:12px;">
+            <div style="font-size:12px;color:#888;margin-bottom:8px;">자주 쓰는 직급</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
+              ${positions.map(p => `<button onclick="document.getElementById('pos-input').value='${p}'" style="padding:4px 10px;border:1px solid #ddd;border-radius:20px;font-size:12px;background:#f8f9fa;cursor:pointer;font-family:inherit;">${p}</button>`).join('')}
+            </div>
+            <input id="pos-input" type="text" value="${currentPosition}" placeholder="직접 입력" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;font-family:inherit;outline:none;">
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="document.getElementById('pos-modal').remove()" style="flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:13px;cursor:pointer;color:#666;">취소</button>
+            <button onclick="savePosition('${userId}')" style="flex:1;padding:10px;border:none;border-radius:8px;background:#1a73e8;color:#fff;font-size:13px;cursor:pointer;font-weight:500;">저장</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    document.getElementById('pos-input').focus();
+  }
+
+  async function savePosition(userId) {
+    const position = document.getElementById('pos-input').value.trim();
+    if (!position) { alert('직급을 입력해주세요.'); return; }
+    const res = await fetch('/api/users/position', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, position }),
+    });
+    if (res.ok) {
+      document.getElementById('pos-modal').remove();
+      showToast('직급이 변경되었습니다.');
+      loadUsers();
+    } else {
+      const err = await res.json();
+      alert('변경 실패: ' + (err.error || ''));
+    }
   }
 
   // ─── 보고 대상 설정 모달 ─────────────────────────
