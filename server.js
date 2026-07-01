@@ -31,6 +31,35 @@ function requireAdmin(req, res, next) {
   res.status(403).json({ error: '관리자 권한이 필요합니다.' });
 }
 
+// 시스템관리자 전용 (직원 관리, 권한 부여 등 민감한 작업)
+function requireSystemAdmin(req, res, next) {
+  const u = req.session.user;
+  const isAdmin = u?.role === 'admin' || u?.isAdmin === true;
+  const scope = u?.adminScope || 'system';
+  if (isAdmin && scope === 'system') return next();
+  res.status(403).json({ error: '시스템관리자 권한이 필요합니다.' });
+}
+
+// 관리자의 권한 범위 조회 헬퍼
+function getAdminScope(user) {
+  const scope = user?.adminScope || 'system';
+  const teams = user?.managedTeams || [];
+  return { scope, teams };
+}
+
+// 프로젝트가 관리자 권한 범위 내에 있는지 확인
+function isProjectInScope(user, project) {
+  const { scope, teams } = getAdminScope(user);
+  if (scope === 'system') return true;
+  return teams.includes(project.team);
+}
+
+function requireTeamLead(req, res, next) {
+  const level = req.session.user?.level || 4;
+  if (level <= 3) return next(); // 팀장 이상
+  res.status(403).json({ error: '팀장 이상 권한이 필요합니다.' });
+}
+
 // ─── 로그인 API ──────────────────────────────────────────
 
 // 현재 로그인 유저 정보
@@ -106,7 +135,7 @@ app.get('/api/recipients', requireLogin, (req, res) => {
 });
 
 // reportsTo 변경 API (관리자)
-app.post('/api/users/reportsTo', requireAdmin, (req, res) => {
+app.post('/api/users/reportsTo', requireSystemAdmin, (req, res) => {
   const { userId, reportsTo } = req.body;
   const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
   const user = data.users.find(u => u.id === userId);
@@ -118,12 +147,16 @@ app.post('/api/users/reportsTo', requireAdmin, (req, res) => {
 
 app.get('/api/users', requireAdmin, (req, res) => {
   const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
-  // 비밀번호 제외하고 응답
-  const users = data.users.map(({ password, ...u }) => u);
+  const { scope, teams } = getAdminScope(req.session.user);
+  // 비밀번호 제외하고 응답, 권한 범위에 맞게 필터링
+  let users = data.users.map(({ password, ...u }) => u);
+  if (scope !== 'system') {
+    users = users.filter(u => teams.includes(u.team) || u.id === req.session.user.id);
+  }
   res.json({ users });
 });
 
-app.post('/api/users/add', requireAdmin, (req, res) => {
+app.post('/api/users/add', requireSystemAdmin, (req, res) => {
   const { name, email, password, role, team, division, position, level } = req.body;
   if (!name || !email || !password) return res.status(400).json({ error: '필수값 누락' });
   const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
@@ -133,7 +166,7 @@ app.post('/api/users/add', requireAdmin, (req, res) => {
   res.json({ success: true });
 });
 
-app.post('/api/users/delete', requireAdmin, (req, res) => {
+app.post('/api/users/delete', requireSystemAdmin, (req, res) => {
   const { userId } = req.body;
   const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
   data.users = data.users.filter(u => u.id !== userId);
@@ -141,7 +174,7 @@ app.post('/api/users/delete', requireAdmin, (req, res) => {
   res.json({ success: true });
 });
 
-app.post('/api/users/level', requireAdmin, (req, res) => {
+app.post('/api/users/level', requireSystemAdmin, (req, res) => {
   const { email, level } = req.body;
   const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
   const user = data.users.find(u => u.email === email);
@@ -154,12 +187,35 @@ app.post('/api/users/level', requireAdmin, (req, res) => {
   res.json({ success: true });
 });
 
-app.post('/api/users/admin', requireAdmin, (req, res) => {
+app.post('/api/users/admin', requireSystemAdmin, (req, res) => {
   const { userId, isAdmin } = req.body;
   const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
   const user = data.users.find(u => u.id === userId);
   if (!user) return res.status(404).json({ error: '사용자 없음' });
   user.isAdmin = isAdmin;
+  // 관리자 해제 시 권한 범위도 초기화
+  if (!isAdmin) {
+    user.adminScope = 'system';
+    user.managedTeams = [];
+  } else if (!user.adminScope) {
+    user.adminScope = 'system'; // 기본값 — 시스템관리자에서 운영관리자 범위 변경 API로 조정 가능
+  }
+  saveUsers(data);
+  res.json({ success: true });
+});
+
+// 관리자 권한 범위(adminScope/managedTeams) 설정 — 시스템관리자만 변경 가능
+app.post('/api/users/adminScope', requireSystemAdmin, (req, res) => {
+  const { userId, adminScope, managedTeams } = req.body;
+  if (!['system', 'division', 'team'].includes(adminScope)) {
+    return res.status(400).json({ error: '잘못된 adminScope 값입니다.' });
+  }
+  const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
+  const user = data.users.find(u => u.id === userId);
+  if (!user) return res.status(404).json({ error: '사용자 없음' });
+  if (!user.isAdmin) return res.status(400).json({ error: '먼저 관리자 권한을 부여해야 합니다.' });
+  user.adminScope = adminScope;
+  user.managedTeams = adminScope === 'system' ? [] : (Array.isArray(managedTeams) ? managedTeams : []);
   saveUsers(data);
   res.json({ success: true });
 });
@@ -178,7 +234,7 @@ app.post('/api/users/my-password', requireLogin, (req, res) => {
   res.json({ success: true });
 });
 
-app.post('/api/users/password', requireAdmin, (req, res) => {
+app.post('/api/users/password', requireSystemAdmin, (req, res) => {
   const { userId, newPassword } = req.body;
   const data = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
   const user = data.users.find(u => u.id === userId);
@@ -289,14 +345,17 @@ function saveProjects(data) {
 // 관리자용 전체 프로젝트 조회 (필터링 없음)
 app.get('/api/projects/all', requireAdmin, (req, res) => {
   const data = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
-  res.json(data);
+  const { scope, teams } = getAdminScope(req.session.user);
+  if (scope === 'system') return res.json(data);
+  res.json({ projects: data.projects.filter(p => teams.includes(p.team)) });
 });
 
-// 단위업무 담당자 수정
-app.post('/api/projects/task/assignees', (req, res) => {
+// 단위업무 담당자 수정 (관리자)
+app.post('/api/projects/task/assignees', requireAdmin, (req, res) => {
   const { projectId, taskId, assignees } = req.body;
   const data = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
   const project = data.projects.find(p => p.id === projectId);
+  if (!project || !isProjectInScope(req.session.user, project)) return res.status(403).json({ error: '권한 범위 밖의 프로젝트입니다.' });
   const task = project?.tasks.find(t => t.id === taskId);
   if (!task) return res.status(404).json({ error: '단위업무 없음' });
   task.assignees = assignees || [];
@@ -304,11 +363,12 @@ app.post('/api/projects/task/assignees', (req, res) => {
   res.json({ success: true, projects: data.projects });
 });
 
-// 단계 담당자 수정
-app.post('/api/projects/step/assignees', (req, res) => {
+// 단계 담당자 수정 (관리자)
+app.post('/api/projects/step/assignees', requireAdmin, (req, res) => {
   const { projectId, taskId, stepId, assignees } = req.body;
   const data = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
   const project = data.projects.find(p => p.id === projectId);
+  if (!project || !isProjectInScope(req.session.user, project)) return res.status(403).json({ error: '권한 범위 밖의 프로젝트입니다.' });
   const task = project?.tasks.find(t => t.id === taskId);
   const step = task?.steps?.find(s => s.id === stepId);
   if (!step) return res.status(404).json({ error: '단계 없음' });
@@ -332,33 +392,44 @@ app.post('/api/projects/task/add', (req, res) => {
   res.json({ success: true, projects: data.projects });
 });
 
-// 단위업무 삭제
-app.post('/api/projects/task/delete', (req, res) => {
+// 단위업무 삭제 (관리자)
+app.post('/api/projects/task/delete', requireAdmin, (req, res) => {
   const { projectId, taskId } = req.body;
   const data = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
   const project = data.projects.find(p => p.id === projectId);
   if (!project) return res.status(404).json({ error: '프로젝트 없음' });
+  if (!isProjectInScope(req.session.user, project)) return res.status(403).json({ error: '권한 범위 밖의 프로젝트입니다.' });
 
   project.tasks = project.tasks.filter(t => t.id !== taskId);
   saveProjects(data);
   res.json({ success: true, projects: data.projects });
 });
 
-// 프로젝트 정보 수정
-app.post('/api/projects/update', (req, res) => {
+// 프로젝트 정보 수정 (관리자)
+app.post('/api/projects/update', requireAdmin, (req, res) => {
   const { projectId, updates } = req.body;
   const data = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
   const project = data.projects.find(p => p.id === projectId);
   if (!project) return res.status(404).json({ error: '프로젝트 없음' });
+  if (!isProjectInScope(req.session.user, project)) return res.status(403).json({ error: '권한 범위 밖의 프로젝트입니다.' });
+  // 운영관리자는 프로젝트를 본인 권한 범위 밖 팀으로 옮길 수 없음
+  const { scope, teams } = getAdminScope(req.session.user);
+  if (scope !== 'system' && updates?.team && !teams.includes(updates.team)) {
+    return res.status(403).json({ error: '권한 범위 밖의 팀으로 변경할 수 없습니다.' });
+  }
   Object.assign(project, updates);
   saveProjects(data);
   res.json({ success: true, projects: data.projects });
 });
 
-// 프로젝트 삭제
-app.post('/api/projects/delete', (req, res) => {
+// 프로젝트 삭제 (관리자)
+app.post('/api/projects/delete', requireAdmin, (req, res) => {
   const { projectId } = req.body;
   const data = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
+  const project = data.projects.find(p => p.id === projectId);
+  if (!project) return res.status(404).json({ error: '프로젝트 없음' });
+  if (!isProjectInScope(req.session.user, project)) return res.status(403).json({ error: '권한 범위 밖의 프로젝트입니다.' });
+
   data.projects = data.projects.filter(p => p.id !== projectId);
   saveProjects(data);
   res.json({ success: true, projects: data.projects });
@@ -424,9 +495,15 @@ app.post('/api/projects/step/delete', (req, res) => {
 });
 
 // 프로젝트 추가
-app.post('/api/projects/add', (req, res) => {
+app.post('/api/projects/add', requireAdmin, (req, res) => {
   const { name, tag, division, team, manager, assignee, startDate, targetDate } = req.body;
   if (!name || !tag) return res.status(400).json({ error: '잘못된 요청' });
+
+  const { scope, teams } = getAdminScope(req.session.user);
+  if (scope !== 'system' && (!team || !teams.includes(team))) {
+    return res.status(403).json({ error: '본인 관리 범위 내의 팀으로만 프로젝트를 생성할 수 있습니다.' });
+  }
+
   const data = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
   const newId = `p${Date.now()}`;
   data.projects.push({ id: newId, name, tag, division: division||'', team: team||'', manager: manager||'', assignee: assignee||'', startDate: startDate||'', targetDate: targetDate||'', tasks: [] });
@@ -1197,6 +1274,258 @@ app.post('/api/annual-send', requireLogin, async (req, res) => {
     const aRecord = { year, reporter: user.name, team: user.team, email: user.email, sentAt: new Date().toISOString(), sentTo: toAddresses, aiSummary, quarterlyRecords };
     fs.writeFileSync(path.join(aDir, `${year}-${user.id || user.email}.json`), JSON.stringify(aRecord, null, 2), 'utf-8');
     saveToGitHub(`data/annual/${year}-${user.id || user.email}.json`, aRecord).catch(e => console.error('[GitHub annual 백업 실패]', e.message));
+
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ─── 팀 일일 취합보고 ───────────────────────────────────────
+app.get('/team-daily', requireTeamLead, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'team-daily.html'));
+});
+
+app.get('/api/team-daily-status', requireTeamLead, (req, res) => {
+  const leader = req.session.user;
+  const date = req.query.date || new Date().toISOString().slice(0, 10);
+  const usersData = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
+  const teamMembers = usersData.users.filter(u => u.team === leader.team && u.email !== leader.email);
+
+  const logPath = path.join(__dirname, 'data', 'reports', `${date}.json`);
+  let entries = [];
+  if (fs.existsSync(logPath)) {
+    const raw = JSON.parse(fs.readFileSync(logPath, 'utf-8'));
+    entries = Array.isArray(raw) ? raw : [raw];
+  }
+
+  const submitted = [];
+  const missing = [];
+  teamMembers.forEach(member => {
+    const entry = entries.find(e => e.reporterEmail === member.email || e.reporterName === member.name);
+    if (entry) {
+      submitted.push({ email: member.email, reporterName: member.name, body: entry.body, subject: entry.subject, timestamp: entry.timestamp });
+    } else {
+      missing.push({ email: member.email, name: member.name });
+    }
+  });
+
+  res.json({ date, team: leader.team, submitted, missing, totalMembers: teamMembers.length });
+});
+
+app.post('/api/team-daily-remind', requireTeamLead, async (req, res) => {
+  const { email, name } = req.body;
+  const leader = req.session.user;
+  try {
+    const { sendReminderEmail } = require('./mailer');
+    await sendReminderEmail(email, name, leader.name, 'daily');
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/api/team-daily-send', requireTeamLead, async (req, res) => {
+  const { date, members, recipients } = req.body;
+  const leader = req.session.user;
+
+  if (!members || members.length === 0) return res.status(400).json({ error: '취합할 보고 내용이 없습니다.' });
+  if (!recipients || recipients.length === 0) return res.status(400).json({ error: '수신자를 선택해주세요.' });
+
+  try {
+    const { sendTeamDailyReport } = require('./mailer');
+    await sendTeamDailyReport(leader.team, date, members, leader.name, recipients);
+
+    // 저장
+    const dir = path.join(__dirname, 'data', 'team-reports', 'daily');
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    const record = { team: leader.team, date, leader: leader.name, sentAt: new Date().toISOString(), sentTo: recipients, members };
+    const fileName = `${date}-${leader.team}.json`;
+    fs.writeFileSync(path.join(dir, fileName), JSON.stringify(record, null, 2), 'utf-8');
+    saveToGitHub(`data/team-reports/daily/${fileName}`, record).catch(e => console.error('[GitHub 팀일일취합 백업 실패]', e.message));
+
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ─── 팀 주간 취합보고 ───────────────────────────────────────
+app.get('/team-weekly', requireTeamLead, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'team-weekly.html'));
+});
+
+function getISOWeekInfo(d) {
+  const date = new Date(d); date.setHours(0,0,0,0);
+  date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+  const week1 = new Date(date.getFullYear(), 0, 4);
+  const week = 1 + Math.round(((date - week1) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+  return { year: date.getFullYear(), week };
+}
+
+app.get('/api/team-weekly-status', requireTeamLead, (req, res) => {
+  const leader = req.session.user;
+  const today = new Date();
+  const { year, week } = getISOWeekInfo(today);
+  const weekKey = req.query.weekKey || `${year}-W${String(week).padStart(2,'0')}`;
+
+  const usersData = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
+  const teamMembers = usersData.users.filter(u => u.team === leader.team && u.email !== leader.email);
+
+  const weeklyDir = path.join(__dirname, 'data', 'weekly');
+  const records = [];
+  if (fs.existsSync(weeklyDir)) {
+    fs.readdirSync(weeklyDir).forEach(f => {
+      if (!f.endsWith('.json')) return;
+      try {
+        const rec = JSON.parse(fs.readFileSync(path.join(weeklyDir, f), 'utf-8'));
+        if (rec.weekKey === weekKey && rec.team === leader.team) records.push(rec);
+      } catch (e) {}
+    });
+  }
+
+  const submitted = [];
+  const missing = [];
+  teamMembers.forEach(member => {
+    const rec = records.find(r => r.email === member.email || r.reporter === member.name);
+    if (rec) {
+      submitted.push({ email: member.email, reporter: member.name, aiSummary: rec.aiSummary, weekStart: rec.weekStart, weekEnd: rec.weekEnd });
+    } else {
+      missing.push({ email: member.email, name: member.name });
+    }
+  });
+
+  let weekStart = '', weekEnd = '';
+  if (records.length > 0) { weekStart = records[0].weekStart; weekEnd = records[0].weekEnd; }
+
+  res.json({ weekKey, team: leader.team, submitted, missing, totalMembers: teamMembers.length, weekStart, weekEnd });
+});
+
+app.post('/api/team-weekly-remind', requireTeamLead, async (req, res) => {
+  const { email, name } = req.body;
+  const leader = req.session.user;
+  try {
+    const { sendReminderEmail } = require('./mailer');
+    await sendReminderEmail(email, name, leader.name, 'weekly');
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/api/team-weekly-send', requireTeamLead, async (req, res) => {
+  const { weekKey, weekStart, weekEnd, members, recipients } = req.body;
+  const leader = req.session.user;
+
+  if (!members || members.length === 0) return res.status(400).json({ error: '취합할 보고 내용이 없습니다.' });
+  if (!recipients || recipients.length === 0) return res.status(400).json({ error: '수신자를 선택해주세요.' });
+
+  try {
+    const { sendTeamWeeklyReport } = require('./mailer');
+    await sendTeamWeeklyReport(leader.team, weekKey, weekStart, weekEnd, members, leader.name, recipients);
+
+    const dir = path.join(__dirname, 'data', 'team-reports', 'weekly');
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    const record = { team: leader.team, weekKey, weekStart, weekEnd, leader: leader.name, sentAt: new Date().toISOString(), sentTo: recipients, members };
+    const fileName = `${weekKey}-${leader.team}.json`;
+    fs.writeFileSync(path.join(dir, fileName), JSON.stringify(record, null, 2), 'utf-8');
+    saveToGitHub(`data/team-reports/weekly/${fileName}`, record).catch(e => console.error('[GitHub 팀주간취합 백업 실패]', e.message));
+
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ─── 프로젝트 취합 보고 ─────────────────────────────────────
+app.get('/project-report', requireTeamLead, (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'project-report.html'));
+});
+
+// 프로젝트 취합 데이터 조회
+app.get('/api/project-report-data', requireTeamLead, (req, res) => {
+  const { projectId, date } = req.query;
+  const user = req.session.user;
+  const today = date || new Date().toISOString().slice(0, 10);
+
+  const projData = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
+  const project = (projData.projects || []).find(p => p.id === projectId);
+  if (!project) return res.status(404).json({ error: '프로젝트 없음' });
+
+  // 해당 날짜 보고 데이터에서 담당자별 체크 내역 수집
+  const logPath = path.join(__dirname, 'data', 'reports', `${today}.json`);
+  const reporterBodies = {};
+  if (fs.existsSync(logPath)) {
+    const logs = JSON.parse(fs.readFileSync(logPath, 'utf-8'));
+    const entries = Array.isArray(logs) ? logs : [logs];
+    entries.forEach(e => {
+      if (e.reporterName) reporterBodies[e.reporterName] = e.body || '';
+    });
+  }
+
+  // 단위업무별 담당자 + 진행 현황 + 오늘 메모 취합
+  const tasks = (project.tasks || []).map(task => {
+    const taskAssignees = task.assignees || [];
+    const steps = (task.steps || []).map(step => {
+      const stepAssignees = step.assignees || [];
+      const allAssignees = [...new Set([...taskAssignees, ...stepAssignees])];
+
+      // 오늘 날짜의 memoHistory 항목 수집
+      const todayMemos = allAssignees
+        .map(name => {
+          const memoEntry = (step.memoHistory || []).find(m => m.date === today);
+          return memoEntry ? { name, memo: memoEntry.memo } : null;
+        })
+        .filter(Boolean);
+
+      return {
+        id: step.id,
+        name: step.name,
+        type: step.type || 'check',
+        done: step.done || false,
+        pct: step.pct || 0,
+        current: step.current || 0,
+        target: step.target || 1,
+        assignees: allAssignees,
+        todayMemos,
+        memo: step.memo || '',
+      };
+    });
+
+    return {
+      id: task.id,
+      name: task.name,
+      progress: task.progress || 0,
+      assignees: taskAssignees,
+      steps,
+    };
+  });
+
+  res.json({ project: { id: project.id, name: project.name, tag: project.tag, team: project.team }, date: today, tasks });
+});
+
+// 프로젝트 취합 보고 발송
+app.post('/api/project-report-send', requireTeamLead, async (req, res) => {
+  const { projectId, date, tasks, recipients, summary } = req.body;
+  const leader = req.session.user;
+
+  if (!recipients || recipients.length === 0) return res.status(400).json({ error: '수신자를 선택해주세요.' });
+
+  const projData = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
+  const project = (projData.projects || []).find(p => p.id === projectId);
+  if (!project) return res.status(404).json({ error: '프로젝트 없음' });
+
+  try {
+    const { sendProjectReport } = require('./mailer');
+    await sendProjectReport({ project, date, tasks, summary }, leader.name, leader.team, recipients);
+
+    // 저장
+    const dir = path.join(__dirname, 'data', 'team-reports', 'project');
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    const record = { projectId, projectName: project.name, date, leader: leader.name, team: leader.team, sentAt: new Date().toISOString(), sentTo: recipients, tasks, summary };
+    const fileName = `${date}-${projectId}.json`;
+    fs.writeFileSync(path.join(dir, fileName), JSON.stringify(record, null, 2), 'utf-8');
+    saveToGitHub(`data/team-reports/project/${fileName}`, record).catch(e => console.error('[GitHub 프로젝트취합 백업 실패]', e.message));
 
     res.json({ success: true });
   } catch (e) {

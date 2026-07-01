@@ -530,4 +530,192 @@ async function sendAnnualReport(data, recipients, reporterName, reporterTeam) {
   });
 }
 
-module.exports = { sendReport, sendWeeklyReport, sendQuarterlyReport, sendAnnualReport, verifyConnection, buildHtmlEmail, buildWeeklyHtmlEmail, buildQuarterlyHtmlEmail, buildAnnualHtmlEmail };
+// ─── 팀 일일 취합보고 이메일 ──────────────────────────────
+function buildTeamDailyHtmlEmail(team, date, members, leaderName) {
+  const fmt = d => { const [y,m,dd] = d.split('-'); return `${y}.${m}.${dd}`; };
+
+  const memberCards = members.map(m => {
+    const bodyHtml = (m.body || '').split('\n').map(line => {
+      const content = line.trim();
+      if (!content) return '<div style="min-height:0.5em">&nbsp;</div>';
+      const isMain = /^\d+\./.test(content);
+      return `<div style="min-height:1.6em;font-weight:${isMain?'600':'400'};color:${isMain?'#1a1a2e':'#444'};">${content}</div>`;
+    }).join('');
+    return `
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:14px;background:#f8fbff;border-radius:10px;border:1.5px solid #c8d8f8;">
+      <tr><td style="padding:16px 20px;">
+        <p style="margin:0 0 10px;font-size:14px;font-weight:600;color:#1a1a2e;">${m.reporterName}</p>
+        <div style="background:#fff;border-radius:8px;padding:12px 14px;font-size:12px;line-height:1.8;color:#222;">${bodyHtml}</div>
+      </td></tr></table>`;
+  }).join('');
+
+  return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f5f6fa;font-family:'Malgun Gothic',sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#1a73e8;"><tr><td style="padding:14px 28px;">
+  <span style="color:#fff;font-size:15px;font-weight:500;">도서출판 성우 &nbsp;·&nbsp; ${team} 일일 취합보고</span>
+</td></tr></table>
+<table width="660" cellpadding="0" cellspacing="0" style="margin:20px auto;background:#fff;border-radius:12px;">
+<tr><td style="padding:28px 32px;">
+<p style="margin:0 0 4px;font-size:22px;font-weight:500;color:#1a1a2e;">${team} 일일 취합보고서</p>
+<p style="margin:0 0 22px;font-size:12px;color:#aaa;">${fmt(date)} &nbsp;·&nbsp; 취합: ${leaderName} &nbsp;·&nbsp; 참여 ${members.length}명</p>
+<hr style="border:none;border-top:0.5px solid #eee;margin:0 0 18px;">
+${memberCards}
+<hr style="border:none;border-top:0.5px solid #eee;margin:4px 0 12px;">
+<p style="margin:0;font-size:11px;color:#aaa;text-align:center;">이 보고서는 일일보고 자동화 시스템에서 발송되었습니다. &nbsp;·&nbsp; 도서출판 성우 ${team}</p>
+</td></tr></table></body></html>`;
+}
+
+async function sendTeamDailyReport(team, date, members, leaderName, recipients) {
+  const html = buildTeamDailyHtmlEmail(team, date, members, leaderName);
+  const fmt = d => { const [y,m,dd] = d.split('-'); return `${m}.${dd}`; };
+  return transporter.sendMail({
+    from: `"${leaderName} (${team})" <${process.env.SMTP_USER}>`,
+    to: recipients.join(', '),
+    subject: `[일일취합] ${team} (${fmt(date)})`,
+    html,
+  });
+}
+
+// ─── 팀 주간 취합보고 이메일 ──────────────────────────────
+function buildTeamWeeklyHtmlEmail(team, weekKey, weekStart, weekEnd, members, leaderName) {
+  const fmt = d => { const [y,m,dd] = d.split('-'); return `${y}.${m}.${dd}`; };
+
+  const memberCards = members.map(m => `
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:14px;background:#f6fff8;border-radius:10px;border:1.5px solid #b2dfdb;">
+    <tr><td style="padding:16px 20px;">
+      <p style="margin:0 0 10px;font-size:14px;font-weight:600;color:#1a1a2e;">${m.reporter}</p>
+      <div style="background:#fff;border-radius:8px;padding:12px 14px;font-size:12px;line-height:1.8;color:#222;white-space:pre-line;">${m.aiSummary || '요약 없음'}</div>
+    </td></tr></table>`).join('');
+
+  return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f5f6fa;font-family:'Malgun Gothic',sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#2563eb;"><tr><td style="padding:14px 28px;">
+  <span style="color:#fff;font-size:15px;font-weight:500;">도서출판 성우 &nbsp;·&nbsp; ${team} 주간 취합보고</span>
+</td></tr></table>
+<table width="660" cellpadding="0" cellspacing="0" style="margin:20px auto;background:#fff;border-radius:12px;">
+<tr><td style="padding:28px 32px;">
+<p style="margin:0 0 4px;font-size:22px;font-weight:500;color:#1a1a2e;">${team} 주간 취합보고서</p>
+<p style="margin:0 0 22px;font-size:12px;color:#aaa;">${weekKey} (${fmt(weekStart)} ~ ${fmt(weekEnd)}) &nbsp;·&nbsp; 취합: ${leaderName} &nbsp;·&nbsp; 참여 ${members.length}명</p>
+<hr style="border:none;border-top:0.5px solid #eee;margin:0 0 18px;">
+${memberCards}
+<hr style="border:none;border-top:0.5px solid #eee;margin:4px 0 12px;">
+<p style="margin:0;font-size:11px;color:#aaa;text-align:center;">이 보고서는 일일보고 자동화 시스템에서 발송되었습니다. &nbsp;·&nbsp; 도서출판 성우 ${team}</p>
+</td></tr></table></body></html>`;
+}
+
+async function sendTeamWeeklyReport(team, weekKey, weekStart, weekEnd, members, leaderName, recipients) {
+  const html = buildTeamWeeklyHtmlEmail(team, weekKey, weekStart, weekEnd, members, leaderName);
+  return transporter.sendMail({
+    from: `"${leaderName} (${team})" <${process.env.SMTP_USER}>`,
+    to: recipients.join(', '),
+    subject: `[주간취합] ${team} (${weekKey})`,
+    html,
+  });
+}
+
+// ─── 미제출자 알림 이메일 ───────────────────────────────────
+async function sendReminderEmail(toEmail, toName, leaderName, reportType) {
+  const label = reportType === 'weekly' ? '주간보고' : '일일보고';
+  return transporter.sendMail({
+    from: `"${leaderName}" <${process.env.SMTP_USER}>`,
+    to: toEmail,
+    subject: `[알림] ${label} 제출 요청`,
+    html: `<div style="font-family:'Malgun Gothic',sans-serif;padding:24px;">
+      <p style="font-size:14px;color:#1a1a2e;">${toName}님,</p>
+      <p style="font-size:14px;color:#1a1a2e;">팀 취합보고를 위해 ${label} 제출이 필요합니다. 확인 후 빠른 제출 부탁드립니다.</p>
+      <p style="font-size:12px;color:#aaa;margin-top:20px;">- ${leaderName} 드림 -</p>
+    </div>`,
+  });
+}
+
+// ─── 프로젝트 취합 보고 이메일 ──────────────────────────────
+function buildProjectReportHtml(data, leaderName, leaderTeam) {
+  const { project, date, tasks, summary } = data;
+  const fmt = d => { if (!d) return ''; const [y,m,dd] = d.split('-'); return `${y}.${m}.${dd}`; };
+
+  const taskRows = (tasks || []).map(task => {
+    const stepRows = (task.steps || []).map(step => {
+      // 진행률 표시
+      let progressStr = '';
+      if (step.type === 'check') progressStr = step.done ? '✅ 완료' : '⬜ 미완료';
+      else if (step.type === 'qty') progressStr = `${step.current || 0} / ${step.target || 1}`;
+      else progressStr = `${step.pct || 0}%`;
+
+      // 오늘 메모 표시 (B안 — 공동 진행 취합)
+      const memoHtml = (step.todayMemos || []).length > 0
+        ? (step.todayMemos || []).map(m => `<div style="font-size:11px;color:#555;padding:3px 0;border-bottom:0.5px solid #f0f0f0;">
+            <span style="font-weight:500;color:#1a73e8;">${m.name}</span>: ${m.memo}
+          </div>`).join('')
+        : '<div style="font-size:11px;color:#bbb;">오늘 메모 없음</div>';
+
+      const assigneesStr = (step.assignees || []).join(', ') || '미지정';
+
+      return `<tr style="border-bottom:0.5px solid #f0f0f0;">
+        <td style="padding:8px 12px;font-size:12px;color:#444;padding-left:24px;">${step.name}</td>
+        <td style="padding:8px 12px;font-size:11px;color:#888;">${assigneesStr}</td>
+        <td style="padding:8px 12px;font-size:12px;font-weight:500;color:#1a73e8;">${progressStr}</td>
+        <td style="padding:8px 12px;">${memoHtml}</td>
+      </tr>`;
+    }).join('');
+
+    const assigneesStr = (task.assignees || []).join(', ') || '미지정';
+    const barWidth = Math.min(task.progress || 0, 100);
+
+    return `
+      <tr style="background:#f0f4ff;">
+        <td colspan="4" style="padding:10px 12px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:13px;font-weight:600;color:#1a1a2e;flex:1;">${task.name}</span>
+            <span style="font-size:11px;color:#888;">${assigneesStr}</span>
+            <span style="font-size:13px;font-weight:500;color:#1a73e8;">${task.progress || 0}%</span>
+          </div>
+          <div style="height:4px;background:#d1d9f0;border-radius:2px;margin-top:6px;">
+            <div style="height:4px;background:#1a73e8;border-radius:2px;width:${barWidth}%;"></div>
+          </div>
+        </td>
+      </tr>
+      ${stepRows}`;
+  }).join('');
+
+  return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f5f6fa;font-family:'Malgun Gothic',sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#1a73e8;"><tr><td style="padding:14px 28px;">
+  <span style="color:#fff;font-size:15px;font-weight:500;">도서출판 성우 &nbsp;·&nbsp; ${leaderTeam} 프로젝트 취합보고</span>
+</td></tr></table>
+<table width="680" cellpadding="0" cellspacing="0" style="margin:20px auto;background:#fff;border-radius:12px;">
+<tr><td style="padding:28px 32px;">
+  <p style="margin:0 0 4px;font-size:22px;font-weight:500;color:#1a1a2e;">${project.name}</p>
+  <p style="margin:0 0 22px;font-size:12px;color:#aaa;">${fmt(date)} &nbsp;·&nbsp; 취합: ${leaderName} (${leaderTeam}) &nbsp;·&nbsp; ${project.tag || ''}</p>
+  <hr style="border:none;border-top:0.5px solid #eee;margin:0 0 18px;">
+  ${summary ? `
+  <p style="margin:0 0 10px;font-size:14px;font-weight:500;color:#1a1a2e;">프로젝트 요약</p>
+  <div style="background:#f8fbff;border-radius:8px;padding:14px;font-size:13px;line-height:1.8;color:#222;margin-bottom:18px;white-space:pre-line;">${summary}</div>
+  <hr style="border:none;border-top:0.5px solid #eee;margin:0 0 18px;">` : ''}
+  <p style="margin:0 0 10px;font-size:14px;font-weight:500;color:#1a1a2e;">단위업무별 진행 현황</p>
+  <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;border:0.5px solid #e8e8e8;border-radius:8px;overflow:hidden;">
+    <tr style="background:#f8f9fa;">
+      <th style="padding:8px 12px;font-size:11px;color:#666;text-align:left;border-bottom:0.5px solid #e8e8e8;">단계</th>
+      <th style="padding:8px 12px;font-size:11px;color:#666;text-align:left;border-bottom:0.5px solid #e8e8e8;">담당자</th>
+      <th style="padding:8px 12px;font-size:11px;color:#666;text-align:left;border-bottom:0.5px solid #e8e8e8;">진행률</th>
+      <th style="padding:8px 12px;font-size:11px;color:#666;text-align:left;border-bottom:0.5px solid #e8e8e8;">오늘 작업 내역</th>
+    </tr>
+    ${taskRows}
+  </table>
+  <hr style="border:none;border-top:0.5px solid #eee;margin:18px 0 12px;">
+  <p style="margin:0;font-size:11px;color:#aaa;text-align:center;">도서출판 성우 ${leaderTeam} · 일일보고 자동화 시스템</p>
+</td></tr></table></body></html>`;
+}
+
+async function sendProjectReport(data, leaderName, leaderTeam, recipients) {
+  const { project, date } = data;
+  const fmt = d => { if (!d) return ''; const [y,m,dd] = d.split('-'); return `${m}.${dd}`; };
+  const html = buildProjectReportHtml(data, leaderName, leaderTeam);
+  return transporter.sendMail({
+    from: `"${leaderName} (${leaderTeam})" <${process.env.SMTP_USER}>`,
+    to: recipients.join(', '),
+    subject: `[프로젝트취합] ${project.name} (${fmt(date)})`,
+    html,
+  });
+}
+
+module.exports = { sendReport, sendWeeklyReport, sendQuarterlyReport, sendAnnualReport, verifyConnection, buildHtmlEmail, buildWeeklyHtmlEmail, buildQuarterlyHtmlEmail, buildAnnualHtmlEmail, sendTeamDailyReport, sendTeamWeeklyReport, sendReminderEmail, sendProjectReport };
