@@ -4,16 +4,18 @@
       "id": "u1",
       "name": "함흥우",
       "email": "ham318@sungwoobook.com",
-      "password": "1qgkagmddn*",
-      "role": "팀원",
-      "position": "팀원",
-      "level": 4,
+      "password": "1234",
+      "role": "팀장",
+      "position": "팀장",
+      "level": 3,
       "isAdmin": true,
       "team": "솔루션개발팀",
       "division": "초등콘텐츠사업부",
       "reportsTo": [
         "u1781771799336"
-      ]
+      ],
+      "adminScope": "system",
+      "managedTeams": []
     },
     {
       "id": "u1781771178674",
@@ -26,7 +28,9 @@
       "isAdmin": false,
       "team": "해당사항없음",
       "division": "도서출판성우",
-      "reportsTo": []
+      "reportsTo": [],
+      "adminScope": "system",
+      "managedTeams": []
     },
     {
       "id": "u1781771219247",
@@ -39,7 +43,9 @@
       "isAdmin": false,
       "team": "해당사항없음",
       "division": "도서출판성우",
-      "reportsTo": []
+      "reportsTo": [],
+      "adminScope": "system",
+      "managedTeams": []
     },
     {
       "id": "u1781771799336",
@@ -55,6 +61,12 @@
       "reportsTo": [
         "u1781771219247",
         "u1781771178674"
+      ],
+      "adminScope": "division",
+      "managedTeams": [
+        "초등편집팀",
+        "디자인팀",
+        "솔루션개발팀"
       ]
     }
   ]
