@@ -291,6 +291,18 @@
       "isAdmin": false,
       "team": "재무회계팀",
       "division": "영업관리본부"
+    },
+    {
+      "id": "u1782960011195",
+      "name": "윤경희",
+      "email": "92662411@sungwoobook.com",
+      "password": "1234",
+      "role": "팀장",
+      "position": "팀장",
+      "level": 3,
+      "isAdmin": false,
+      "team": "CS팀",
+      "division": "영업관리본부"
     }
   ]
 }
