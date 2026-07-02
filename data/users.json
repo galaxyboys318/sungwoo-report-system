@@ -231,7 +231,14 @@
       "isAdmin": true,
       "team": "영업관리본부",
       "division": "영업관리본부",
-      "adminScope": "system"
+      "adminScope": "division",
+      "managedTeams": [
+        "영업관리본부",
+        "영업팀",
+        "재무회계팀",
+        "CS팀",
+        "물류관리팀"
+      ]
     },
     {
       "id": "u1782959760900",
