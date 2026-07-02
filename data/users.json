@@ -279,6 +279,18 @@
       "isAdmin": false,
       "team": "영업팀",
       "division": "영업관리본부"
+    },
+    {
+      "id": "u1782959981457",
+      "name": "손귀자",
+      "email": "dayo1128@sungwoobook.com",
+      "password": "1234",
+      "role": "팀장",
+      "position": "팀장",
+      "level": 3,
+      "isAdmin": false,
+      "team": "재무회계팀",
+      "division": "영업관리본부"
     }
   ]
 }
