@@ -315,6 +315,18 @@
       "isAdmin": false,
       "team": "물류관리팀",
       "division": "영업관리본부"
+    },
+    {
+      "id": "u1782960274769",
+      "name": "주예나",
+      "email": "jooyena0744@sungwoobook.com",
+      "password": "1234",
+      "role": "팀원",
+      "position": "팀원",
+      "level": 4,
+      "isAdmin": false,
+      "team": "물류관리팀",
+      "division": "영업관리본부"
     }
   ]
 }
