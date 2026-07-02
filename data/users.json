@@ -178,7 +178,10 @@
         "u1781771219247",
         "u1782958833649"
       ],
-      "adminScope": "system"
+      "adminScope": "team",
+      "managedTeams": [
+        "유아편집팀"
+      ]
     },
     {
       "id": "u1782959322562",
