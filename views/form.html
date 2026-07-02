@@ -21,9 +21,9 @@
       padding: 28px 32px;
       margin-bottom: 20px;
     }
-    .header .tag { font-size: 15px; color: #1a73e8; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 8px; }
-    .header h1 { font-size: 25px; color: #1a1a1a; font-weight: 700; }
-    .header .date { font-size: 16px; color: #888; margin-top: 4px; }
+    .header .tag { font-size: clamp(11px, 0.78vw, 16px); color: #1a73e8; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .header h1 { font-size: clamp(19px, 1.3vw, 28px); color: #1a1a1a; font-weight: 700; }
+    .header .date { font-size: clamp(12px, 0.83vw, 18px); color: #888; margin-top: 4px; }
 
     .project-card {
       background: #fff;
@@ -43,11 +43,11 @@
     }
     .project-header:hover { background: #fafafa; }
     .project-color { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-    .project-name { font-size: 19px; font-weight: 700; color: #1a1a1a; flex: 1; }
-    .project-tag { font-size: 14px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
-    .project-arrow { font-size: 15px; color: #aaa; transition: transform 0.2s; }
+    .project-name { font-size: clamp(14px, 0.99vw, 21px); font-weight: 700; color: #1a1a1a; flex: 1; }
+    .project-tag { font-size: clamp(10px, 0.73vw, 15px); padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+    .project-arrow { font-size: clamp(11px, 0.78vw, 16px); color: #aaa; transition: transform 0.2s; }
     .project-arrow.open { transform: rotate(90deg); }
-    .checked-count { font-size: 15px; color: #1a73e8; font-weight: 600; min-width: 40px; text-align: right; }
+    .checked-count { font-size: clamp(11px, 0.78vw, 16px); color: #1a73e8; font-weight: 600; min-width: 40px; text-align: right; }
 
     .task-list { padding: 4px 0; display: none; }
     .task-list.open { display: block; }
@@ -71,7 +71,7 @@
       flex-shrink: 0;
     }
     .task-right { flex: 1; }
-    .task-name { font-size: 18px; color: #333; margin-bottom: 8px; line-height: 1.7; }
+    .task-name { font-size: clamp(14px, 0.94vw, 20px); color: #333; margin-bottom: 8px; line-height: 1.7; }
     .task-item.checked .task-name { color: #1a73e8; font-weight: 600; }
 
     .task-memo {
@@ -79,7 +79,7 @@
       border: 1px solid #e0e0e0;
       border-radius: 6px;
       padding: 7px 10px;
-      font-size: 16px;
+      font-size: clamp(12px, 0.83vw, 18px);
       font-family: inherit;
       color: #333;
       resize: none;
@@ -95,7 +95,7 @@
     .task-item.temp .task-name { color: #888; font-style: italic; }
     .task-item.temp.checked .task-name { color: #1a73e8; font-style: normal; font-weight: 600; }
     .task-delete {
-      font-size: 18px;
+      font-size: clamp(14px, 0.94vw, 20px);
       color: #ccc;
       cursor: pointer;
       margin-top: 2px;
@@ -112,7 +112,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 16px;
+      font-size: clamp(12px, 0.83vw, 18px);
       color: #aaa;
       cursor: pointer;
       background: none;
@@ -122,7 +122,7 @@
       transition: color 0.15s;
     }
     .add-task-btn:hover { color: #1a73e8; }
-    .add-task-btn .plus { font-size: 20px; font-weight: 300; }
+    .add-task-btn .plus { font-size: clamp(15px, 1.04vw, 22px); font-weight: 300; }
 
     /* 추가 입력창 */
     .add-task-input-row {
@@ -137,7 +137,7 @@
       border: 1.5px solid #1a73e8;
       border-radius: 6px;
       padding: 7px 10px;
-      font-size: 16px;
+      font-size: clamp(12px, 0.83vw, 18px);
       font-family: inherit;
       color: #333;
       outline: none;
@@ -148,7 +148,7 @@
       color: #fff;
       border: none;
       border-radius: 6px;
-      font-size: 16px;
+      font-size: clamp(12px, 0.83vw, 18px);
       font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
@@ -159,7 +159,7 @@
       color: #666;
       border: none;
       border-radius: 6px;
-      font-size: 16px;
+      font-size: clamp(12px, 0.83vw, 18px);
       cursor: pointer;
     }
 
@@ -174,7 +174,7 @@
     }
     .step-section.show { display: block; }
     .step-section-title {
-      font-size: 14px;
+      font-size: clamp(10px, 0.73vw, 15px);
       font-weight: 700;
       color: #1a73e8;
       padding: 8px 12px 4px;
@@ -193,7 +193,7 @@
       gap: 10px;
     }
     .step-type-badge {
-      font-size: 12px;
+      font-size: clamp(10px, 0.62vw, 13px);
       padding: 2px 6px;
       border-radius: 4px;
       font-weight: 700;
@@ -203,7 +203,7 @@
     .type-check { background: #e8f0fe; color: #1a73e8; }
     .type-qty   { background: #e6f4ea; color: #137333; }
     .type-pct   { background: #fef7e0; color: #b06000; }
-    .step-name-label { flex: 1; font-size: 16px; color: #333; }
+    .step-name-label { flex: 1; font-size: clamp(12px, 0.83vw, 18px); color: #333; }
     .step-today-chk {
       width: 14px; height: 14px; accent-color: #1a73e8;
       cursor: pointer; flex-shrink: 0; margin-right: 2px;
@@ -222,26 +222,26 @@
       border: 1px solid #c8e6c9;
       border-radius: 4px;
       padding: 4px 6px;
-      font-size: 15px;
+      font-size: clamp(11px, 0.78vw, 16px);
       text-align: center;
       font-family: inherit;
       color: #333;
     }
     .step-qty-input:focus { outline: none; border-color: #34a853; }
-    .step-qty-target { font-size: 14px; color: #888; white-space: nowrap; }
+    .step-qty-target { font-size: clamp(10px, 0.73vw, 15px); color: #888; white-space: nowrap; }
     .step-pct-wrap { display: flex; align-items: center; gap: 6px; }
     .step-pct-slider {
       width: 80px;
       accent-color: #f9a825;
       cursor: pointer;
     }
-    .step-pct-val { font-size: 15px; color: #b06000; font-weight: 700; min-width: 30px; }
+    .step-pct-val { font-size: clamp(11px, 0.78vw, 16px); color: #b06000; font-weight: 700; min-width: 30px; }
     .step-memo {
       width: 100%;
       border: 1px solid #dde8fb;
       border-radius: 5px;
       padding: 5px 9px;
-      font-size: 15px;
+      font-size: clamp(11px, 0.78vw, 16px);
       font-family: inherit;
       color: #333;
       background: #fff;
@@ -255,8 +255,8 @@
     .step-memo:disabled { background: #f5f5f5; color: #bbb; cursor: not-allowed; border-color: #eee; resize: none; }
     .memo-history { margin-top: 5px; border-left: 2px solid #dde8fb; padding-left: 10px; }
     .memo-history-item { margin-bottom: 6px; }
-    .memo-history-date { font-size: 12px; color: #1a73e8; font-weight: 500; margin-bottom: 1px; }
-    .memo-history-text { font-size: 14px; color: #888; line-height: 1.8; }
+    .memo-history-date { font-size: clamp(10px, 0.62vw, 13px); color: #1a73e8; font-weight: 500; margin-bottom: 1px; }
+    .memo-history-text { font-size: clamp(10px, 0.73vw, 15px); color: #888; line-height: 1.8; }
     .task-progress-bar {
       height: 3px;
       background: #e0e0e0;
@@ -273,7 +273,7 @@
       transition: width 0.3s;
     }
     .task-progress-label {
-      font-size: 14px;
+      font-size: clamp(10px, 0.73vw, 15px);
       color: #1a73e8;
       font-weight: 600;
       margin-top: 4px;
@@ -284,36 +284,36 @@
     /* 단계 추가 폼 (직원용) */
     .add-step-form { padding: 6px 12px 8px; border-top: 1px dashed #dde8fb; }
     .add-step-btn {
-      font-size: 15px; color: #1a73e8; background: none; border: none;
+      font-size: clamp(11px, 0.78vw, 16px); color: #1a73e8; background: none; border: none;
       cursor: pointer; padding: 4px 0; display: flex; align-items: center; gap: 4px;
     }
     .add-step-btn:hover { text-decoration: underline; }
     .add-step-input-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
     .step-type-mini {
       border: 1.5px solid #e0e0e0; border-radius: 5px; padding: 5px 6px;
-      font-size: 15px; font-family: inherit; background: #fff; color: #333;
+      font-size: clamp(11px, 0.78vw, 16px); font-family: inherit; background: #fff; color: #333;
     }
     .step-type-mini:focus { outline: none; border-color: #1a73e8; }
     .step-name-mini {
       flex: 1; min-width: 100px; border: 1.5px solid #e0e0e0; border-radius: 5px;
-      padding: 5px 8px; font-size: 15px; font-family: inherit; color: #333;
+      padding: 5px 8px; font-size: clamp(11px, 0.78vw, 16px); font-family: inherit; color: #333;
     }
     .step-name-mini:focus { outline: none; border-color: #1a73e8; }
     .step-qty-mini {
       width: 60px; border: 1.5px solid #e0e0e0; border-radius: 5px;
-      padding: 5px 6px; font-size: 15px; text-align: center; font-family: inherit;
+      padding: 5px 6px; font-size: clamp(11px, 0.78vw, 16px); text-align: center; font-family: inherit;
     }
     .step-qty-mini:focus { outline: none; border-color: #1a73e8; }
     .step-confirm-btn {
       padding: 5px 10px; background: #1a73e8; color: #fff;
-      border: none; border-radius: 5px; font-size: 15px; font-weight: 700; cursor: pointer;
+      border: none; border-radius: 5px; font-size: clamp(11px, 0.78vw, 16px); font-weight: 700; cursor: pointer;
     }
     .step-cancel-btn {
       padding: 5px 8px; background: #f0f0f0; color: #666;
-      border: none; border-radius: 5px; font-size: 15px; cursor: pointer;
+      border: none; border-radius: 5px; font-size: clamp(11px, 0.78vw, 16px); cursor: pointer;
     }
     .step-del-btn {
-      font-size: 15px; color: #ccc; background: none; border: none;
+      font-size: clamp(11px, 0.78vw, 16px); color: #ccc; background: none; border: none;
       cursor: pointer; padding: 2px 4px; flex-shrink: 0;
     }
     .step-del-btn:hover { color: #e53935; }
@@ -326,14 +326,14 @@
       padding: 25px;
       margin-bottom: 20px;
     }
-    .extra-card label { font-size: 16px; font-weight: 700; color: #555; display: block; margin-bottom: 10px; }
+    .extra-card label { font-size: clamp(12px, 0.83vw, 18px); font-weight: 700; color: #555; display: block; margin-bottom: 10px; }
     .extra-textarea {
       width: 100%;
       height: 80px;
       border: 1.5px solid #e0e0e0;
       border-radius: 8px;
       padding: 10px 12px;
-      font-size: 16px;
+      font-size: clamp(12px, 0.83vw, 18px);
       font-family: inherit;
       color: #333;
       resize: none;
@@ -354,7 +354,7 @@
       padding: 18px;
       background: #1a73e8;
       color: #fff;
-      font-size: 19px;
+      font-size: clamp(14px, 0.99vw, 21px);
       font-weight: 700;
       border: none;
       border-radius: 8px;
@@ -362,9 +362,9 @@
     }
     .btn-submit:hover { background: #1558b0; }
     .btn-submit:disabled { background: #aac4f0; cursor: not-allowed; }
-    .hint { font-size: 15px; color: #aaa; text-align: center; margin-top: 10px; }
+    .hint { font-size: clamp(11px, 0.78vw, 16px); color: #aaa; text-align: center; margin-top: 10px; }
 
-    .loading { display: none; text-align: center; margin-top: 14px; color: #666; font-size: 16px; }
+    .loading { display: none; text-align: center; margin-top: 14px; color: #666; font-size: clamp(12px, 0.83vw, 18px); }
     .spinner {
       display: inline-block; width: 16px; height: 16px;
       border: 2px solid #ccc; border-top-color: #1a73e8;
@@ -381,7 +381,7 @@
     .tag-2 { background: #fce8e6; color: #c5221f; }
   </style>
 </head>
-<body style="font-size:20px">
+<body style="font-size:clamp(15px, 1.04vw, 22px)">
   <div class="wrap">
     <div class="header">
       <div>
@@ -390,16 +390,16 @@
         <div class="date" id="today-date"></div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-        <span id="user-name" onclick="openPwModal()" style="font-size:16px;color:#555;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px;" title="비밀번호 변경"></span>
+        <span id="user-name" onclick="openPwModal()" style="font-size:clamp(12px, 0.83vw, 18px);color:#555;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px;" title="비밀번호 변경"></span>
         <div style="display:flex;gap:10px">
-          <a id="team-daily-link" href="/team-daily" style="display:none;font-size:15px;color:#16a34a;text-decoration:none;border:1px solid #16a34a;border-radius:5px;padding:4px 10px;font-weight:500;">👥 팀 취합</a>
-          <a id="project-report-link" href="/project-report" style="display:none;font-size:15px;color:#9333ea;text-decoration:none;border:1px solid #9333ea;border-radius:5px;padding:4px 10px;font-weight:500;">📊 프로젝트 취합</a>
-          <a id="admin-link" href="/admin" style="display:none;font-size:15px;color:#1a73e8;text-decoration:none;border:1px solid #1a73e8;border-radius:5px;padding:4px 10px">관리자</a>
-          <a href="/weekly" style="font-size:15px;color:#34a853;text-decoration:none;border:1px solid #34a853;border-radius:5px;padding:4px 10px;font-weight:500;">📋 주간보고</a>
-          <a href="/quarterly" style="font-size:15px;color:#2563eb;text-decoration:none;border:1px solid #2563eb;border-radius:5px;padding:4px 10px;font-weight:500;">📊 분기보고</a>
-          <a href="/annual" style="font-size:15px;color:#1e1e2e;text-decoration:none;border:1px solid #1e1e2e;border-radius:5px;padding:4px 10px;font-weight:500;">📈 연간보고</a>
-          <a href="/my-reports" style="font-size:15px;color:#1a73e8;text-decoration:none;border:1px solid #1a73e8;border-radius:5px;padding:4px 10px">내 보고 내역</a>
-          <button onclick="doLogout()" style="font-size:15px;color:#888;background:none;border:1px solid #ddd;border-radius:5px;padding:4px 10px;cursor:pointer">로그아웃</button>
+          <a id="team-daily-link" href="/team-daily" style="display:none;font-size:clamp(11px, 0.78vw, 16px);color:#16a34a;text-decoration:none;border:1px solid #16a34a;border-radius:5px;padding:4px 10px;font-weight:500;">👥 팀 취합</a>
+          <a id="project-report-link" href="/project-report" style="display:none;font-size:clamp(11px, 0.78vw, 16px);color:#9333ea;text-decoration:none;border:1px solid #9333ea;border-radius:5px;padding:4px 10px;font-weight:500;">📊 프로젝트 취합</a>
+          <a id="admin-link" href="/admin" style="display:none;font-size:clamp(11px, 0.78vw, 16px);color:#1a73e8;text-decoration:none;border:1px solid #1a73e8;border-radius:5px;padding:4px 10px">관리자</a>
+          <a href="/weekly" style="font-size:clamp(11px, 0.78vw, 16px);color:#34a853;text-decoration:none;border:1px solid #34a853;border-radius:5px;padding:4px 10px;font-weight:500;">📋 주간보고</a>
+          <a href="/quarterly" style="font-size:clamp(11px, 0.78vw, 16px);color:#2563eb;text-decoration:none;border:1px solid #2563eb;border-radius:5px;padding:4px 10px;font-weight:500;">📊 분기보고</a>
+          <a href="/annual" style="font-size:clamp(11px, 0.78vw, 16px);color:#1e1e2e;text-decoration:none;border:1px solid #1e1e2e;border-radius:5px;padding:4px 10px;font-weight:500;">📈 연간보고</a>
+          <a href="/my-reports" style="font-size:clamp(11px, 0.78vw, 16px);color:#1a73e8;text-decoration:none;border:1px solid #1a73e8;border-radius:5px;padding:4px 10px">내 보고 내역</a>
+          <button onclick="doLogout()" style="font-size:clamp(11px, 0.78vw, 16px);color:#888;background:none;border:1px solid #ddd;border-radius:5px;padding:4px 10px;cursor:pointer">로그아웃</button>
         </div>
       </div>
     </div>
@@ -1008,23 +1008,23 @@
 <!-- 비밀번호 변경 모달 -->
 <div id="pw-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;display:flex;align-items:center;justify-content:center;display:none;">
   <div style="background:#fff;border-radius:14px;padding:28px 28px 24px;width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
-    <div style="font-size:20px;font-weight:600;color:#1a1a2e;margin-bottom:25px;">🔒 비밀번호 변경</div>
+    <div style="font-size:clamp(15px, 1.04vw, 22px);font-weight:600;color:#1a1a2e;margin-bottom:25px;">🔒 비밀번호 변경</div>
     <div style="margin-bottom:15px;">
-      <label style="font-size:15px;color:#666;display:block;margin-bottom:6px;">현재 비밀번호</label>
-      <input type="password" id="pw-current" autocomplete="current-password" placeholder="현재 비밀번호 입력" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:7px;font-size:16px;font-family:inherit;outline:none;" oninput="clearPwError()">
+      <label style="font-size:clamp(11px, 0.78vw, 16px);color:#666;display:block;margin-bottom:6px;">현재 비밀번호</label>
+      <input type="password" id="pw-current" autocomplete="current-password" placeholder="현재 비밀번호 입력" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:7px;font-size:clamp(12px, 0.83vw, 18px);font-family:inherit;outline:none;" oninput="clearPwError()">
     </div>
     <div style="margin-bottom:15px;">
-      <label style="font-size:15px;color:#666;display:block;margin-bottom:6px;">새 비밀번호</label>
-      <input type="password" id="pw-new" autocomplete="new-password" placeholder="새 비밀번호 (4자 이상)" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:7px;font-size:16px;font-family:inherit;outline:none;" oninput="clearPwError()">
+      <label style="font-size:clamp(11px, 0.78vw, 16px);color:#666;display:block;margin-bottom:6px;">새 비밀번호</label>
+      <input type="password" id="pw-new" autocomplete="new-password" placeholder="새 비밀번호 (4자 이상)" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:7px;font-size:clamp(12px, 0.83vw, 18px);font-family:inherit;outline:none;" oninput="clearPwError()">
     </div>
     <div style="margin-bottom:22px;">
-      <label style="font-size:15px;color:#666;display:block;margin-bottom:6px;">새 비밀번호 확인</label>
-      <input type="password" id="pw-confirm" autocomplete="new-password" placeholder="새 비밀번호 다시 입력" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:7px;font-size:16px;font-family:inherit;outline:none;" oninput="clearPwError()">
+      <label style="font-size:clamp(11px, 0.78vw, 16px);color:#666;display:block;margin-bottom:6px;">새 비밀번호 확인</label>
+      <input type="password" id="pw-confirm" autocomplete="new-password" placeholder="새 비밀번호 다시 입력" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:7px;font-size:clamp(12px, 0.83vw, 18px);font-family:inherit;outline:none;" oninput="clearPwError()">
     </div>
-    <div id="pw-error" style="font-size:15px;color:#e74c3c;margin-bottom:15px;display:none;"></div>
+    <div id="pw-error" style="font-size:clamp(11px, 0.78vw, 16px);color:#e74c3c;margin-bottom:15px;display:none;"></div>
     <div style="display:flex;gap:10px;">
-      <button onclick="closePwModal()" style="flex:1;padding:12px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:16px;cursor:pointer;font-family:inherit;color:#666;">취소</button>
-      <button onclick="submitPwChange()" style="flex:1;padding:12px;border:none;border-radius:8px;background:#1a73e8;color:#fff;font-size:16px;cursor:pointer;font-family:inherit;font-weight:500;">변경하기</button>
+      <button onclick="closePwModal()" style="flex:1;padding:12px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:clamp(12px, 0.83vw, 18px);cursor:pointer;font-family:inherit;color:#666;">취소</button>
+      <button onclick="submitPwChange()" style="flex:1;padding:12px;border:none;border-radius:8px;background:#1a73e8;color:#fff;font-size:clamp(12px, 0.83vw, 18px);cursor:pointer;font-family:inherit;font-weight:500;">변경하기</button>
     </div>
   </div>
 </div>

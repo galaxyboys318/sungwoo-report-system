@@ -8,41 +8,41 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Malgun Gothic',sans-serif;background:#f5f6fa;color:#1a1a2e;}
 .topbar{background:#1a73e8;display:flex;align-items:center;gap:18px;padding:0 24px;height:52px;position:sticky;top:0;z-index:100;}
-.topbar-title{color:#fff;font-size:19px;font-weight:600;}
+.topbar-title{color:#fff;font-size:clamp(14px, 0.99vw, 21px);font-weight:600;}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
-.topbar-user{color:rgba(255,255,255,0.8);font-size:16px;}
-.btn-topbar{background:rgba(255,255,255,0.15);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:15px;cursor:pointer;font-family:inherit;}
+.topbar-user{color:rgba(255,255,255,0.8);font-size:clamp(12px, 0.83vw, 18px);}
+.btn-topbar{background:rgba(255,255,255,0.15);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:clamp(11px, 0.78vw, 16px);cursor:pointer;font-family:inherit;}
 .btn-topbar:hover{background:rgba(255,255,255,0.25);}
 .wrap{max-width:960px;margin:0 auto;padding:24px 16px 48px;}
-.section-title{font-size:21px;font-weight:600;color:#1a1a2e;margin:0 0 14px;}
+.section-title{font-size:clamp(16px, 1.09vw, 23px);font-weight:600;color:#1a1a2e;margin:0 0 14px;}
 .card{background:#fff;border-radius:12px;border:0.5px solid #e8e8e8;padding:20px 24px;margin-bottom:18px;}
 
 /* 요약 카드 */
 .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:25px;}
 .summary-item{background:#fff;border-radius:10px;border:0.5px solid #e8e8e8;padding:20px;text-align:center;}
-.summary-label{font-size:14px;color:#888;margin-bottom:8px;}
-.summary-value{font-size:35px;font-weight:600;}
-.summary-unit{font-size:14px;color:#aaa;margin-top:3px;}
+.summary-label{font-size:clamp(10px, 0.73vw, 15px);color:#888;margin-bottom:8px;}
+.summary-value{font-size:clamp(26px, 1.82vw, 38px);font-weight:600;}
+.summary-unit{font-size:clamp(10px, 0.73vw, 15px);color:#aaa;margin-top:3px;}
 .v-blue{color:#1a73e8;} .v-green{color:#34a853;} .v-orange{color:#e67e22;}
 
 /* 프로젝트 카드 */
 .project-card{background:#f8fbff;border-radius:10px;border:1.5px solid #c8d8f8;padding:14px 18px;margin-bottom:12px;}
 .project-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-.project-name{font-size:18px;font-weight:600;color:#1a1a2e;}
-.tag{font-size:12px;padding:2px 7px;border-radius:20px;font-weight:500;background:#e8f0fe;color:#1558b0;}
+.project-name{font-size:clamp(14px, 0.94vw, 20px);font-weight:600;color:#1a1a2e;}
+.tag{font-size:clamp(10px, 0.62vw, 13px);padding:2px 7px;border-radius:20px;font-weight:500;background:#e8f0fe;color:#1558b0;}
 .task-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
-.task-name{font-size:15px;color:#444;}
-.task-dates{font-size:12px;color:#aaa;margin-left:6px;}
-.task-pct{font-size:15px;font-weight:500;color:#3498db;}
+.task-name{font-size:clamp(11px, 0.78vw, 16px);color:#444;}
+.task-dates{font-size:clamp(10px, 0.62vw, 13px);color:#aaa;margin-left:6px;}
+.task-pct{font-size:clamp(11px, 0.78vw, 16px);font-weight:500;color:#3498db;}
 .bar-bg{background:#e0e0e0;border-radius:20px;height:5px;overflow:hidden;margin-bottom:10px;}
 .bar-fill{height:5px;border-radius:20px;background:#3498db;}
 
 /* AI 요약 */
-.ai-box{width:100%;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;padding:16px 18px;font-size:16px;line-height:2.3;color:#222;min-height:120px;resize:vertical;font-family:inherit;outline:none;box-sizing:border-box;}
+.ai-box{width:100%;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;padding:16px 18px;font-size:clamp(12px, 0.83vw, 18px);line-height:2.3;color:#222;min-height:120px;resize:vertical;font-family:inherit;outline:none;box-sizing:border-box;}
     .ai-box:focus{border-color:#1a73e8;background:#fff;}
     .ai-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;}
-    .ai-hint{font-size:14px;color:#aaa;}
-.ai-loading{color:#aaa;display:flex;align-items:center;gap:10px;font-size:16px;}
+    .ai-hint{font-size:clamp(10px, 0.73vw, 15px);color:#aaa;}
+.ai-loading{color:#aaa;display:flex;align-items:center;gap:10px;font-size:clamp(12px, 0.83vw, 18px);}
 .ai-dot{width:6px;height:6px;border-radius:50%;background:#1a73e8;animation:blink 1s infinite;}
 .ai-dot:nth-child(2){animation-delay:0.2s;}
 .ai-dot:nth-child(3){animation-delay:0.4s;}
@@ -51,41 +51,41 @@ body{font-family:'Malgun Gothic',sans-serif;background:#f5f6fa;color:#1a1a2e;}
 /* 일자별 내역 */
 .day-row{padding:12px 0;border-bottom:0.5px solid #f0f0f0;}
 .day-row:last-child{border-bottom:none;}
-.day-date{font-size:15px;font-weight:600;color:#1a73e8;margin-bottom:5px;}
-.day-body{font-size:15px;color:#444;line-height:2.2;white-space:pre-line;}
+.day-date{font-size:clamp(11px, 0.78vw, 16px);font-weight:600;color:#1a73e8;margin-bottom:5px;}
+.day-body{font-size:clamp(11px, 0.78vw, 16px);color:#444;line-height:2.2;white-space:pre-line;}
 .day-tasks{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
-.day-task-badge{font-size:12px;background:#e8f0fe;color:#1558b0;padding:2px 8px;border-radius:20px;}
+.day-task-badge{font-size:clamp(10px, 0.62vw, 13px);background:#e8f0fe;color:#1558b0;padding:2px 8px;border-radius:20px;}
 
 /* 빈 상태 */
-.empty{text-align:center;padding:48px 0;color:#bbb;font-size:16px;}
+.empty{text-align:center;padding:48px 0;color:#bbb;font-size:clamp(12px, 0.83vw, 18px);}
 
 /* 발송 버튼 */
-.send-btn{width:100%;padding:18px;background:#1a73e8;color:#fff;font-size:19px;font-weight:600;border:none;border-radius:10px;cursor:pointer;font-family:inherit;transition:background 0.15s;}
+.send-btn{width:100%;padding:18px;background:#1a73e8;color:#fff;font-size:clamp(14px, 0.99vw, 21px);font-weight:600;border:none;border-radius:10px;cursor:pointer;font-family:inherit;transition:background 0.15s;}
 .send-btn:hover{background:#1558b0;}
 .send-btn:disabled{background:#ccc;cursor:not-allowed;}
-.send-hint{font-size:15px;color:#aaa;text-align:center;margin-top:8px;}
+.send-hint{font-size:clamp(11px, 0.78vw, 16px);color:#aaa;text-align:center;margin-top:8px;}
 
 .history-item{padding:14px 0;border-bottom:0.5px solid #f0f0f0;display:flex;align-items:flex-start;gap:15px;}
 .history-item:last-child{border-bottom:none;}
 .history-meta{flex:1;min-width:0;}
-.history-week{font-size:16px;font-weight:600;color:#1a1a2e;margin-bottom:4px;}
-.history-date{font-size:14px;color:#aaa;}
-.history-to{font-size:14px;color:#888;margin-top:3px;}
-.history-summary{font-size:15px;color:#666;margin-top:5px;line-height:1.9;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.del-btn{flex-shrink:0;padding:6px 12px;background:none;border:1px solid #e74c3c;color:#e74c3c;border-radius:6px;font-size:15px;cursor:pointer;font-family:inherit;}
+.history-week{font-size:clamp(12px, 0.83vw, 18px);font-weight:600;color:#1a1a2e;margin-bottom:4px;}
+.history-date{font-size:clamp(10px, 0.73vw, 15px);color:#aaa;}
+.history-to{font-size:clamp(10px, 0.73vw, 15px);color:#888;margin-top:3px;}
+.history-summary{font-size:clamp(11px, 0.78vw, 16px);color:#666;margin-top:5px;line-height:1.9;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.del-btn{flex-shrink:0;padding:6px 12px;background:none;border:1px solid #e74c3c;color:#e74c3c;border-radius:6px;font-size:clamp(11px, 0.78vw, 16px);cursor:pointer;font-family:inherit;}
 .del-btn:hover{background:#fef2f2;}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:8px;font-size:16px;display:none;z-index:999;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:8px;font-size:clamp(12px, 0.83vw, 18px);display:none;z-index:999;}
 .recipient-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
 .recipient-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;cursor:pointer;}
 .recipient-item:hover{background:#f0f4ff;}
 .recipient-item input[type=checkbox]{width:16px;height:16px;accent-color:#1a73e8;cursor:pointer;flex-shrink:0;}
-.recipient-name{font-size:16px;font-weight:500;color:#1a1a2e;flex:1;}
-.recipient-email{font-size:14px;color:#aaa;}
-.recipient-pos{font-size:14px;color:#888;margin-left:auto;}
+.recipient-name{font-size:clamp(12px, 0.83vw, 18px);font-weight:500;color:#1a1a2e;flex:1;}
+.recipient-email{font-size:clamp(10px, 0.73vw, 15px);color:#aaa;}
+.recipient-pos{font-size:clamp(10px, 0.73vw, 15px);color:#888;margin-left:auto;}
 .warning-box{background:#fff8e1;border:1px solid #ffe082;border-radius:8px;padding:14px 16px;margin-bottom:20px;display:flex;gap:12px;align-items:flex-start;}
-.warning-icon{font-size:25px;flex-shrink:0;line-height:1.2;}
-.warning-text{font-size:16px;color:#7b5e00;line-height:2.0;}
-.warning-text strong{display:block;margin-bottom:5px;font-size:18px;}
+.warning-icon{font-size:clamp(19px, 1.3vw, 28px);flex-shrink:0;line-height:1.2;}
+.warning-text{font-size:clamp(12px, 0.83vw, 18px);color:#7b5e00;line-height:2.0;}
+.warning-text strong{display:block;margin-bottom:5px;font-size:clamp(14px, 0.94vw, 20px);}
 </style>
 </head>
 <body>
@@ -141,7 +141,7 @@ async function loadHistory() {
   if (!section) return;
 
   if (records.length === 0) {
-    section.innerHTML = `<div class="card"><div class="section-title" style="margin-bottom:12px;">📂 주간보고 발송 내역</div><div style="font-size:16px;color:#bbb;text-align:center;padding:20px 0;">발송 내역이 없습니다.</div></div>`;
+    section.innerHTML = `<div class="card"><div class="section-title" style="margin-bottom:12px;">📂 주간보고 발송 내역</div><div style="font-size:clamp(12px, 0.83vw, 18px);color:#bbb;text-align:center;padding:20px 0;">발송 내역이 없습니다.</div></div>`;
     return;
   }
 
@@ -165,7 +165,7 @@ async function loadHistory() {
   section.innerHTML = `
     <div class="card">
       <div class="section-title" style="margin-bottom:5px;">📂 주간보고 발송 내역</div>
-      <div style="font-size:14px;color:#aaa;margin-bottom:18px;">삭제 시 이메일은 취소되지 않으며 분기보고 집계에서만 제외됩니다.</div>
+      <div style="font-size:clamp(10px, 0.73vw, 15px);color:#aaa;margin-bottom:18px;">삭제 시 이메일은 취소되지 않으며 분기보고 집계에서만 제외됩니다.</div>
       ${rows}
     </div>`;
 }
@@ -219,7 +219,7 @@ function renderPage() {
     container.innerHTML = `
       <div class="card">
         <div class="section-title" style="margin-bottom:5px;">📅 ${fmt(weekStart)} ~ ${fmt(weekEnd)}</div>
-        <p style="font-size:15px;color:#aaa;margin-bottom:0;">이번 주 보고 내역이 없습니다.</p>
+        <p style="font-size:clamp(11px, 0.78vw, 16px);color:#aaa;margin-bottom:0;">이번 주 보고 내역이 없습니다.</p>
       </div>`;
     return;
   }
@@ -261,7 +261,7 @@ function renderPage() {
     <div class="card">
       <div class="section-title" style="margin-bottom:15px;">✨ AI 주간 요약</div>
       <div class="ai-header">
-        <span style="font-size:14px;color:#1a73e8;">✨ AI가 작성한 초안입니다. 직접 수정 후 발송하세요.</span>
+        <span style="font-size:clamp(10px, 0.73vw, 15px);color:#1a73e8;">✨ AI가 작성한 초안입니다. 직접 수정 후 발송하세요.</span>
         <span class="ai-hint" id="ai-status">요약 생성 중...</span>
       </div>
       <textarea class="ai-box" id="ai-summary-box" placeholder="AI 요약이 생성되면 여기에 표시됩니다. 내용을 직접 수정할 수 있어요."></textarea>
@@ -295,9 +295,9 @@ function renderPage() {
         </div>
       </div>
 
-      <div style="font-size:16px;font-weight:500;color:#1a1a2e;margin-bottom:12px;">수신자 선택</div>
+      <div style="font-size:clamp(12px, 0.83vw, 18px);font-weight:500;color:#1a1a2e;margin-bottom:12px;">수신자 선택</div>
       <div class="recipient-list" id="recipient-list">
-        <div style="font-size:16px;color:#aaa;">수신자 목록 불러오는 중...</div>
+        <div style="font-size:clamp(12px, 0.83vw, 18px);color:#aaa;">수신자 목록 불러오는 중...</div>
       </div>
 
       <button class="send-btn" id="send-btn" onclick="sendWeekly()">📨 주간보고 발송</button>
@@ -354,7 +354,7 @@ async function loadRecipients() {
   const list = document.getElementById('recipient-list');
   if (!list) return;
   if (!data.recipients || data.recipients.length === 0) {
-    list.innerHTML = '<div style="font-size:16px;color:#aaa;">수신 가능한 상급자가 없습니다.</div>';
+    list.innerHTML = '<div style="font-size:clamp(12px, 0.83vw, 18px);color:#aaa;">수신 가능한 상급자가 없습니다.</div>';
     return;
   }
   list.innerHTML = data.recipients.map(r => `
@@ -362,7 +362,7 @@ async function loadRecipients() {
       <input type="checkbox" class="recipient-chk" value="${r.email}" checked>
       <span class="recipient-name">${r.name}</span>
       <span class="recipient-pos">${r.position || r.role || ''}</span>
-      ${r.level === 1 ? '<span style="font-size:12px;background:#e8f0fe;color:#1558b0;padding:1px 7px;border-radius:20px;font-weight:500;">경영진</span>' : ''}
+      ${r.level === 1 ? '<span style="font-size:clamp(10px, 0.62vw, 13px);background:#e8f0fe;color:#1558b0;padding:1px 7px;border-radius:20px;font-weight:500;">경영진</span>' : ''}
       <span class="recipient-email">${r.email}</span>
     </label>`).join('');
 }

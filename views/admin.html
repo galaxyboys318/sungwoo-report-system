@@ -10,13 +10,13 @@
 
     /* 탑바 */
     .topbar { background: #1a73e8; padding: 0 24px; display: flex; align-items: center; gap: 0; height: 52px; }
-    .topbar-title { color: #fff; font-size: 19px; font-weight: 700; margin-right: 32px; }
-    .tab { color: rgba(255,255,255,0.7); font-size: 16px; font-weight: 600; padding: 0 16px; height: 52px; display: flex; align-items: center; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; }
+    .topbar-title { color: #fff; font-size: clamp(14px, 0.99vw, 21px); font-weight: 700; margin-right: 32px; }
+    .tab { color: rgba(255,255,255,0.7); font-size: clamp(12px, 0.83vw, 18px); font-weight: 600; padding: 0 16px; height: 52px; display: flex; align-items: center; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; }
     .tab:hover { color: #fff; }
     .tab.active { color: #fff; border-bottom-color: #fff; }
     .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
-    .topbar-user { color: rgba(255,255,255,0.8); font-size: 16px; }
-    .btn-topbar { color: #fff; background: rgba(255,255,255,0.15); border: none; border-radius: 5px; padding: 5px 12px; font-size: 15px; cursor: pointer; }
+    .topbar-user { color: rgba(255,255,255,0.8); font-size: clamp(12px, 0.83vw, 18px); }
+    .btn-topbar { color: #fff; background: rgba(255,255,255,0.15); border: none; border-radius: 5px; padding: 5px 12px; font-size: clamp(11px, 0.78vw, 16px); cursor: pointer; }
     .btn-topbar:hover { background: rgba(255,255,255,0.25); }
 
     .page { display: none; padding: 30px; max-width: 820px; margin: 0 auto; }
@@ -28,11 +28,11 @@
     .card-header:hover { background: #fafafa; }
     .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
     .card-title { flex: 1; }
-    .card-name { font-size: 19px; font-weight: 700; color: #1a1a1a; }
-    .card-meta { font-size: 15px; color: #888; margin-top: 2px; }
-    .badge { font-size: 14px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
-    .progress-text { font-size: 15px; color: #1a73e8; font-weight: 700; min-width: 36px; text-align: right; }
-    .arrow { font-size: 15px; color: #aaa; transition: transform 0.2s; }
+    .card-name { font-size: clamp(14px, 0.99vw, 21px); font-weight: 700; color: #1a1a1a; }
+    .card-meta { font-size: clamp(11px, 0.78vw, 16px); color: #888; margin-top: 2px; }
+    .badge { font-size: clamp(10px, 0.73vw, 15px); padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+    .progress-text { font-size: clamp(11px, 0.78vw, 16px); color: #1a73e8; font-weight: 700; min-width: 36px; text-align: right; }
+    .arrow { font-size: clamp(11px, 0.78vw, 16px); color: #aaa; transition: transform 0.2s; }
     .arrow.open { transform: rotate(90deg); }
 
     /* 프로젝트 바디 */
@@ -40,11 +40,11 @@
     .card-body.open { display: block; }
     .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
     .field { display: flex; flex-direction: column; gap: 4px; }
-    .field-label { font-size: 14px; color: #888; font-weight: 700; }
-    .field-input { border: 1.5px solid #e0e0e0; border-radius: 6px; padding: 7px 10px; font-size: 16px; font-family: inherit; color: #333; }
+    .field-label { font-size: clamp(10px, 0.73vw, 15px); color: #888; font-weight: 700; }
+    .field-input { border: 1.5px solid #e0e0e0; border-radius: 6px; padding: 7px 10px; font-size: clamp(12px, 0.83vw, 18px); font-family: inherit; color: #333; }
     .field-input:focus { outline: none; border-color: #1a73e8; }
     .action-row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; }
-    .btn { padding: 7px 16px; border: none; border-radius: 6px; font-size: 16px; font-weight: 700; cursor: pointer; }
+    .btn { white-space: nowrap; padding: 7px 16px; border: none; border-radius: 6px; font-size: clamp(12px, 0.83vw, 18px); font-weight: 700; cursor: pointer; }
     .btn-blue { background: #1a73e8; color: #fff; }
     .btn-blue:hover { background: #1558b0; }
     .btn-red { background: none; color: #e53935; border: 1px solid #e53935; }
@@ -56,16 +56,16 @@
 
     /* 단위업무 */
     .task-section { padding: 0 20px 12px; }
-    .section-title { font-size: 15px; font-weight: 700; color: #555; padding: 12px 0 8px; letter-spacing: 0.3px; }
+    .section-title { font-size: clamp(11px, 0.78vw, 16px); font-weight: 700; color: #555; padding: 12px 0 8px; letter-spacing: 0.3px; }
     .task-block { border: 1.5px solid #e8e8e8; border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
     .task-block-header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: #fafafa; cursor: pointer; border-bottom: 1px solid #e8e8e8; }
     .task-block-header:hover { background: #f0f0f0; }
-    .task-block-name { flex: 1; font-size: 18px; font-weight: 600; color: #333; }
-    .task-assignees { font-size: 14px; color: #888; }
-    .task-progress { font-size: 15px; color: #1a73e8; font-weight: 600; }
-    .btn-sm { font-size: 14px; color: #aaa; background: none; border: none; cursor: pointer; padding: 2px 6px; border-radius: 4px; }
+    .task-block-name { flex: 1; font-size: clamp(14px, 0.94vw, 20px); font-weight: 600; color: #333; }
+    .task-assignees { font-size: clamp(10px, 0.73vw, 15px); color: #888; }
+    .task-progress { font-size: clamp(11px, 0.78vw, 16px); color: #1a73e8; font-weight: 600; }
+    .btn-sm { font-size: clamp(10px, 0.73vw, 15px); color: #aaa; background: none; border: none; cursor: pointer; padding: 2px 6px; border-radius: 4px; }
     .btn-sm:hover { color: #e53935; background: #fce8e6; }
-    .task-arrow { font-size: 14px; color: #aaa; transition: transform 0.2s; }
+    .task-arrow { font-size: clamp(10px, 0.73vw, 15px); color: #aaa; transition: transform 0.2s; }
     .task-arrow.open { transform: rotate(90deg); }
 
     .task-body { display: none; padding: 10px 14px; }
@@ -73,32 +73,32 @@
 
     /* 담당자 태그 입력 */
     .assignee-wrap { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 10px; }
-    .assignee-tag { display: flex; align-items: center; gap: 4px; background: #e8f0fe; color: #1a73e8; font-size: 15px; padding: 3px 8px; border-radius: 20px; font-weight: 600; }
-    .assignee-tag .remove { cursor: pointer; font-size: 16px; color: #aac4f0; font-weight: 400; }
+    .assignee-tag { display: flex; align-items: center; gap: 4px; background: #e8f0fe; color: #1a73e8; font-size: clamp(11px, 0.78vw, 16px); padding: 3px 8px; border-radius: 20px; font-weight: 600; }
+    .assignee-tag .remove { cursor: pointer; font-size: clamp(12px, 0.83vw, 18px); color: #aac4f0; font-weight: 400; }
     .assignee-tag .remove:hover { color: #e53935; }
     .assignee-add-wrap { display: flex; gap: 6px; align-items: center; }
-    .assignee-select { border: 1.5px solid #e0e0e0; border-radius: 6px; padding: 5px 8px; font-size: 15px; font-family: inherit; color: #333; background: #fff; }
+    .assignee-select { border: 1.5px solid #e0e0e0; border-radius: 6px; padding: 5px 8px; font-size: clamp(11px, 0.78vw, 16px); font-family: inherit; color: #333; background: #fff; }
     .assignee-select:focus { outline: none; border-color: #1a73e8; }
-    .btn-assignee-add { padding: 5px 10px; background: #e8f0fe; color: #1a73e8; border: none; border-radius: 6px; font-size: 15px; font-weight: 700; cursor: pointer; }
+    .btn-assignee-add { padding: 5px 10px; background: #e8f0fe; color: #1a73e8; border: none; border-radius: 6px; font-size: clamp(11px, 0.78vw, 16px); font-weight: 700; cursor: pointer; }
     .btn-assignee-add:hover { background: #c5d8fb; }
 
     /* 단계 목록 */
     .step-list { margin-top: 8px; }
     .step-row { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-top: 1px solid #f0f0f0; }
-    .step-type-badge { font-size: 12px; padding: 2px 6px; border-radius: 4px; font-weight: 700; white-space: nowrap; }
+    .step-type-badge { font-size: clamp(10px, 0.62vw, 13px); padding: 2px 6px; border-radius: 4px; font-weight: 700; white-space: nowrap; }
     .type-check { background: #e8f0fe; color: #1a73e8; }
     .type-qty { background: #e6f4ea; color: #137333; }
     .type-pct { background: #fef7e0; color: #b06000; }
-    .step-name { flex: 1; font-size: 16px; color: #333; }
-    .step-assignees-text { font-size: 14px; color: #888; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .step-name { flex: 1; font-size: clamp(12px, 0.83vw, 18px); color: #333; }
+    .step-assignees-text { font-size: clamp(10px, 0.73vw, 15px); color: #888; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
     /* 단계/단위업무 추가 폼 */
     .add-form { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; padding-top: 8px; margin-top: 4px; border-top: 1px dashed #e0e0e0; }
-    .add-input { flex: 1; min-width: 120px; border: 1.5px solid #e0e0e0; border-radius: 6px; padding: 6px 10px; font-size: 16px; font-family: inherit; color: #333; }
+    .add-input { flex: 1; min-width: 120px; border: 1.5px solid #e0e0e0; border-radius: 6px; padding: 6px 10px; font-size: clamp(12px, 0.83vw, 18px); font-family: inherit; color: #333; }
     .add-input:focus { outline: none; border-color: #1a73e8; }
-    .add-select { border: 1.5px solid #e0e0e0; border-radius: 6px; padding: 6px 8px; font-size: 15px; font-family: inherit; background: #fff; }
+    .add-select { border: 1.5px solid #e0e0e0; border-radius: 6px; padding: 6px 8px; font-size: clamp(11px, 0.78vw, 16px); font-family: inherit; background: #fff; }
     .add-select:focus { outline: none; border-color: #1a73e8; }
-    .qty-input { width: 64px; border: 1.5px solid #e0e0e0; border-radius: 6px; padding: 6px 8px; font-size: 15px; text-align: center; font-family: inherit; }
+    .qty-input { width: 64px; border: 1.5px solid #e0e0e0; border-radius: 6px; padding: 6px 8px; font-size: clamp(11px, 0.78vw, 16px); text-align: center; font-family: inherit; }
     .qty-input:focus { outline: none; border-color: #1a73e8; }
 
     /* 단위업무 추가 row */
@@ -108,11 +108,11 @@
     .user-card { background: #fff; border-radius: 10px; border: 1.5px solid #e8e8e8; padding: 14px 18px; margin-bottom: 12px; }
     .user-card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
     .user-card-bottom { display: flex; align-items: center; gap: 8px; padding-top: 10px; border-top: 0.5px solid #f0f0f0; flex-wrap: wrap; }
-    .user-avatar { width: 38px; height: 38px; border-radius: 50%; background: #e8f0fe; display: flex; align-items: center; justify-content: center; font-size: 19px; font-weight: 700; color: #1a73e8; flex-shrink: 0; }
+    .user-avatar { width: 38px; height: 38px; border-radius: 50%; background: #e8f0fe; display: flex; align-items: center; justify-content: center; font-size: clamp(14px, 0.99vw, 21px); font-weight: 700; color: #1a73e8; flex-shrink: 0; }
     .user-info { flex: 1; min-width: 0; }
-    .user-name { font-size: 18px; font-weight: 700; color: #1a1a1a; }
-    .user-sub { font-size: 15px; color: #888; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; }
-    .level-badge { font-size: 14px; padding: 2px 8px; border-radius: 20px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+    .user-name { font-size: clamp(14px, 0.94vw, 20px); font-weight: 700; color: #1a1a1a; }
+    .user-sub { font-size: clamp(11px, 0.78vw, 16px); color: #888; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; }
+    .level-badge { font-size: clamp(10px, 0.73vw, 15px); padding: 2px 8px; border-radius: 20px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
     .level-1 { background: #fce8e6; color: #c5221f; }
     .level-2 { background: #fef7e0; color: #b06000; }
     .level-3 { background: #e6f4ea; color: #137333; }
@@ -120,18 +120,18 @@
 
     /* 직원 추가 폼 */
     .add-user-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); padding: 25px; margin-bottom: 20px; }
-    .add-user-card h3 { font-size: 18px; font-weight: 700; color: #555; margin-bottom: 18px; }
+    .add-user-card h3 { font-size: clamp(14px, 0.94vw, 20px); font-weight: 700; color: #555; margin-bottom: 18px; }
     .add-user-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
 
     /* 모달 */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: center; justify-content: center; }
     .modal-overlay.show { display: flex; }
     .modal { background: #fff; border-radius: 12px; padding: 35px; width: 440px; max-width: 90vw; }
-    .modal h3 { font-size: 19px; font-weight: 700; margin-bottom: 20px; }
+    .modal h3 { font-size: clamp(14px, 0.99vw, 21px); font-weight: 700; margin-bottom: 20px; }
     .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
 
     /* 토스트 */
-    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px); background: #333; color: #fff; padding: 10px 24px; border-radius: 24px; font-size: 16px; opacity: 0; transition: all 0.3s; pointer-events: none; white-space: nowrap; z-index: 200; }
+    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px); background: #333; color: #fff; padding: 10px 24px; border-radius: 24px; font-size: clamp(12px, 0.83vw, 18px); opacity: 0; transition: all 0.3s; pointer-events: none; white-space: nowrap; z-index: 200; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     .color-0{background:#4285f4} .color-1{background:#34a853} .color-2{background:#ea4335} .color-3{background:#fbbc04} .color-4{background:#9c27b0}
@@ -341,7 +341,7 @@
             </select>
             <input class="add-input" id="stepname-${task.id}" placeholder="단계명 입력..." onkeydown="if(event.key==='Enter') addStep('${projectId}','${task.id}')">
             <input class="qty-input" id="steptarget-${task.id}" placeholder="목표수" type="number" min="1" style="display:none">
-            <button class="btn btn-blue" style="padding:6px 12px;font-size:15px" onclick="addStep('${projectId}','${task.id}')">+ 단계</button>
+            <button class="btn btn-blue" style="padding:6px 12px;font-size:clamp(11px, 0.78vw, 16px)" onclick="addStep('${projectId}','${task.id}')">+ 단계</button>
           </div>
         </div>
       </div>`;
@@ -545,11 +545,11 @@
           <div class="user-avatar">${user.name[0]}</div>
           <div class="user-info">
             <div class="user-name">${user.name}</div>
-            <div class="user-sub">${user.email} &nbsp;·&nbsp; ${user.division||''} ${user.team||'(팀 미설정)'} <button onclick="editTeam('${user.id}','${user.team||''}','${user.division||''}')" title="팀/부서 변경" style="border:none;background:none;cursor:pointer;font-size:15px;padding:0 3px;color:#1a73e8;">✏️</button></div>
+            <div class="user-sub">${user.email} &nbsp;·&nbsp; ${user.division||''} ${user.team||'(팀 미설정)'} <button onclick="editTeam('${user.id}','${user.team||''}','${user.division||''}')" title="팀/부서 변경" style="border:none;background:none;cursor:pointer;font-size:clamp(11px, 0.78vw, 16px);padding:0 3px;color:#1a73e8;">✏️</button></div>
           </div>
           <span class="level-badge ${levelClass}" onclick="editPosition('${user.id}', '${user.position||'팀원'}')" title="클릭하여 직급 변경" style="cursor:pointer;">${user.position||'팀원'} (Lv.${user.level||4}) ✏️</span>
-          ${user.isAdmin ? `<span style="font-size:14px;padding:2px 8px;border-radius:20px;font-weight:700;white-space:nowrap;background:${scopeColor.bg};color:${scopeColor.text};">${scopeLabel}${scope!=='system' && (user.managedTeams||[]).length ? `<br><span style="font-size:12px;font-weight:400;">${user.managedTeams.join(', ')}</span>` : ''}</span>` : ''}
-          <select style="font-size:15px;padding:5px 8px;border-radius:6px;border:1px solid #ddd;cursor:pointer;flex-shrink:0;" onchange="changeLevel('${user.email}', this.value)">
+          ${user.isAdmin ? `<span style="font-size:clamp(10px, 0.73vw, 15px);padding:2px 8px;border-radius:20px;font-weight:700;white-space:nowrap;background:${scopeColor.bg};color:${scopeColor.text};">${scopeLabel}${scope!=='system' && (user.managedTeams||[]).length ? `<br><span style="font-size:clamp(10px, 0.62vw, 13px);font-weight:400;">${user.managedTeams.join(', ')}</span>` : ''}</span>` : ''}
+          <select style="font-size:clamp(11px, 0.78vw, 16px);padding:5px 8px;border-radius:6px;border:1px solid #ddd;cursor:pointer;flex-shrink:0;" onchange="changeLevel('${user.email}', this.value)">
             <option value="1" ${(user.level||4)==1?'selected':''}>Lv.1 회장/대표</option>
             <option value="2" ${(user.level||4)==2?'selected':''}>Lv.2 이사</option>
             <option value="3" ${(user.level||4)==3?'selected':''}>Lv.3 팀장</option>
@@ -557,11 +557,11 @@
           </select>
         </div>
         <div class="user-card-bottom">
-          <button class="btn ${user.isAdmin ? 'btn-gray' : 'btn-blue'}" style="font-size:15px;padding:6px 12px" onclick="toggleAdmin('${user.id}', ${user.isAdmin})">${user.isAdmin ? '관리자 해제' : '관리자 지정'}</button>
-          ${user.isAdmin ? `<button class="btn" style="font-size:15px;padding:6px 12px;background:#f59e0b;border-color:#f59e0b;color:#fff;" onclick="openScopeModal('${user.id}','${user.name}')">권한 범위 설정</button>` : ''}
-          <button class="btn btn-gray" style="font-size:15px;padding:6px 12px" onclick="resetPassword('${user.id}')">비번 재설정</button>
-          <button class="btn btn-blue" style="font-size:15px;padding:6px 12px;background:#9333ea;border-color:#9333ea;" onclick="openReportsToModal('${user.id}','${user.name}')">보고대상 설정</button>
-          <button class="btn btn-red" style="font-size:15px;padding:6px 12px;margin-left:auto;" onclick="deleteUser('${user.id}','${user.name}')">삭제</button>
+          <button class="btn ${user.isAdmin ? 'btn-gray' : 'btn-blue'}" style="font-size:clamp(11px, 0.78vw, 16px);padding:6px 12px" onclick="toggleAdmin('${user.id}', ${user.isAdmin})">${user.isAdmin ? '관리자 해제' : '관리자 지정'}</button>
+          ${user.isAdmin ? `<button class="btn" style="font-size:clamp(11px, 0.78vw, 16px);padding:6px 12px;background:#f59e0b;border-color:#f59e0b;color:#fff;" onclick="openScopeModal('${user.id}','${user.name}')">권한 범위 설정</button>` : ''}
+          <button class="btn btn-gray" style="font-size:clamp(11px, 0.78vw, 16px);padding:6px 12px" onclick="resetPassword('${user.id}')">비번 재설정</button>
+          <button class="btn btn-blue" style="font-size:clamp(11px, 0.78vw, 16px);padding:6px 12px;background:#9333ea;border-color:#9333ea;" onclick="openReportsToModal('${user.id}','${user.name}')">보고대상 설정</button>
+          <button class="btn btn-red" style="font-size:clamp(11px, 0.78vw, 16px);padding:6px 12px;margin-left:auto;" onclick="deleteUser('${user.id}','${user.name}')">삭제</button>
         </div>
       `;
       container.appendChild(div);
@@ -577,28 +577,28 @@
     const modalHtml = `
       <div id="team-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;display:flex;align-items:center;justify-content:center;">
         <div style="background:#fff;border-radius:14px;padding:35px;width:400px;max-width:90vw;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
-          <div style="font-size:20px;font-weight:600;color:#1a1a2e;margin-bottom:22px;">팀 / 부서 변경</div>
+          <div style="font-size:clamp(15px, 1.04vw, 22px);font-weight:600;color:#1a1a2e;margin-bottom:22px;">팀 / 부서 변경</div>
 
           <div style="margin-bottom:18px;">
-            <div style="font-size:15px;color:#666;font-weight:500;margin-bottom:8px;">소속 팀 <span style="font-size:14px;color:#aaa;">(이사급 이상은 비워도 됩니다)</span></div>
+            <div style="font-size:clamp(11px, 0.78vw, 16px);color:#666;font-weight:500;margin-bottom:8px;">소속 팀 <span style="font-size:clamp(10px, 0.73vw, 15px);color:#aaa;">(이사급 이상은 비워도 됩니다)</span></div>
             ${allTeams.length > 0 ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
-              ${allTeams.map(t => `<button onclick="document.getElementById('team-input').value='${t}'" style="padding:3px 9px;border:1px solid #ddd;border-radius:20px;font-size:14px;background:#f8f9fa;cursor:pointer;font-family:inherit;">${t}</button>`).join('')}
-              <button onclick="document.getElementById('team-input').value=''" style="padding:3px 9px;border:1px solid #f59e0b;border-radius:20px;font-size:14px;background:#fef3c7;color:#92400e;cursor:pointer;font-family:inherit;">비우기</button>
+              ${allTeams.map(t => `<button onclick="document.getElementById('team-input').value='${t}'" style="padding:3px 9px;border:1px solid #ddd;border-radius:20px;font-size:clamp(10px, 0.73vw, 15px);background:#f8f9fa;cursor:pointer;font-family:inherit;">${t}</button>`).join('')}
+              <button onclick="document.getElementById('team-input').value=''" style="padding:3px 9px;border:1px solid #f59e0b;border-radius:20px;font-size:clamp(10px, 0.73vw, 15px);background:#fef3c7;color:#92400e;cursor:pointer;font-family:inherit;">비우기</button>
             </div>` : ''}
-            <input id="team-input" type="text" value="${currentTeam}" placeholder="팀 이름 입력 (비워도 됨)" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-size:16px;font-family:inherit;outline:none;">
+            <input id="team-input" type="text" value="${currentTeam}" placeholder="팀 이름 입력 (비워도 됨)" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-size:clamp(12px, 0.83vw, 18px);font-family:inherit;outline:none;">
           </div>
 
           <div style="margin-bottom:25px;">
-            <div style="font-size:15px;color:#666;font-weight:500;margin-bottom:8px;">소속 부서</div>
+            <div style="font-size:clamp(11px, 0.78vw, 16px);color:#666;font-weight:500;margin-bottom:8px;">소속 부서</div>
             ${allDivisions.length > 0 ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
-              ${allDivisions.map(d => `<button onclick="document.getElementById('division-input').value='${d}'" style="padding:3px 9px;border:1px solid #ddd;border-radius:20px;font-size:14px;background:#f8f9fa;cursor:pointer;font-family:inherit;">${d}</button>`).join('')}
+              ${allDivisions.map(d => `<button onclick="document.getElementById('division-input').value='${d}'" style="padding:3px 9px;border:1px solid #ddd;border-radius:20px;font-size:clamp(10px, 0.73vw, 15px);background:#f8f9fa;cursor:pointer;font-family:inherit;">${d}</button>`).join('')}
             </div>` : ''}
-            <input id="division-input" type="text" value="${currentDivision}" placeholder="부서 이름 입력" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-size:16px;font-family:inherit;outline:none;">
+            <input id="division-input" type="text" value="${currentDivision}" placeholder="부서 이름 입력" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-size:clamp(12px, 0.83vw, 18px);font-family:inherit;outline:none;">
           </div>
 
           <div style="display:flex;gap:10px;">
-            <button onclick="document.getElementById('team-modal').remove()" style="flex:1;padding:12px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:16px;cursor:pointer;color:#666;">취소</button>
-            <button onclick="saveTeam('${userId}')" style="flex:1;padding:12px;border:none;border-radius:8px;background:#1a73e8;color:#fff;font-size:16px;cursor:pointer;font-weight:500;">저장</button>
+            <button onclick="document.getElementById('team-modal').remove()" style="flex:1;padding:12px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:clamp(12px, 0.83vw, 18px);cursor:pointer;color:#666;">취소</button>
+            <button onclick="saveTeam('${userId}')" style="flex:1;padding:12px;border:none;border-radius:8px;background:#1a73e8;color:#fff;font-size:clamp(12px, 0.83vw, 18px);cursor:pointer;font-weight:500;">저장</button>
           </div>
         </div>
       </div>`;
@@ -629,17 +629,17 @@
     const modalHtml = `
       <div id="pos-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;display:flex;align-items:center;justify-content:center;">
         <div style="background:#fff;border-radius:14px;padding:35px;width:360px;max-width:90vw;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
-          <div style="font-size:20px;font-weight:600;color:#1a1a2e;margin-bottom:20px;">직급 변경</div>
+          <div style="font-size:clamp(15px, 1.04vw, 22px);font-weight:600;color:#1a1a2e;margin-bottom:20px;">직급 변경</div>
           <div style="margin-bottom:15px;">
-            <div style="font-size:15px;color:#888;margin-bottom:10px;">자주 쓰는 직급</div>
+            <div style="font-size:clamp(11px, 0.78vw, 16px);color:#888;margin-bottom:10px;">자주 쓰는 직급</div>
             <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:15px;">
-              ${positions.map(p => `<button onclick="document.getElementById('pos-input').value='${p}'" style="padding:4px 10px;border:1px solid #ddd;border-radius:20px;font-size:15px;background:#f8f9fa;cursor:pointer;font-family:inherit;">${p}</button>`).join('')}
+              ${positions.map(p => `<button onclick="document.getElementById('pos-input').value='${p}'" style="padding:4px 10px;border:1px solid #ddd;border-radius:20px;font-size:clamp(11px, 0.78vw, 16px);background:#f8f9fa;cursor:pointer;font-family:inherit;">${p}</button>`).join('')}
             </div>
-            <input id="pos-input" type="text" value="${currentPosition}" placeholder="직접 입력" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-size:16px;font-family:inherit;outline:none;">
+            <input id="pos-input" type="text" value="${currentPosition}" placeholder="직접 입력" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-size:clamp(12px, 0.83vw, 18px);font-family:inherit;outline:none;">
           </div>
           <div style="display:flex;gap:10px;">
-            <button onclick="document.getElementById('pos-modal').remove()" style="flex:1;padding:12px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:16px;cursor:pointer;color:#666;">취소</button>
-            <button onclick="savePosition('${userId}')" style="flex:1;padding:12px;border:none;border-radius:8px;background:#1a73e8;color:#fff;font-size:16px;cursor:pointer;font-weight:500;">저장</button>
+            <button onclick="document.getElementById('pos-modal').remove()" style="flex:1;padding:12px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:clamp(12px, 0.83vw, 18px);cursor:pointer;color:#666;">취소</button>
+            <button onclick="savePosition('${userId}')" style="flex:1;padding:12px;border:none;border-radius:8px;background:#1a73e8;color:#fff;font-size:clamp(12px, 0.83vw, 18px);cursor:pointer;font-weight:500;">저장</button>
           </div>
         </div>
       </div>`;
@@ -673,20 +673,20 @@
     const modalHtml = `
       <div id="reports-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;display:flex;align-items:center;justify-content:center;">
         <div style="background:#fff;border-radius:14px;padding:35px;width:460px;max-width:90vw;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
-          <div style="font-size:20px;font-weight:600;color:#1a1a2e;margin-bottom:8px;">${userName}님의 보고 대상 설정</div>
-          <div style="font-size:15px;color:#888;margin-bottom:18px;">이 직원이 보고서를 발송할 상급자를 선택하세요.</div>
+          <div style="font-size:clamp(15px, 1.04vw, 22px);font-weight:600;color:#1a1a2e;margin-bottom:8px;">${userName}님의 보고 대상 설정</div>
+          <div style="font-size:clamp(11px, 0.78vw, 16px);color:#888;margin-bottom:18px;">이 직원이 보고서를 발송할 상급자를 선택하세요.</div>
           <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;overflow-y:auto;flex:1;padding-right:4px;">
             ${allUsers.map(u => `
               <label style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;cursor:pointer;flex-shrink:0;">
                 <input type="checkbox" value="${u.id}" ${currentReportsTo.includes(u.id) ? 'checked' : ''} style="width:16px;height:16px;accent-color:#9333ea;">
-                <span style="font-size:16px;font-weight:500;color:#1a1a2e;flex:1;">${u.name}</span>
-                <span style="font-size:14px;color:#888;">${u.position||u.role||''}</span>
-                <span style="font-size:14px;color:#aaa;">${u.email}</span>
+                <span style="font-size:clamp(12px, 0.83vw, 18px);font-weight:500;color:#1a1a2e;flex:1;">${u.name}</span>
+                <span style="font-size:clamp(10px, 0.73vw, 15px);color:#888;">${u.position||u.role||''}</span>
+                <span style="font-size:clamp(10px, 0.73vw, 15px);color:#aaa;">${u.email}</span>
               </label>`).join('')}
           </div>
           <div style="display:flex;gap:10px;flex-shrink:0;">
-            <button onclick="document.getElementById('reports-modal').remove()" style="flex:1;padding:12px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:16px;cursor:pointer;color:#666;">취소</button>
-            <button onclick="saveReportsTo('${userId}')" style="flex:1;padding:12px;border:none;border-radius:8px;background:#9333ea;color:#fff;font-size:16px;cursor:pointer;font-weight:500;">저장</button>
+            <button onclick="document.getElementById('reports-modal').remove()" style="flex:1;padding:12px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:clamp(12px, 0.83vw, 18px);cursor:pointer;color:#666;">취소</button>
+            <button onclick="saveReportsTo('${userId}')" style="flex:1;padding:12px;border:none;border-radius:8px;background:#9333ea;color:#fff;font-size:clamp(12px, 0.83vw, 18px);cursor:pointer;font-weight:500;">저장</button>
           </div>
         </div>
       </div>`;
@@ -720,38 +720,38 @@
     const modalHtml = `
       <div id="scope-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;display:flex;align-items:center;justify-content:center;">
         <div style="background:#fff;border-radius:14px;padding:35px;width:440px;max-width:90vw;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
-          <div style="font-size:20px;font-weight:600;color:#1a1a2e;margin-bottom:8px;">${userName}님의 관리자 권한 범위</div>
-          <div style="font-size:15px;color:#888;margin-bottom:22px;">권한 범위를 선택하세요.</div>
+          <div style="font-size:clamp(15px, 1.04vw, 22px);font-weight:600;color:#1a1a2e;margin-bottom:8px;">${userName}님의 관리자 권한 범위</div>
+          <div style="font-size:clamp(11px, 0.78vw, 16px);color:#888;margin-bottom:22px;">권한 범위를 선택하세요.</div>
 
           <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
             <label style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;cursor:pointer;">
               <input type="radio" name="scope-radio" value="system" ${currentScope==='system'?'checked':''} onchange="toggleScopeTeams(false)">
-              <span style="font-size:16px;font-weight:500;">시스템관리자 — 전사 전체 관리</span>
+              <span style="font-size:clamp(12px, 0.83vw, 18px);font-weight:500;">시스템관리자 — 전사 전체 관리</span>
             </label>
             <label style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;cursor:pointer;">
               <input type="radio" name="scope-radio" value="division" ${currentScope==='division'?'checked':''} onchange="toggleScopeTeams(true)">
-              <span style="font-size:16px;font-weight:500;">운영관리자(이사급) — 담당 팀 여러 개 멀티 관리</span>
+              <span style="font-size:clamp(12px, 0.83vw, 18px);font-weight:500;">운영관리자(이사급) — 담당 팀 여러 개 멀티 관리</span>
             </label>
             <label style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;cursor:pointer;">
               <input type="radio" name="scope-radio" value="team" ${currentScope==='team'?'checked':''} onchange="toggleScopeTeams(true)">
-              <span style="font-size:16px;font-weight:500;">운영관리자(팀장급) — 본인 팀만 관리</span>
+              <span style="font-size:clamp(12px, 0.83vw, 18px);font-weight:500;">운영관리자(팀장급) — 본인 팀만 관리</span>
             </label>
           </div>
 
           <div id="scope-teams-box" style="display:${currentScope!=='system'?'block':'none'};margin-bottom:22px;">
-            <div style="font-size:15px;font-weight:500;color:#666;margin-bottom:10px;">담당 팀 선택 (이사급은 복수 선택 가능)</div>
+            <div style="font-size:clamp(11px, 0.78vw, 16px);font-weight:500;color:#666;margin-bottom:10px;">담당 팀 선택 (이사급은 복수 선택 가능)</div>
             <div style="display:flex;flex-direction:column;gap:8px;max-height:160px;overflow-y:auto;">
               ${allTeams.map(t => `
                 <label style="display:flex;align-items:center;gap:10px;padding:7px 10px;background:#fff;border:0.5px solid #e8e8e8;border-radius:6px;cursor:pointer;">
                   <input type="checkbox" class="scope-team-chk" value="${t}" ${currentTeams.includes(t)?'checked':''}>
-                  <span style="font-size:15px;">${t}</span>
+                  <span style="font-size:clamp(11px, 0.78vw, 16px);">${t}</span>
                 </label>`).join('')}
             </div>
           </div>
 
           <div style="display:flex;gap:10px;">
-            <button onclick="document.getElementById('scope-modal').remove()" style="flex:1;padding:12px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:16px;cursor:pointer;color:#666;">취소</button>
-            <button onclick="saveAdminScope('${userId}')" style="flex:1;padding:12px;border:none;border-radius:8px;background:#f59e0b;color:#fff;font-size:16px;cursor:pointer;font-weight:500;">저장</button>
+            <button onclick="document.getElementById('scope-modal').remove()" style="flex:1;padding:12px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:clamp(12px, 0.83vw, 18px);cursor:pointer;color:#666;">취소</button>
+            <button onclick="saveAdminScope('${userId}')" style="flex:1;padding:12px;border:none;border-radius:8px;background:#f59e0b;color:#fff;font-size:clamp(12px, 0.83vw, 18px);cursor:pointer;font-weight:500;">저장</button>
           </div>
         </div>
       </div>`;

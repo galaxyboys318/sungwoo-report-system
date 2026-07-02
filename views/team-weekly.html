@@ -8,45 +8,45 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Malgun Gothic',sans-serif;background:#f5f6fa;color:#1a1a2e;}
 .topbar{background:#2563eb;display:flex;align-items:center;gap:18px;padding:0 24px;height:52px;position:sticky;top:0;z-index:100;}
-.topbar-title{color:#fff;font-size:19px;font-weight:600;}
+.topbar-title{color:#fff;font-size:clamp(14px, 0.99vw, 21px);font-weight:600;}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
-.topbar-user{color:rgba(255,255,255,0.8);font-size:16px;}
-.btn-topbar{background:rgba(255,255,255,0.15);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:15px;cursor:pointer;font-family:inherit;}
+.topbar-user{color:rgba(255,255,255,0.8);font-size:clamp(12px, 0.83vw, 18px);}
+.btn-topbar{background:rgba(255,255,255,0.15);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:clamp(11px, 0.78vw, 16px);cursor:pointer;font-family:inherit;}
 .btn-topbar:hover{background:rgba(255,255,255,0.25);}
 .wrap{max-width:960px;margin:0 auto;padding:24px 16px 48px;}
 .card{background:#fff;border-radius:12px;border:0.5px solid #e8e8e8;padding:20px 24px;margin-bottom:18px;}
-.section-title{font-size:19px;font-weight:500;color:#1a1a2e;margin:0 0 14px;}
-.week-info{font-size:16px;color:#666;margin-bottom:18px;}
+.section-title{font-size:clamp(14px, 0.99vw, 21px);font-weight:500;color:#1a1a2e;margin:0 0 14px;}
+.week-info{font-size:clamp(12px, 0.83vw, 18px);color:#666;margin-bottom:18px;}
 .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
 .s-card{background:#f8f9fa;border-radius:10px;border:0.5px solid #e8e8e8;padding:18px;text-align:center;}
-.s-num{font-size:30px;font-weight:500;margin:4px 0;}
-.s-label{font-size:14px;color:#aaa;}
+.s-num{font-size:clamp(22px, 1.56vw, 33px);font-weight:500;margin:4px 0;}
+.s-label{font-size:clamp(10px, 0.73vw, 15px);color:#aaa;}
 
 .missing-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#fff8e1;border-radius:8px;border:0.5px solid #ffe082;margin-bottom:10px;}
-.missing-name{font-size:16px;font-weight:500;color:#92400e;}
-.remind-btn{padding:6px 12px;background:#fff;border:1px solid #f59e0b;color:#b45309;border-radius:6px;font-size:15px;cursor:pointer;font-family:inherit;}
+.missing-name{font-size:clamp(12px, 0.83vw, 18px);font-weight:500;color:#92400e;}
+.remind-btn{padding:6px 12px;background:#fff;border:1px solid #f59e0b;color:#b45309;border-radius:6px;font-size:clamp(11px, 0.78vw, 16px);cursor:pointer;font-family:inherit;}
 .remind-btn:hover{background:#fef3c7;}
 .remind-btn:disabled{opacity:0.5;cursor:not-allowed;}
 
 .member-card{border:0.5px solid #e8e8e8;border-radius:10px;margin-bottom:15px;overflow:hidden;}
-.member-header{background:#f0f7ff;padding:10px 16px;font-size:16px;font-weight:600;color:#2563eb;}
+.member-header{background:#f0f7ff;padding:10px 16px;font-size:clamp(12px, 0.83vw, 18px);font-weight:600;color:#2563eb;}
 .member-body{padding:14px 16px;}
-.member-textarea{width:100%;min-height:120px;border:0.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:16px;font-family:inherit;line-height:2.0;resize:vertical;outline:none;}
+.member-textarea{width:100%;min-height:120px;border:0.5px solid #ddd;border-radius:8px;padding:10px 12px;font-size:clamp(12px, 0.83vw, 18px);font-family:inherit;line-height:2.0;resize:vertical;outline:none;}
 .member-textarea:focus{border-color:#2563eb;}
 
-.warn-box{background:#fff8e1;border:1px solid #ffe082;border-radius:8px;padding:14px 16px;margin-bottom:20px;font-size:16px;color:#7b5e00;}
+.warn-box{background:#fff8e1;border:1px solid #ffe082;border-radius:8px;padding:14px 16px;margin-bottom:20px;font-size:clamp(12px, 0.83vw, 18px);color:#7b5e00;}
 .recipient-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
 .recipient-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;cursor:pointer;}
 .recipient-item input{width:16px;height:16px;accent-color:#2563eb;cursor:pointer;}
-.recipient-name{font-size:16px;font-weight:500;flex:1;}
-.recipient-email{font-size:14px;color:#aaa;}
+.recipient-name{font-size:clamp(12px, 0.83vw, 18px);font-weight:500;flex:1;}
+.recipient-email{font-size:clamp(10px, 0.73vw, 15px);color:#aaa;}
 
-.send-btn{width:100%;padding:16px;background:#2563eb;color:#fff;font-size:18px;font-weight:500;border:none;border-radius:10px;cursor:pointer;font-family:inherit;}
+.send-btn{width:100%;padding:16px;background:#2563eb;color:#fff;font-size:clamp(14px, 0.94vw, 20px);font-weight:500;border:none;border-radius:10px;cursor:pointer;font-family:inherit;}
 .send-btn:hover{background:#1d4ed8;}
 .send-btn:disabled{background:#ccc;cursor:not-allowed;}
-.send-hint{font-size:15px;color:#aaa;text-align:center;margin-top:8px;}
-.empty{text-align:center;padding:38px;color:#bbb;font-size:16px;}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:8px;font-size:16px;display:none;z-index:999;}
+.send-hint{font-size:clamp(11px, 0.78vw, 16px);color:#aaa;text-align:center;margin-top:8px;}
+.empty{text-align:center;padding:38px;color:#bbb;font-size:clamp(12px, 0.83vw, 18px);}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:8px;font-size:clamp(12px, 0.83vw, 18px);display:none;z-index:999;}
 </style>
 </head>
 <body>
@@ -164,7 +164,7 @@ async function renderSendSection() {
     <label class="recipient-item">
       <input type="checkbox" class="team-recipient-chk" value="${r.email}" checked>
       <span class="recipient-name">${r.name} (${r.position||r.role||''})</span>
-      ${r.level === 1 ? '<span style="font-size:12px;background:#e8f0fe;color:#1558b0;padding:1px 7px;border-radius:20px;">경영진</span>' : ''}
+      ${r.level === 1 ? '<span style="font-size:clamp(10px, 0.62vw, 13px);background:#e8f0fe;color:#1558b0;padding:1px 7px;border-radius:20px;">경영진</span>' : ''}
       <span class="recipient-email">${r.email}</span>
     </label>`).join('');
 
@@ -176,8 +176,8 @@ async function renderSendSection() {
     <div class="card">
       <div class="section-title">발송 설정</div>
       ${missingWarn}
-      <div style="font-size:16px;font-weight:500;margin-bottom:12px;">수신자 선택</div>
-      <div class="recipient-list">${recipientHtml || '<div style="font-size:15px;color:#aaa;">수신 가능한 상급자가 없습니다.</div>'}</div>
+      <div style="font-size:clamp(12px, 0.83vw, 18px);font-weight:500;margin-bottom:12px;">수신자 선택</div>
+      <div class="recipient-list">${recipientHtml || '<div style="font-size:clamp(11px, 0.78vw, 16px);color:#aaa;">수신 가능한 상급자가 없습니다.</div>'}</div>
       <button class="send-btn" id="send-btn" onclick="sendTeamWeekly()">📨 취합 발송 (${statusData.submitted.length}명)</button>
       <div class="send-hint">발송 후에는 취소할 수 없습니다.</div>
     </div>`;
