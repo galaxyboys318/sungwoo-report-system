@@ -27,7 +27,7 @@
       "role": "회장",
       "position": "회장",
       "level": 1,
-      "isAdmin": false,
+      "isAdmin": true,
       "team": "",
       "division": "도서출판성우",
       "reportsTo": [],
