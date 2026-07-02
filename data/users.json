@@ -183,6 +183,18 @@
       "isAdmin": false,
       "team": "유아편집팀",
       "division": "유아콘텐츠사업부"
+    },
+    {
+      "id": "u1782959573957",
+      "name": "유명애",
+      "email": "pretty7970@sungwoobook.com",
+      "password": "1234",
+      "role": "팀장",
+      "position": "팀장",
+      "level": 3,
+      "isAdmin": false,
+      "team": "책육아콘텐츠연구실",
+      "division": "유아콘텐츠사업부"
     }
   ]
 }
