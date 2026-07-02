@@ -171,6 +171,18 @@
       "isAdmin": false,
       "team": "유아편집팀",
       "division": "유아콘텐츠사업부"
+    },
+    {
+      "id": "u1782959509707",
+      "name": "최창대",
+      "email": "prayfg@sungwoobook.com",
+      "password": "1234",
+      "role": "팀원",
+      "position": "팀원",
+      "level": 4,
+      "isAdmin": false,
+      "team": "유아편집팀",
+      "division": "유아콘텐츠사업부"
     }
   ]
 }
