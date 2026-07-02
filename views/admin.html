@@ -545,7 +545,7 @@
           <div class="user-avatar">${user.name[0]}</div>
           <div class="user-info">
             <div class="user-name">${user.name}</div>
-            <div class="user-sub">${user.email} &nbsp;·&nbsp; ${user.division||''} ${user.team||''}</div>
+            <div class="user-sub">${user.email} &nbsp;·&nbsp; <span onclick="editTeam('${user.id}','${user.team||''}','${user.division||''}')" title="클릭하여 팀/부서 변경" style="cursor:pointer;text-decoration:underline;text-underline-offset:2px;">${user.division||''} ${user.team||'(팀 미설정)'} ✏️</span></div>
           </div>
           <span class="level-badge ${levelClass}" onclick="editPosition('${user.id}', '${user.position||'팀원'}')" title="클릭하여 직급 변경" style="cursor:pointer;">${user.position||'팀원'} (Lv.${user.level||4}) ✏️</span>
           ${user.isAdmin ? `<span style="font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700;white-space:nowrap;background:${scopeColor.bg};color:${scopeColor.text};">${scopeLabel}${scope!=='system' && (user.managedTeams||[]).length ? `<br><span style="font-size:10px;font-weight:400;">${user.managedTeams.join(', ')}</span>` : ''}</span>` : ''}
@@ -566,6 +566,61 @@
       `;
       container.appendChild(div);
     });
+  }
+
+  // ─── 팀/부서 편집 모달 ──────────────────────────────
+  async function editTeam(userId, currentTeam, currentDivision) {
+    // 현재 등록된 팀/부서 목록 자동 수집
+    const allTeams = [...new Set(userData.map(u => u.team).filter(Boolean))];
+    const allDivisions = [...new Set(userData.map(u => u.division).filter(Boolean))];
+
+    const modalHtml = `
+      <div id="team-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;display:flex;align-items:center;justify-content:center;">
+        <div style="background:#fff;border-radius:14px;padding:28px;width:400px;max-width:90vw;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
+          <div style="font-size:16px;font-weight:600;color:#1a1a2e;margin-bottom:18px;">팀 / 부서 변경</div>
+
+          <div style="margin-bottom:14px;">
+            <div style="font-size:12px;color:#666;font-weight:500;margin-bottom:6px;">소속 팀 <span style="font-size:11px;color:#aaa;">(이사급 이상은 비워도 됩니다)</span></div>
+            ${allTeams.length > 0 ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;">
+              ${allTeams.map(t => `<button onclick="document.getElementById('team-input').value='${t}'" style="padding:3px 9px;border:1px solid #ddd;border-radius:20px;font-size:11px;background:#f8f9fa;cursor:pointer;font-family:inherit;">${t}</button>`).join('')}
+              <button onclick="document.getElementById('team-input').value=''" style="padding:3px 9px;border:1px solid #f59e0b;border-radius:20px;font-size:11px;background:#fef3c7;color:#92400e;cursor:pointer;font-family:inherit;">비우기</button>
+            </div>` : ''}
+            <input id="team-input" type="text" value="${currentTeam}" placeholder="팀 이름 입력 (비워도 됨)" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;font-family:inherit;outline:none;">
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <div style="font-size:12px;color:#666;font-weight:500;margin-bottom:6px;">소속 부서</div>
+            ${allDivisions.length > 0 ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;">
+              ${allDivisions.map(d => `<button onclick="document.getElementById('division-input').value='${d}'" style="padding:3px 9px;border:1px solid #ddd;border-radius:20px;font-size:11px;background:#f8f9fa;cursor:pointer;font-family:inherit;">${d}</button>`).join('')}
+            </div>` : ''}
+            <input id="division-input" type="text" value="${currentDivision}" placeholder="부서 이름 입력" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;font-family:inherit;outline:none;">
+          </div>
+
+          <div style="display:flex;gap:8px;">
+            <button onclick="document.getElementById('team-modal').remove()" style="flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:13px;cursor:pointer;color:#666;">취소</button>
+            <button onclick="saveTeam('${userId}')" style="flex:1;padding:10px;border:none;border-radius:8px;background:#1a73e8;color:#fff;font-size:13px;cursor:pointer;font-weight:500;">저장</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    document.getElementById('team-input').focus();
+  }
+
+  async function saveTeam(userId) {
+    const team = document.getElementById('team-input').value.trim();
+    const division = document.getElementById('division-input').value.trim();
+    const res = await fetch('/api/users/team', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, team, division }),
+    });
+    if (res.ok) {
+      document.getElementById('team-modal').remove();
+      showToast('팀/부서가 변경되었습니다.');
+      loadUsers();
+    } else {
+      const err = await res.json();
+      alert('변경 실패: ' + (err.error || ''));
+    }
   }
 
   // ─── 직급 변경 모달 ──────────────────────────────
