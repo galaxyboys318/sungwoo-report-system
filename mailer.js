@@ -207,7 +207,7 @@ function buildHtmlEmail(report, reporterName, reporterTeam, checkedTasksRaw) {
   </td></tr>
 </table>
 
-<table width="660" cellpadding="0" cellspacing="0" border="0" bgcolor="#f5f6fa" style="margin:20px auto;border-radius:14px;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f5f6fa" style="max-width:860px;margin:20px auto;border-radius:14px;">
 <tr><td style="padding:16px;">
 <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="border-radius:12px;">
 <tr><td style="padding:28px 32px;">
@@ -339,7 +339,7 @@ function buildWeeklyHtmlEmail(data, reporterName, reporterTeam) {
     </tr>`).join('');
 
   return `
-<table width="660" cellpadding="0" cellspacing="0" border="0" bgcolor="#f5f6fa" style="margin:24px auto;border-radius:14px;font-family:'Malgun Gothic',sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f5f6fa" style="max-width:860px;margin:24px auto;border-radius:14px;font-family:'Malgun Gothic',sans-serif;">
 <tr><td style="background:#1a73e8;border-radius:14px 14px 0 0;padding:14px 28px;">
   <span style="color:#fff;font-size:15px;font-weight:500;">도서출판 성우 &nbsp;·&nbsp; 주간업무보고</span>
 </td></tr>
@@ -436,7 +436,7 @@ function buildQuarterlyHtmlEmail(data, reporterName, reporterTeam) {
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#2563eb;"><tr><td style="padding:14px 28px;">
   <span style="color:#fff;font-size:15px;font-weight:500;">도서출판 성우 &nbsp;·&nbsp; 분기업무보고</span>
 </td></tr></table>
-<table width="660" cellpadding="0" cellspacing="0" style="margin:20px auto;background:#fff;border-radius:12px;">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:860px;margin:20px auto;background:#fff;border-radius:12px;">
 <tr><td style="padding:28px 32px;">
 <p style="margin:0 0 4px;font-size:22px;font-weight:500;color:#1a1a2e;">${qLabel} 업무 보고서</p>
 <p style="margin:0 0 22px;font-size:12px;color:#aaa;">${reporterName} &nbsp;·&nbsp; ${reporterTeam}</p>
@@ -494,7 +494,7 @@ function buildAnnualHtmlEmail(data, reporterName, reporterTeam) {
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#1e1e2e;"><tr><td style="padding:14px 28px;">
   <span style="color:#fff;font-size:15px;font-weight:500;">도서출판 성우 &nbsp;·&nbsp; 연간업무보고</span>
 </td></tr></table>
-<table width="660" cellpadding="0" cellspacing="0" style="margin:20px auto;background:#fff;border-radius:12px;">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:860px;margin:20px auto;background:#fff;border-radius:12px;">
 <tr><td style="padding:28px 32px;">
 <p style="margin:0 0 4px;font-size:22px;font-weight:500;color:#1a1a2e;">${year}년 연간 업무 보고서</p>
 <p style="margin:0 0 22px;font-size:12px;color:#aaa;">${reporterName} &nbsp;·&nbsp; ${reporterTeam}</p>
@@ -554,7 +554,7 @@ function buildTeamDailyHtmlEmail(team, date, members, leaderName) {
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a73e8;"><tr><td style="padding:14px 28px;">
   <span style="color:#fff;font-size:15px;font-weight:500;">도서출판 성우 &nbsp;·&nbsp; ${team} 일일 취합보고</span>
 </td></tr></table>
-<table width="660" cellpadding="0" cellspacing="0" style="margin:20px auto;background:#fff;border-radius:12px;">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:860px;margin:20px auto;background:#fff;border-radius:12px;">
 <tr><td style="padding:28px 32px;">
 <p style="margin:0 0 4px;font-size:22px;font-weight:500;color:#1a1a2e;">${team} 일일 취합보고서</p>
 <p style="margin:0 0 22px;font-size:12px;color:#aaa;">${fmt(date)} &nbsp;·&nbsp; 취합: ${leaderName} &nbsp;·&nbsp; 참여 ${members.length}명</p>
@@ -592,7 +592,7 @@ function buildTeamWeeklyHtmlEmail(team, weekKey, weekStart, weekEnd, members, le
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#2563eb;"><tr><td style="padding:14px 28px;">
   <span style="color:#fff;font-size:15px;font-weight:500;">도서출판 성우 &nbsp;·&nbsp; ${team} 주간 취합보고</span>
 </td></tr></table>
-<table width="660" cellpadding="0" cellspacing="0" style="margin:20px auto;background:#fff;border-radius:12px;">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:860px;margin:20px auto;background:#fff;border-radius:12px;">
 <tr><td style="padding:28px 32px;">
 <p style="margin:0 0 4px;font-size:22px;font-weight:500;color:#1a1a2e;">${team} 주간 취합보고서</p>
 <p style="margin:0 0 22px;font-size:12px;color:#aaa;">${weekKey} (${fmt(weekStart)} ~ ${fmt(weekEnd)}) &nbsp;·&nbsp; 취합: ${leaderName} &nbsp;·&nbsp; 참여 ${members.length}명</p>
@@ -682,7 +682,7 @@ function buildProjectReportHtml(data, leaderName, leaderTeam) {
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a73e8;"><tr><td style="padding:14px 28px;">
   <span style="color:#fff;font-size:15px;font-weight:500;">도서출판 성우 &nbsp;·&nbsp; ${leaderTeam} 프로젝트 취합보고</span>
 </td></tr></table>
-<table width="680" cellpadding="0" cellspacing="0" style="margin:20px auto;background:#fff;border-radius:12px;">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:860px;margin:20px auto;background:#fff;border-radius:12px;">
 <tr><td style="padding:28px 32px;">
   <p style="margin:0 0 4px;font-size:22px;font-weight:500;color:#1a1a2e;">${project.name}</p>
   <p style="margin:0 0 22px;font-size:12px;color:#aaa;">${fmt(date)} &nbsp;·&nbsp; 취합: ${leaderName} (${leaderTeam}) &nbsp;·&nbsp; ${project.tag || ''}</p>
