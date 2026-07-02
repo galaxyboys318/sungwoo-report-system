@@ -219,6 +219,18 @@
       "isAdmin": false,
       "team": "영상개발팀",
       "division": "유아콘텐츠사업부"
+    },
+    {
+      "id": "u1782959718129",
+      "name": "차영미",
+      "email": "vision327@sungwoobook.com",
+      "password": "1234",
+      "role": "이사",
+      "position": "이사",
+      "level": 2,
+      "isAdmin": false,
+      "team": "영업관리본부",
+      "division": "영업관리본부"
     }
   ]
 }
