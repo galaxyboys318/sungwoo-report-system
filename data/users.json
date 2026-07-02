@@ -231,6 +231,18 @@
       "isAdmin": false,
       "team": "영업관리본부",
       "division": "영업관리본부"
+    },
+    {
+      "id": "u1782959760900",
+      "name": "강성민",
+      "email": "ksm5774@sungwoobook.com",
+      "password": "1234",
+      "role": "팀장",
+      "position": "팀장",
+      "level": 3,
+      "isAdmin": false,
+      "team": "영업팀",
+      "division": "영업관리본부"
     }
   ]
 }
