@@ -41,7 +41,7 @@
       "position": "대표이사",
       "level": 1,
       "isAdmin": false,
-      "team": "해당사항없음",
+      "team": "",
       "division": "도서출판성우",
       "reportsTo": [],
       "adminScope": "system",
