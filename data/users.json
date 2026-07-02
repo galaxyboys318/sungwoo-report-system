@@ -170,14 +170,15 @@
       "role": "팀장",
       "position": "팀장",
       "level": 3,
-      "isAdmin": false,
+      "isAdmin": true,
       "team": "유아편집팀",
       "division": "유아콘텐츠사업부",
       "reportsTo": [
         "u1781771178674",
         "u1781771219247",
         "u1782958833649"
-      ]
+      ],
+      "adminScope": "system"
     },
     {
       "id": "u1782959322562",
