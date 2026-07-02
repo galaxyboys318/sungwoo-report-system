@@ -105,12 +105,14 @@
     .add-task-row { display: flex; gap: 8px; padding: 10px 20px 14px; align-items: center; }
 
     /* 직원 관리 */
-    .user-card { background: #fff; border-radius: 10px; border: 1.5px solid #e8e8e8; padding: 14px 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; }
+    .user-card { background: #fff; border-radius: 10px; border: 1.5px solid #e8e8e8; padding: 14px 18px; margin-bottom: 10px; }
+    .user-card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .user-card-bottom { display: flex; align-items: center; gap: 8px; padding-top: 10px; border-top: 0.5px solid #f0f0f0; flex-wrap: wrap; }
     .user-avatar { width: 38px; height: 38px; border-radius: 50%; background: #e8f0fe; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: #1a73e8; flex-shrink: 0; }
-    .user-info { flex: 1; }
+    .user-info { flex: 1; min-width: 0; }
     .user-name { font-size: 14px; font-weight: 700; color: #1a1a1a; }
-    .user-sub { font-size: 12px; color: #888; margin-top: 2px; }
-    .level-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 700; }
+    .user-sub { font-size: 12px; color: #888; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .level-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
     .level-1 { background: #fce8e6; color: #c5221f; }
     .level-2 { background: #fef7e0; color: #b06000; }
     .level-3 { background: #e6f4ea; color: #137333; }
@@ -539,24 +541,28 @@
       const div = document.createElement('div');
       div.className = 'user-card';
       div.innerHTML = `
-        <div class="user-avatar">${user.name[0]}</div>
-        <div class="user-info">
-          <div class="user-name">${user.name}</div>
-          <div class="user-sub">${user.email} · ${user.division||''} ${user.team||''}</div>
+        <div class="user-card-top">
+          <div class="user-avatar">${user.name[0]}</div>
+          <div class="user-info">
+            <div class="user-name">${user.name}</div>
+            <div class="user-sub">${user.email} &nbsp;·&nbsp; ${user.division||''} ${user.team||''}</div>
+          </div>
+          <span class="level-badge ${levelClass}" onclick="editPosition('${user.id}', '${user.position||'팀원'}')" title="클릭하여 직급 변경" style="cursor:pointer;">${user.position||'팀원'} (Lv.${user.level||4}) ✏️</span>
+          ${user.isAdmin ? `<span style="font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700;white-space:nowrap;background:${scopeColor.bg};color:${scopeColor.text};">${scopeLabel}${scope!=='system' && (user.managedTeams||[]).length ? `<br><span style="font-size:10px;font-weight:400;">${user.managedTeams.join(', ')}</span>` : ''}</span>` : ''}
+          <select style="font-size:12px;padding:5px 8px;border-radius:6px;border:1px solid #ddd;cursor:pointer;flex-shrink:0;" onchange="changeLevel('${user.email}', this.value)">
+            <option value="1" ${(user.level||4)==1?'selected':''}>Lv.1 회장/대표</option>
+            <option value="2" ${(user.level||4)==2?'selected':''}>Lv.2 이사</option>
+            <option value="3" ${(user.level||4)==3?'selected':''}>Lv.3 팀장</option>
+            <option value="4" ${(user.level||4)==4?'selected':''}>Lv.4 팀원</option>
+          </select>
         </div>
-        <span class="level-badge ${levelClass}" onclick="editPosition('${user.id}', '${user.position||'팀원'}')" title="클릭하여 직급 변경" style="cursor:pointer;">${user.position||'팀원'} (Lv.${user.level||4}) ✏️</span>
-        ${user.isAdmin ? `<span style="font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700;background:${scopeColor.bg};color:${scopeColor.text};">${scopeLabel}${scope!=='system' && (user.managedTeams||[]).length ? ` · ${user.managedTeams.join(', ')}` : ''}</span>` : ''}
-        <select style="font-size:12px;padding:5px 8px;border-radius:6px;border:1px solid #ddd;cursor:pointer;" onchange="changeLevel('${user.email}', this.value)">
-          <option value="1" ${(user.level||4)==1?'selected':''}>Lv.1 회장/대표</option>
-          <option value="2" ${(user.level||4)==2?'selected':''}>Lv.2 이사</option>
-          <option value="3" ${(user.level||4)==3?'selected':''}>Lv.3 팀장</option>
-          <option value="4" ${(user.level||4)==4?'selected':''}>Lv.4 팀원</option>
-        </select>
-        <button class="btn ${user.isAdmin ? 'btn-gray' : 'btn-blue'}" style="font-size:12px;padding:6px 10px" onclick="toggleAdmin('${user.id}', ${user.isAdmin})">${user.isAdmin ? '관리자 해제' : '관리자 지정'}</button>
-        ${user.isAdmin ? `<button class="btn" style="font-size:12px;padding:6px 10px;background:#f59e0b;border-color:#f59e0b;color:#fff;" onclick="openScopeModal('${user.id}','${user.name}')">권한 범위 설정</button>` : ''}
-        <button class="btn btn-gray" style="font-size:12px;padding:6px 10px" onclick="resetPassword('${user.id}')">비번재설정</button>
-        <button class="btn btn-blue" style="font-size:12px;padding:6px 10px;background:#9333ea;border-color:#9333ea;" onclick="openReportsToModal('${user.id}','${user.name}')">보고대상 설정</button>
-        <button class="btn btn-red" style="font-size:12px;padding:6px 10px" onclick="deleteUser('${user.id}','${user.name}')">삭제</button>
+        <div class="user-card-bottom">
+          <button class="btn ${user.isAdmin ? 'btn-gray' : 'btn-blue'}" style="font-size:12px;padding:6px 12px" onclick="toggleAdmin('${user.id}', ${user.isAdmin})">${user.isAdmin ? '관리자 해제' : '관리자 지정'}</button>
+          ${user.isAdmin ? `<button class="btn" style="font-size:12px;padding:6px 12px;background:#f59e0b;border-color:#f59e0b;color:#fff;" onclick="openScopeModal('${user.id}','${user.name}')">권한 범위 설정</button>` : ''}
+          <button class="btn btn-gray" style="font-size:12px;padding:6px 12px" onclick="resetPassword('${user.id}')">비번 재설정</button>
+          <button class="btn btn-blue" style="font-size:12px;padding:6px 12px;background:#9333ea;border-color:#9333ea;" onclick="openReportsToModal('${user.id}','${user.name}')">보고대상 설정</button>
+          <button class="btn btn-red" style="font-size:12px;padding:6px 12px;margin-left:auto;" onclick="deleteUser('${user.id}','${user.name}')">삭제</button>
+        </div>
       `;
       container.appendChild(div);
     });
