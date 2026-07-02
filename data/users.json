@@ -68,6 +68,18 @@
         "디자인팀",
         "솔루션개발팀"
       ]
+    },
+    {
+      "id": "u1782955482705",
+      "name": "이미경",
+      "email": "betcha@sungwoobook.com",
+      "password": "1234",
+      "role": "팀원",
+      "position": "팀원",
+      "level": 4,
+      "isAdmin": false,
+      "team": "초등편집팀",
+      "division": ""
     }
   ]
 }
