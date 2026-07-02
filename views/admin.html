@@ -106,12 +106,12 @@
 
     /* 직원 관리 */
     .user-card { background: #fff; border-radius: 14px; border: 1.5px solid #e8e8e8; padding: 22px 24px; margin-bottom: 16px; }
-    .user-card-top { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+    .user-card-top { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
     .user-card-bottom { display: flex; align-items: center; gap: 10px; padding-top: 16px; border-top: 0.5px solid #f0f0f0; flex-wrap: wrap; }
     .user-avatar { width: 48px; height: 48px; border-radius: 50%; background: #e8f0fe; display: flex; align-items: center; justify-content: center; font-size: clamp(16px, 1.2vw, 22px); font-weight: 700; color: #1a73e8; flex-shrink: 0; }
     .user-info { flex: 1; min-width: 0; }
     .user-name { font-size: clamp(15px, 1.0vw, 20px); font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
-    .user-email { font-size: clamp(12px, 0.85vw, 16px); color: #666; margin-bottom: 3px; }
+    .user-email { font-size: clamp(12px, 0.85vw, 16px); color: #666; margin-bottom: 3px; word-break: break-all; }
     .user-team { font-size: clamp(12px, 0.85vw, 16px); color: #999; }
     .level-badge { font-size: clamp(10px, 0.73vw, 15px); padding: 2px 8px; border-radius: 20px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
     .level-1 { background: #fce8e6; color: #c5221f; }
@@ -545,20 +545,20 @@
         <div class="user-card-top">
           <div class="user-avatar">${user.name[0]}</div>
           <div class="user-info">
-            <div class="user-name">${user.name}</div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px;">
+              <span class="user-name">${user.name}</span>
+              <span class="level-badge ${levelClass}" onclick="editPosition('${user.id}', '${user.position||'팀원'}')" title="클릭하여 직급 변경" style="cursor:pointer;">${user.position||'팀원'} ✏️</span>
+              <select style="font-size:clamp(11px, 0.78vw, 16px);padding:5px 8px;border-radius:8px;border:1px solid #ddd;cursor:pointer;" onchange="changeLevel('${user.email}', this.value)">
+                <option value="1" ${(user.level||4)==1?'selected':''}>Lv.1 회장/대표</option>
+                <option value="2" ${(user.level||4)==2?'selected':''}>Lv.2 이사</option>
+                <option value="3" ${(user.level||4)==3?'selected':''}>Lv.3 팀장</option>
+                <option value="4" ${(user.level||4)==4?'selected':''}>Lv.4 팀원</option>
+              </select>
+            </div>
             <div class="user-email">${user.email}</div>
             <div class="user-team">${user.division||''} ${user.team||'(팀 미설정)'} <button onclick="editTeam('${user.id}','${user.team||''}','${user.division||''}')" title="팀/부서 변경" style="border:none;background:none;cursor:pointer;font-size:clamp(11px, 0.78vw, 16px);padding:0 3px;color:#1a73e8;">✏️</button></div>
-            <div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-              <span class="level-badge ${levelClass}" onclick="editPosition('${user.id}', '${user.position||'팀원'}')" title="클릭하여 직급 변경" style="cursor:pointer;">${user.position||'팀원'} ✏️</span>
-              ${user.isAdmin ? `<span style="font-size:clamp(10px, 0.73vw, 15px);padding:3px 10px;border-radius:20px;font-weight:700;white-space:nowrap;background:${scopeColor.bg};color:${scopeColor.text};">${scopeLabel}${scope!=='system' && (user.managedTeams||[]).length ? ` · ${user.managedTeams.join(', ')}` : ''}</span>` : ''}
-            </div>
+            ${user.isAdmin ? `<div style="margin-top:6px;"><span style="font-size:clamp(10px, 0.73vw, 15px);padding:3px 10px;border-radius:20px;font-weight:700;background:${scopeColor.bg};color:${scopeColor.text};">${scopeLabel}${scope!=='system' && (user.managedTeams||[]).length ? ' · ' + user.managedTeams.join(', ') : ''}</span></div>` : ''}
           </div>
-          <select style="font-size:clamp(11px, 0.78vw, 16px);padding:6px 10px;border-radius:8px;border:1px solid #ddd;cursor:pointer;flex-shrink:0;" onchange="changeLevel('${user.email}', this.value)">
-            <option value="1" ${(user.level||4)==1?'selected':''}>Lv.1 회장/대표</option>
-            <option value="2" ${(user.level||4)==2?'selected':''}>Lv.2 이사</option>
-            <option value="3" ${(user.level||4)==3?'selected':''}>Lv.3 팀장</option>
-            <option value="4" ${(user.level||4)==4?'selected':''}>Lv.4 팀원</option>
-          </select>
         </div>
         <div class="user-card-bottom">
           <button class="btn ${user.isAdmin ? 'btn-gray' : 'btn-blue'}" style="font-size:clamp(11px, 0.78vw, 16px);padding:6px 12px" onclick="toggleAdmin('${user.id}', ${user.isAdmin})">${user.isAdmin ? '관리자 해제' : '관리자 지정'}</button>
