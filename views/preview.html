@@ -10,7 +10,7 @@
       font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
       background: #f4f6f9;
       min-height: 100vh;
-      padding: 24px;
+      padding: 30px;
       display: flex;
       justify-content: center;
     }
@@ -19,16 +19,16 @@
       background: #fff;
       border-radius: 12px;
       box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-      padding: 40px;
-      margin-bottom: 16px;
+      padding: 50px;
+      margin-bottom: 20px;
     }
     .step-tag {
       font-size: 15px;
       color: #888;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
       font-weight: 600;
     }
-    h2 { font-size: 22px; color: #1a1a1a; margin-bottom: 20px; }
+    h2 { font-size: 22px; color: #1a1a1a; margin-bottom: 25px; }
 
     /* 메일 미리보기 영역 */
     .mail-preview {
@@ -45,7 +45,7 @@
       display: flex;
       font-size: 16px;
       color: #444;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
     .mail-header .field:last-child { margin-bottom: 0; }
     .mail-header .label {
@@ -67,7 +67,7 @@
       font-size: 18px;
       font-weight: 600;
       color: #555;
-      margin-bottom: 12px;
+      margin-bottom: 15px;
     }
     .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
     .checkbox-item {
@@ -93,7 +93,7 @@
     }
     .btn {
       flex: 1;
-      padding: 13px;
+      padding: 16px;
       font-size: 18px;
       font-weight: 700;
       border: none;
@@ -117,11 +117,11 @@
     .result {
       display: none;
       text-align: center;
-      padding: 32px;
+      padding: 40px;
     }
     .result.show { display: block; }
-    .result-icon { font-size: 60px; margin-bottom: 12px; }
-    .result-msg { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
+    .result-icon { font-size: 60px; margin-bottom: 15px; }
+    .result-msg { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 10px; }
     .result-sub { font-size: 16px; color: #888; }
     .btn-again {
       margin-top: 20px;
@@ -255,7 +255,7 @@
     } else {
       // htmlBody 없으면 텍스트를 줄바꿈 유지해서 표시
       const escaped = (data.body || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      iframe.srcdoc = '<div style="font-family:Malgun Gothic,sans-serif;font-size:18px;line-height:1.9;padding:20px;white-space:pre-wrap;word-break:keep-all;color:#222">' + escaped + '</div>';
+      iframe.srcdoc = '<div style="font-family:Malgun Gothic,sans-serif;font-size:18px;line-height:2.3;padding:25px;white-space:pre-wrap;word-break:keep-all;color:#222">' + escaped + '</div>';
     }
 
     function goBack() {

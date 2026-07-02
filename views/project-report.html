@@ -7,24 +7,24 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Malgun Gothic',sans-serif;background:#f5f6fa;color:#1a1a2e;}
-.topbar{background:#1a73e8;display:flex;align-items:center;gap:14px;padding:0 24px;height:52px;position:sticky;top:0;z-index:100;}
+.topbar{background:#1a73e8;display:flex;align-items:center;gap:18px;padding:0 24px;height:52px;position:sticky;top:0;z-index:100;}
 .topbar-title{color:#fff;font-size:19px;font-weight:600;}
-.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
 .topbar-user{color:rgba(255,255,255,0.8);font-size:16px;}
 .btn-topbar{background:rgba(255,255,255,0.15);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:15px;cursor:pointer;font-family:inherit;}
 .btn-topbar:hover{background:rgba(255,255,255,0.25);}
 .wrap{max-width:960px;margin:0 auto;padding:24px 16px 48px;}
-.card{background:#fff;border-radius:12px;border:0.5px solid #e8e8e8;padding:20px 24px;margin-bottom:14px;}
+.card{background:#fff;border-radius:12px;border:0.5px solid #e8e8e8;padding:20px 24px;margin-bottom:18px;}
 .section-title{font-size:19px;font-weight:500;color:#1a1a2e;margin:0 0 14px;}
-.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
 .select-input{padding:7px 12px;border:0.5px solid #ddd;border-radius:8px;font-size:16px;font-family:inherit;min-width:200px;}
 .date-input{padding:7px 12px;border:0.5px solid #ddd;border-radius:8px;font-size:16px;font-family:inherit;}
 .btn-load{padding:7px 16px;background:#1a73e8;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer;font-family:inherit;}
 .btn-load:hover{background:#1558b0;}
 
 /* 단위업무 카드 */
-.task-block{border:0.5px solid #e8e8e8;border-radius:10px;margin-bottom:12px;overflow:hidden;}
-.task-header{background:#f0f4ff;padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:0.5px solid #e8e8e8;}
+.task-block{border:0.5px solid #e8e8e8;border-radius:10px;margin-bottom:15px;overflow:hidden;}
+.task-header{background:#f0f4ff;padding:10px 16px;display:flex;align-items:center;gap:12px;border-bottom:0.5px solid #e8e8e8;}
 .task-name{font-size:18px;font-weight:600;color:#1a1a2e;flex:1;}
 .task-assignees{font-size:14px;color:#888;}
 .task-pct{font-size:18px;font-weight:500;color:#1a73e8;}
@@ -42,26 +42,26 @@ body{font-family:'Malgun Gothic',sans-serif;background:#f5f6fa;color:#1a1a2e;}
 .memo-item{padding:3px 0;border-bottom:0.5px solid #f5f5f5;font-size:14px;color:#555;}
 .memo-item:last-child{border-bottom:none;}
 .memo-author{font-weight:500;color:#1a73e8;}
-.memo-text-input{width:100%;border:0.5px solid #ddd;border-radius:6px;padding:5px 8px;font-size:14px;font-family:inherit;resize:none;outline:none;line-height:1.6;}
+.memo-text-input{width:100%;border:0.5px solid #ddd;border-radius:6px;padding:5px 8px;font-size:14px;font-family:inherit;resize:none;outline:none;line-height:1.9;}
 .memo-text-input:focus{border-color:#1a73e8;}
 .no-memo{font-size:14px;color:#ccc;}
 
 /* 요약 */
-.summary-box{width:100%;min-height:100px;border:0.5px solid #ddd;border-radius:8px;padding:12px;font-size:16px;font-family:inherit;line-height:1.8;resize:vertical;outline:none;}
+.summary-box{width:100%;min-height:100px;border:0.5px solid #ddd;border-radius:8px;padding:15px;font-size:16px;font-family:inherit;line-height:2.2;resize:vertical;outline:none;}
 .summary-box:focus{border-color:#1a73e8;}
 
 /* 수신자 */
-.recipient-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
-.recipient-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;cursor:pointer;}
+.recipient-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.recipient-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;cursor:pointer;}
 .recipient-item input{width:16px;height:16px;accent-color:#1a73e8;}
 .recipient-name{font-size:16px;font-weight:500;flex:1;}
 .recipient-email{font-size:14px;color:#aaa;}
 
-.send-btn{width:100%;padding:13px;background:#1a73e8;color:#fff;font-size:18px;font-weight:500;border:none;border-radius:10px;cursor:pointer;font-family:inherit;}
+.send-btn{width:100%;padding:16px;background:#1a73e8;color:#fff;font-size:18px;font-weight:500;border:none;border-radius:10px;cursor:pointer;font-family:inherit;}
 .send-btn:hover{background:#1558b0;}
 .send-btn:disabled{background:#ccc;cursor:not-allowed;}
 .send-hint{font-size:15px;color:#aaa;text-align:center;margin-top:8px;}
-.empty{text-align:center;padding:30px;color:#bbb;font-size:16px;}
+.empty{text-align:center;padding:38px;color:#bbb;font-size:16px;}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:8px;font-size:16px;display:none;z-index:999;}
 </style>
 </head>
@@ -226,7 +226,7 @@ async function renderSendSection() {
   document.getElementById('send-section').innerHTML = `
     <div class="card">
       <div class="section-title">발송 설정</div>
-      <div style="font-size:16px;font-weight:500;margin-bottom:10px;">수신자 선택</div>
+      <div style="font-size:16px;font-weight:500;margin-bottom:12px;">수신자 선택</div>
       <div class="recipient-list">${recipientHtml || '<div style="font-size:15px;color:#aaa;">수신 가능한 상급자가 없습니다.</div>'}</div>
       <button class="send-btn" id="send-btn" onclick="sendReport()">📨 프로젝트 취합보고 발송</button>
       <div class="send-hint">발송 후에는 취소할 수 없습니다.</div>

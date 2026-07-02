@@ -10,7 +10,7 @@
       font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
       background: #f4f6f9;
       min-height: 100vh;
-      padding: 24px;
+      padding: 30px;
     }
     .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
 
@@ -19,9 +19,9 @@
       border-radius: 12px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.07);
       padding: 28px 32px;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
-    .header .tag { font-size: 15px; color: #1a73e8; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .header .tag { font-size: 15px; color: #1a73e8; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 8px; }
     .header h1 { font-size: 25px; color: #1a1a1a; font-weight: 700; }
     .header .date { font-size: 16px; color: #888; margin-top: 4px; }
 
@@ -29,7 +29,7 @@
       background: #fff;
       border-radius: 12px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-      margin-bottom: 12px;
+      margin-bottom: 15px;
       overflow: hidden;
     }
     .project-header {
@@ -71,7 +71,7 @@
       flex-shrink: 0;
     }
     .task-right { flex: 1; }
-    .task-name { font-size: 18px; color: #333; margin-bottom: 6px; line-height: 1.4; }
+    .task-name { font-size: 18px; color: #333; margin-bottom: 8px; line-height: 1.7; }
     .task-item.checked .task-name { color: #1a73e8; font-weight: 600; }
 
     .task-memo {
@@ -85,7 +85,7 @@
       resize: none;
       height: 36px;
       display: none;
-      line-height: 1.5;
+      line-height: 1.8;
     }
     .task-memo.show { display: block; }
     .task-memo:focus { outline: none; border-color: #1a73e8; height: 72px; transition: height 0.2s; }
@@ -100,7 +100,7 @@
       cursor: pointer;
       margin-top: 2px;
       flex-shrink: 0;
-      line-height: 1;
+      line-height: 1.2;
     }
     .task-delete:hover { color: #e57373; }
 
@@ -247,16 +247,16 @@
       background: #fff;
       resize: none;
       height: 28px;
-      line-height: 1.5;
+      line-height: 1.8;
       transition: height 0.15s, border-color 0.15s;
     }
     .step-memo:focus { outline: none; border-color: #1a73e8; height: 54px; }
     .step-memo::placeholder { color: #c0cfe8; }
     .step-memo:disabled { background: #f5f5f5; color: #bbb; cursor: not-allowed; border-color: #eee; resize: none; }
     .memo-history { margin-top: 5px; border-left: 2px solid #dde8fb; padding-left: 10px; }
-    .memo-history-item { margin-bottom: 5px; }
+    .memo-history-item { margin-bottom: 6px; }
     .memo-history-date { font-size: 12px; color: #1a73e8; font-weight: 500; margin-bottom: 1px; }
-    .memo-history-text { font-size: 14px; color: #888; line-height: 1.5; }
+    .memo-history-text { font-size: 14px; color: #888; line-height: 1.8; }
     .task-progress-bar {
       height: 3px;
       background: #e0e0e0;
@@ -323,10 +323,10 @@
       background: #fff;
       border-radius: 12px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-      padding: 20px;
-      margin-bottom: 16px;
+      padding: 25px;
+      margin-bottom: 20px;
     }
-    .extra-card label { font-size: 16px; font-weight: 700; color: #555; display: block; margin-bottom: 8px; }
+    .extra-card label { font-size: 16px; font-weight: 700; color: #555; display: block; margin-bottom: 10px; }
     .extra-textarea {
       width: 100%;
       height: 80px;
@@ -337,7 +337,7 @@
       font-family: inherit;
       color: #333;
       resize: none;
-      line-height: 1.6;
+      line-height: 1.9;
     }
     .extra-textarea:focus { outline: none; border-color: #1a73e8; }
     .extra-textarea::placeholder { color: #bbb; }
@@ -347,11 +347,11 @@
       background: #fff;
       border-radius: 12px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-      padding: 20px;
+      padding: 25px;
     }
     .btn-submit {
       width: 100%;
-      padding: 14px;
+      padding: 18px;
       background: #1a73e8;
       color: #fff;
       font-size: 19px;
@@ -389,9 +389,9 @@
         <h1>오늘 진행한 업무를 체크해주세요</h1>
         <div class="date" id="today-date"></div>
       </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
         <span id="user-name" onclick="openPwModal()" style="font-size:16px;color:#555;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px;" title="비밀번호 변경"></span>
-        <div style="display:flex;gap:8px">
+        <div style="display:flex;gap:10px">
           <a id="team-daily-link" href="/team-daily" style="display:none;font-size:15px;color:#16a34a;text-decoration:none;border:1px solid #16a34a;border-radius:5px;padding:4px 10px;font-weight:500;">👥 팀 취합</a>
           <a id="project-report-link" href="/project-report" style="display:none;font-size:15px;color:#9333ea;text-decoration:none;border:1px solid #9333ea;border-radius:5px;padding:4px 10px;font-weight:500;">📊 프로젝트 취합</a>
           <a id="admin-link" href="/admin" style="display:none;font-size:15px;color:#1a73e8;text-decoration:none;border:1px solid #1a73e8;border-radius:5px;padding:4px 10px">관리자</a>
@@ -1008,23 +1008,23 @@
 <!-- 비밀번호 변경 모달 -->
 <div id="pw-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;display:flex;align-items:center;justify-content:center;display:none;">
   <div style="background:#fff;border-radius:14px;padding:28px 28px 24px;width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
-    <div style="font-size:20px;font-weight:600;color:#1a1a2e;margin-bottom:20px;">🔒 비밀번호 변경</div>
-    <div style="margin-bottom:12px;">
-      <label style="font-size:15px;color:#666;display:block;margin-bottom:5px;">현재 비밀번호</label>
+    <div style="font-size:20px;font-weight:600;color:#1a1a2e;margin-bottom:25px;">🔒 비밀번호 변경</div>
+    <div style="margin-bottom:15px;">
+      <label style="font-size:15px;color:#666;display:block;margin-bottom:6px;">현재 비밀번호</label>
       <input type="password" id="pw-current" autocomplete="current-password" placeholder="현재 비밀번호 입력" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:7px;font-size:16px;font-family:inherit;outline:none;" oninput="clearPwError()">
     </div>
-    <div style="margin-bottom:12px;">
-      <label style="font-size:15px;color:#666;display:block;margin-bottom:5px;">새 비밀번호</label>
+    <div style="margin-bottom:15px;">
+      <label style="font-size:15px;color:#666;display:block;margin-bottom:6px;">새 비밀번호</label>
       <input type="password" id="pw-new" autocomplete="new-password" placeholder="새 비밀번호 (4자 이상)" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:7px;font-size:16px;font-family:inherit;outline:none;" oninput="clearPwError()">
     </div>
-    <div style="margin-bottom:18px;">
-      <label style="font-size:15px;color:#666;display:block;margin-bottom:5px;">새 비밀번호 확인</label>
+    <div style="margin-bottom:22px;">
+      <label style="font-size:15px;color:#666;display:block;margin-bottom:6px;">새 비밀번호 확인</label>
       <input type="password" id="pw-confirm" autocomplete="new-password" placeholder="새 비밀번호 다시 입력" style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:7px;font-size:16px;font-family:inherit;outline:none;" oninput="clearPwError()">
     </div>
-    <div id="pw-error" style="font-size:15px;color:#e74c3c;margin-bottom:12px;display:none;"></div>
-    <div style="display:flex;gap:8px;">
-      <button onclick="closePwModal()" style="flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:16px;cursor:pointer;font-family:inherit;color:#666;">취소</button>
-      <button onclick="submitPwChange()" style="flex:1;padding:10px;border:none;border-radius:8px;background:#1a73e8;color:#fff;font-size:16px;cursor:pointer;font-family:inherit;font-weight:500;">변경하기</button>
+    <div id="pw-error" style="font-size:15px;color:#e74c3c;margin-bottom:15px;display:none;"></div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="closePwModal()" style="flex:1;padding:12px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:16px;cursor:pointer;font-family:inherit;color:#666;">취소</button>
+      <button onclick="submitPwChange()" style="flex:1;padding:12px;border:none;border-radius:8px;background:#1a73e8;color:#fff;font-size:16px;cursor:pointer;font-family:inherit;font-weight:500;">변경하기</button>
     </div>
   </div>
 </div>
