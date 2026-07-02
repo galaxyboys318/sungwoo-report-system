@@ -50,6 +50,10 @@ function assembleReportText(checkedTasks, extraMemo, reporterName) {
           // 0%는 제외
           if (pct === 0) return;
           body += `   ${stepNum}) ${s.name} : ${val}\n`;
+          // 오늘 메모가 있으면 해당 단계 아래에 포함
+          if (s.memo && s.memo.trim()) {
+            body += `      → ${s.memo.trim()}\n`;
+          }
           stepNum++;
         });
       }
@@ -84,10 +88,10 @@ async function convertToReport(checkedTasks, extraMemo, reporterName, reporterTe
   const systemPrompt = `당신은 출판사 직원의 일일업무보고 문장을 다듬는 도우미입니다.
 
 [절대 규칙]
-- 내용을 추가하거나 삭제하지 마세요.
 - 항목 순서와 구조(번호, 들여쓰기)를 그대로 유지하세요.
 - 0%이거나 없는 항목을 절대 추가하지 마세요.
-- 오직 어색한 문장 표현과 어미만 자연스럽게 수정하세요.
+- 각 단계 아래 "→ 메모내용"이 있으면 해당 내용을 자연스러운 문장으로 단계 설명에 녹여주세요.
+- 메모가 없는 항목은 진행률 정보만으로 간결하게 표현하세요.
 - 경어체 사용: ~하였습니다, ~진행 중입니다, ~완료하였습니다, ~예정입니다
 - 마지막에 반드시 다음 두 줄 추가:
   이상 업무에 참고하여 주시기 바랍니다.
