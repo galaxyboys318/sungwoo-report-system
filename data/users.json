@@ -56,8 +56,8 @@
       "position": "이사",
       "level": 2,
       "isAdmin": true,
-      "team": "초등편집팀, 디자인팀, 솔루션개발팀",
-      "division": "",
+      "team": "",
+      "division": "초등콘텐츠사업부",
       "reportsTo": [
         "u1781771219247",
         "u1781771178674"
