@@ -255,6 +255,18 @@
       "isAdmin": false,
       "team": "영업팀",
       "division": "영업관리본부"
+    },
+    {
+      "id": "u1782959810715",
+      "name": "이훈희",
+      "email": "sun10v2@sungwoobook.com",
+      "password": "1234",
+      "role": "팀원",
+      "position": "팀원",
+      "level": 4,
+      "isAdmin": false,
+      "team": "영업팀",
+      "division": "영업관리본부"
     }
   ]
 }
