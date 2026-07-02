@@ -233,7 +233,6 @@
       "division": "영업관리본부",
       "adminScope": "division",
       "managedTeams": [
-        "영업관리본부",
         "영업팀",
         "재무회계팀",
         "CS팀",
