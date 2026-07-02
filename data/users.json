@@ -126,7 +126,7 @@
       "position": "이사",
       "level": 2,
       "isAdmin": true,
-      "team": "유아편집팀, 책육아콘텐츠연구실, 마케팅팀, 영상개발팀",
+      "team": "",
       "division": "유아콘텐츠사업부",
       "adminScope": "division",
       "managedTeams": [
