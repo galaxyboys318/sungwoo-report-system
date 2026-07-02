@@ -207,6 +207,18 @@
       "isAdmin": false,
       "team": "마케팅팀",
       "division": "유아콘텐츠사업부"
+    },
+    {
+      "id": "u1782959625445",
+      "name": "좌은령",
+      "email": "jer7975@sungwoobook.com",
+      "password": "1234",
+      "role": "팀장",
+      "position": "팀장",
+      "level": 3,
+      "isAdmin": false,
+      "team": "영상개발팀",
+      "division": "유아콘텐츠사업부"
     }
   ]
 }
