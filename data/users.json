@@ -229,7 +229,7 @@
       "position": "이사",
       "level": 2,
       "isAdmin": true,
-      "team": "영업관리본부",
+      "team": "",
       "division": "영업관리본부",
       "adminScope": "division",
       "managedTeams": [
