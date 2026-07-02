@@ -147,6 +147,18 @@
       "isAdmin": false,
       "team": "유아편집팀",
       "division": "유아콘텐츠사업부"
+    },
+    {
+      "id": "u1782959322562",
+      "name": "박선희",
+      "email": "sleepless9@sungwoobook.com",
+      "password": "1234",
+      "role": "팀원",
+      "position": "팀원",
+      "level": 4,
+      "isAdmin": false,
+      "team": "유아편집팀",
+      "division": "유아콘텐츠사업부"
     }
   ]
 }
