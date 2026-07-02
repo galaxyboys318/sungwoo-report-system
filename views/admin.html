@@ -548,10 +548,12 @@
             <div class="user-name">${user.name}</div>
             <div class="user-email">${user.email}</div>
             <div class="user-team">${user.division||''} ${user.team||'(팀 미설정)'} <button onclick="editTeam('${user.id}','${user.team||''}','${user.division||''}')" title="팀/부서 변경" style="border:none;background:none;cursor:pointer;font-size:clamp(11px, 0.78vw, 16px);padding:0 3px;color:#1a73e8;">✏️</button></div>
+            <div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <span class="level-badge ${levelClass}" onclick="editPosition('${user.id}', '${user.position||'팀원'}')" title="클릭하여 직급 변경" style="cursor:pointer;">${user.position||'팀원'} ✏️</span>
+              ${user.isAdmin ? `<span style="font-size:clamp(10px, 0.73vw, 15px);padding:3px 10px;border-radius:20px;font-weight:700;white-space:nowrap;background:${scopeColor.bg};color:${scopeColor.text};">${scopeLabel}${scope!=='system' && (user.managedTeams||[]).length ? ` · ${user.managedTeams.join(', ')}` : ''}</span>` : ''}
+            </div>
           </div>
-          <span class="level-badge ${levelClass}" onclick="editPosition('${user.id}', '${user.position||'팀원'}')" title="클릭하여 직급 변경" style="cursor:pointer;">${user.position||'팀원'} (Lv.${user.level||4}) ✏️</span>
-          ${user.isAdmin ? `<span style="font-size:clamp(10px, 0.73vw, 15px);padding:2px 8px;border-radius:20px;font-weight:700;white-space:nowrap;background:${scopeColor.bg};color:${scopeColor.text};">${scopeLabel}${scope!=='system' && (user.managedTeams||[]).length ? `<br><span style="font-size:clamp(10px, 0.62vw, 13px);font-weight:400;">${user.managedTeams.join(', ')}</span>` : ''}</span>` : ''}
-          <select style="font-size:clamp(11px, 0.78vw, 16px);padding:5px 8px;border-radius:6px;border:1px solid #ddd;cursor:pointer;flex-shrink:0;" onchange="changeLevel('${user.email}', this.value)">
+          <select style="font-size:clamp(11px, 0.78vw, 16px);padding:6px 10px;border-radius:8px;border:1px solid #ddd;cursor:pointer;flex-shrink:0;" onchange="changeLevel('${user.email}', this.value)">
             <option value="1" ${(user.level||4)==1?'selected':''}>Lv.1 회장/대표</option>
             <option value="2" ${(user.level||4)==2?'selected':''}>Lv.2 이사</option>
             <option value="3" ${(user.level||4)==3?'selected':''}>Lv.3 팀장</option>
