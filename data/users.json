@@ -128,6 +128,18 @@
       "isAdmin": false,
       "team": "유아편집팀, 책육아콘텐츠연구실, 마케팅팀, 영상개발팀",
       "division": "유아콘텐츠사업부"
+    },
+    {
+      "id": "u1782958891183",
+      "name": "조설휘",
+      "email": "josh0104@sungwoobook.com",
+      "password": "1234",
+      "role": "팀장",
+      "position": "팀장",
+      "level": 3,
+      "isAdmin": false,
+      "team": "유아편집팀",
+      "division": "유아콘텐츠사업부"
     }
   ]
 }
