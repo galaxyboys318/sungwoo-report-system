@@ -303,6 +303,18 @@
       "isAdmin": false,
       "team": "CS팀",
       "division": "영업관리본부"
+    },
+    {
+      "id": "u1782960250897",
+      "name": "이지현",
+      "email": "00easy@sungwoobook.com",
+      "password": "1234",
+      "role": "팀장",
+      "position": "팀장",
+      "level": 3,
+      "isAdmin": false,
+      "team": "물류관리팀",
+      "division": "영업관리본부"
     }
   ]
 }
