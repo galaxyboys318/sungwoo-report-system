@@ -92,6 +92,18 @@
       "isAdmin": false,
       "team": "초등편집팀",
       "division": ""
+    },
+    {
+      "id": "u1782955531963",
+      "name": "박누리별",
+      "email": "nbpark9916@sungwoobook.com",
+      "password": "1234",
+      "role": "팀원",
+      "position": "팀원",
+      "level": 4,
+      "isAdmin": false,
+      "team": "초등편집팀",
+      "division": ""
     }
   ]
 }
