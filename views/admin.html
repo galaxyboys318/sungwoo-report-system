@@ -672,19 +672,19 @@
 
     const modalHtml = `
       <div id="reports-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;display:flex;align-items:center;justify-content:center;">
-        <div style="background:#fff;border-radius:14px;padding:28px;width:420px;max-width:90vw;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
+        <div style="background:#fff;border-radius:14px;padding:28px;width:460px;max-width:90vw;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
           <div style="font-size:16px;font-weight:600;color:#1a1a2e;margin-bottom:6px;">${userName}님의 보고 대상 설정</div>
-          <div style="font-size:12px;color:#888;margin-bottom:20px;">이 직원이 보고서를 발송할 상급자를 선택하세요.</div>
-          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+          <div style="font-size:12px;color:#888;margin-bottom:14px;">이 직원이 보고서를 발송할 상급자를 선택하세요.</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;overflow-y:auto;flex:1;padding-right:4px;">
             ${allUsers.map(u => `
-              <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;cursor:pointer;">
+              <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;cursor:pointer;flex-shrink:0;">
                 <input type="checkbox" value="${u.id}" ${currentReportsTo.includes(u.id) ? 'checked' : ''} style="width:16px;height:16px;accent-color:#9333ea;">
                 <span style="font-size:13px;font-weight:500;color:#1a1a2e;flex:1;">${u.name}</span>
                 <span style="font-size:11px;color:#888;">${u.position||u.role||''}</span>
                 <span style="font-size:11px;color:#aaa;">${u.email}</span>
               </label>`).join('')}
           </div>
-          <div style="display:flex;gap:8px;">
+          <div style="display:flex;gap:8px;flex-shrink:0;">
             <button onclick="document.getElementById('reports-modal').remove()" style="flex:1;padding:10px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:13px;cursor:pointer;color:#666;">취소</button>
             <button onclick="saveReportsTo('${userId}')" style="flex:1;padding:10px;border:none;border-radius:8px;background:#9333ea;color:#fff;font-size:13px;cursor:pointer;font-weight:500;">저장</button>
           </div>
