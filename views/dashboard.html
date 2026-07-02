@@ -10,27 +10,27 @@
 
     /* 탑바 */
     .topbar { background: #1a73e8; padding: 0 24px; display: flex; align-items: center; height: 52px; }
-    .topbar-title { color: #fff; font-size: 15px; font-weight: 700; margin-right: 32px; }
-    .tab { color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 600; padding: 0 16px; height: 52px; display: flex; align-items: center; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; text-decoration: none; }
+    .topbar-title { color: #fff; font-size: 19px; font-weight: 700; margin-right: 32px; }
+    .tab { color: rgba(255,255,255,0.7); font-size: 16px; font-weight: 600; padding: 0 16px; height: 52px; display: flex; align-items: center; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; text-decoration: none; }
     .tab:hover { color: #fff; }
     .tab.active { color: #fff; border-bottom-color: #fff; }
     .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
-    .topbar-user { color: rgba(255,255,255,0.8); font-size: 13px; }
-    .btn-topbar { color: #fff; background: rgba(255,255,255,0.15); border: none; border-radius: 5px; padding: 5px 12px; font-size: 12px; cursor: pointer; }
+    .topbar-user { color: rgba(255,255,255,0.8); font-size: 16px; }
+    .btn-topbar { color: #fff; background: rgba(255,255,255,0.15); border: none; border-radius: 5px; padding: 5px 12px; font-size: 15px; cursor: pointer; }
     .btn-topbar:hover { background: rgba(255,255,255,0.25); }
 
     .wrap { max-width: 960px; margin: 0 auto; padding: 28px 24px; }
 
     /* 헤더 */
-    .dash-title { font-size: 34px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
-    .dash-sub { font-size: 17px; color: #888; margin-bottom: 32px; }
+    .dash-title { font-size: 42px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+    .dash-sub { font-size: 21px; color: #888; margin-bottom: 32px; }
 
     /* 요약 카드 4개 */
     .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 32px; }
     .summary-card { border-radius: 12px; padding: 26px 18px; text-align: center; }
-    .summary-card .label { font-size: 15px; color: #666; margin-bottom: 10px; }
-    .summary-card .value { font-size: 52px; font-weight: 700; line-height: 1; }
-    .summary-card .sub { font-size: 13px; margin-top: 6px; }
+    .summary-card .label { font-size: 19px; color: #666; margin-bottom: 10px; }
+    .summary-card .value { font-size: 65px; font-weight: 700; line-height: 1; }
+    .summary-card .sub { font-size: 16px; margin-top: 6px; }
     .card-total { background: #f0f4ff; }
     .card-total .value { color: #1a1a2e; }
     .card-done { background: #f0fff4; }
@@ -43,7 +43,7 @@
 
     /* 섹션 구분선 */
     .divider { border: none; border-top: 1px solid #eee; margin: 0 0 24px; }
-    .section-title { font-size: 21px; font-weight: 700; color: #1a1a2e; margin-bottom: 20px; }
+    .section-title { font-size: 26px; font-weight: 700; color: #1a1a2e; margin-bottom: 20px; }
 
     /* 프로젝트 카드 */
     .project-cards { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
@@ -51,13 +51,13 @@
     .project-card-header { display: flex; align-items: center; gap: 12px; padding: 18px 20px; cursor: pointer; border-left: 6px solid #ccc; }
     .project-card-header:hover { background: #f0f0f0; }
     .project-card-left { flex: 1; }
-    .project-card-name { font-size: 17px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
-    .project-card-meta { font-size: 13px; color: #888; }
-    .project-status-badge { font-size: 12px; padding: 4px 12px; border-radius: 10px; font-weight: 700; color: #fff; white-space: nowrap; }
+    .project-card-name { font-size: 21px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
+    .project-card-meta { font-size: 16px; color: #888; }
+    .project-status-badge { font-size: 15px; padding: 4px 12px; border-radius: 10px; font-weight: 700; color: #fff; white-space: nowrap; }
     .project-progress-wrap { text-align: right; min-width: 60px; }
-    .project-progress-pct { font-size: 22px; font-weight: 700; }
-    .project-dday { font-size: 12px; color: #888; margin-top: 2px; }
-    .project-arrow { font-size: 12px; color: #aaa; transition: transform 0.2s; margin-left: 8px; }
+    .project-progress-pct { font-size: 28px; font-weight: 700; }
+    .project-dday { font-size: 15px; color: #888; margin-top: 2px; }
+    .project-arrow { font-size: 15px; color: #aaa; transition: transform 0.2s; margin-left: 8px; }
     .project-arrow.open { transform: rotate(90deg); }
 
     /* 프로젝트 상세 (단위업무) */
@@ -67,12 +67,12 @@
     /* 진행률 바 */
     .bar-wrap { margin-bottom: 16px; }
     .bar-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
-    .bar-name { font-size: 15px; font-weight: 600; color: #1a1a2e; }
-    .bar-dday { font-size: 13px; font-weight: 700; }
-    .bar-pct { font-size: 15px; font-weight: 700; }
+    .bar-name { font-size: 19px; font-weight: 600; color: #1a1a2e; }
+    .bar-dday { font-size: 16px; font-weight: 700; }
+    .bar-pct { font-size: 19px; font-weight: 700; }
     .bar-bg { background: #e8e8e8; border-radius: 20px; height: 22px; overflow: hidden; }
     .bar-fill { height: 22px; border-radius: 20px; transition: width 0.4s; }
-    .bar-steps { font-size: 12px; color: #888; margin-top: 4px; }
+    .bar-steps { font-size: 15px; color: #888; margin-top: 4px; }
 
     /* 2단 레이아웃 */
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px; }
@@ -80,23 +80,23 @@
     /* 세로 막대 차트 */
     .bar-chart { display: flex; align-items: flex-end; gap: 16px; height: 180px; }
     .bar-chart-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
-    .bar-chart-pct { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+    .bar-chart-pct { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
     .bar-chart-bar { width: 60%; border-radius: 6px 6px 0 0; min-height: 4px; transition: height 0.4s; }
-    .bar-chart-label { font-size: 11px; color: #555; margin-top: 6px; text-align: center; word-break: keep-all; }
+    .bar-chart-label { font-size: 14px; color: #555; margin-top: 6px; text-align: center; word-break: keep-all; }
 
     /* 팀원 현황 */
     .reporter-list { display: flex; flex-direction: column; gap: 10px; }
     .reporter-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #f8f9fa; border-radius: 8px; }
-    .reporter-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .reporter-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; color: #fff; flex-shrink: 0; }
     .reporter-info { flex: 1; }
-    .reporter-name { font-size: 14px; font-weight: 700; color: #1a1a2e; }
-    .reporter-sub { font-size: 12px; color: #888; margin-top: 2px; }
-    .reporter-status { font-size: 12px; padding: 3px 10px; border-radius: 10px; font-weight: 700; }
+    .reporter-name { font-size: 18px; font-weight: 700; color: #1a1a2e; }
+    .reporter-sub { font-size: 15px; color: #888; margin-top: 2px; }
+    .reporter-status { font-size: 15px; padding: 3px 10px; border-radius: 10px; font-weight: 700; }
     .status-done { background: #f0fff4; color: #639922; }
     .status-none { background: #f5f5f5; color: #aaa; }
 
     /* 로딩 */
-    .loading { text-align: center; padding: 60px; color: #888; font-size: 15px; }
+    .loading { text-align: center; padding: 60px; color: #888; font-size: 19px; }
     .spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid #ddd; border-top-color: #1a73e8; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 8px; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
@@ -310,7 +310,7 @@
             <span class="project-arrow open" id="arrow-proj-${project.id}">▶</span>
           </div>
           <div class="project-detail open" id="proj-${project.id}" style="border-left-color:${pcolor}">
-            ${taskBarsHtml || '<p style="color:#aaa;font-size:13px;padding:12px 0">등록된 단위업무가 없습니다.</p>'}
+            ${taskBarsHtml || '<p style="color:#aaa;font-size:16px;padding:12px 0">등록된 단위업무가 없습니다.</p>'}
           </div>
         </div>`;
     });
@@ -364,7 +364,7 @@
         </div>
       </div>
       <hr class="divider">
-      <p style="font-size:13px;color:#aaa;text-align:center">이 보고서는 일일보고 시스템 데이터를 기반으로 자동 생성되었습니다.</p>
+      <p style="font-size:16px;color:#aaa;text-align:center">이 보고서는 일일보고 시스템 데이터를 기반으로 자동 생성되었습니다.</p>
     `;
 
     document.getElementById('content').innerHTML = html;

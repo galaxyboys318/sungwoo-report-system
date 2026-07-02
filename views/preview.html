@@ -23,12 +23,12 @@
       margin-bottom: 16px;
     }
     .step-tag {
-      font-size: 12px;
+      font-size: 15px;
       color: #888;
       margin-bottom: 16px;
       font-weight: 600;
     }
-    h2 { font-size: 18px; color: #1a1a1a; margin-bottom: 20px; }
+    h2 { font-size: 22px; color: #1a1a1a; margin-bottom: 20px; }
 
     /* 메일 미리보기 영역 */
     .mail-preview {
@@ -43,7 +43,7 @@
     }
     .mail-header .field {
       display: flex;
-      font-size: 13px;
+      font-size: 16px;
       color: #444;
       margin-bottom: 4px;
     }
@@ -64,7 +64,7 @@
     /* 수신자 선택 */
     .recipient-section { margin-top: 24px; }
     .recipient-section h3 {
-      font-size: 14px;
+      font-size: 18px;
       font-weight: 600;
       color: #555;
       margin-bottom: 12px;
@@ -74,7 +74,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 14px;
+      font-size: 18px;
       color: #333;
       cursor: pointer;
     }
@@ -83,7 +83,7 @@
       accent-color: #1a73e8;
       cursor: pointer;
     }
-    .email-addr { color: #888; font-size: 13px; margin-left: 4px; }
+    .email-addr { color: #888; font-size: 16px; margin-left: 4px; }
 
     /* 버튼 */
     .btn-row {
@@ -94,7 +94,7 @@
     .btn {
       flex: 1;
       padding: 13px;
-      font-size: 14px;
+      font-size: 18px;
       font-weight: 700;
       border: none;
       border-radius: 8px;
@@ -120,9 +120,9 @@
       padding: 32px;
     }
     .result.show { display: block; }
-    .result-icon { font-size: 48px; margin-bottom: 12px; }
-    .result-msg { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
-    .result-sub { font-size: 13px; color: #888; }
+    .result-icon { font-size: 60px; margin-bottom: 12px; }
+    .result-msg { font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
+    .result-sub { font-size: 16px; color: #888; }
     .btn-again {
       margin-top: 20px;
       padding: 10px 24px;
@@ -130,7 +130,7 @@
       color: #fff;
       border: none;
       border-radius: 8px;
-      font-size: 14px;
+      font-size: 18px;
       font-weight: 600;
       cursor: pointer;
     }
@@ -145,7 +145,7 @@
       justify-content: center;
       flex-direction: column;
       gap: 12px;
-      font-size: 15px;
+      font-size: 19px;
       color: #444;
     }
     .loading-overlay.show { display: flex; }
@@ -159,7 +159,7 @@
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
-<body>
+<body style="font-size:20px">
   <div class="wrap">
     <div class="card" id="preview-card">
       <div class="step-tag">STEP 2 · 미리보기 및 발송</div>
@@ -177,7 +177,7 @@
       <div class="recipient-section">
         <h3>수신자 선택</h3>
         <div class="checkbox-group" id="recipient-list">
-          <div style="font-size:13px;color:#888;">수신자 목록 불러오는 중...</div>
+          <div style="font-size:16px;color:#888;">수신자 목록 불러오는 중...</div>
         </div>
       </div>
 
@@ -221,7 +221,7 @@
           <label class="checkbox-item">
             <input type="checkbox" class="recipient-chk" value="${u.email}" checked>
             ${u.name} (${u.position || u.role || ''})
-            ${u.level === 1 ? '<span style="font-size:10px;background:#e8f0fe;color:#1558b0;padding:1px 7px;border-radius:20px;font-weight:500;margin-left:4px;">경영진</span>' : ''}
+            ${u.level === 1 ? '<span style="font-size:12px;background:#e8f0fe;color:#1558b0;padding:1px 7px;border-radius:20px;font-weight:500;margin-left:4px;">경영진</span>' : ''}
             <span class="email-addr">${u.email}</span>
           </label>`).join('');
       } else {
@@ -255,7 +255,7 @@
     } else {
       // htmlBody 없으면 텍스트를 줄바꿈 유지해서 표시
       const escaped = (data.body || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      iframe.srcdoc = '<div style="font-family:Malgun Gothic,sans-serif;font-size:14px;line-height:1.9;padding:20px;white-space:pre-wrap;word-break:keep-all;color:#222">' + escaped + '</div>';
+      iframe.srcdoc = '<div style="font-family:Malgun Gothic,sans-serif;font-size:18px;line-height:1.9;padding:20px;white-space:pre-wrap;word-break:keep-all;color:#222">' + escaped + '</div>';
     }
 
     function goBack() {

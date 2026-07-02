@@ -8,40 +8,40 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Malgun Gothic',sans-serif;background:#f5f6fa;color:#1a1a2e;}
 .topbar{background:#2563eb;display:flex;align-items:center;gap:14px;padding:0 24px;height:52px;position:sticky;top:0;z-index:100;}
-.topbar-title{color:#fff;font-size:15px;font-weight:600;}
+.topbar-title{color:#fff;font-size:19px;font-weight:600;}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
-.topbar-user{color:rgba(255,255,255,0.8);font-size:13px;}
-.btn-topbar{background:rgba(255,255,255,0.15);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;}
+.topbar-user{color:rgba(255,255,255,0.8);font-size:16px;}
+.btn-topbar{background:rgba(255,255,255,0.15);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:15px;cursor:pointer;font-family:inherit;}
 .btn-topbar:hover{background:rgba(255,255,255,0.25);}
 .wrap{max-width:960px;margin:0 auto;padding:24px 16px 48px;}
 .card{background:#fff;border-radius:12px;border:0.5px solid #e8e8e8;padding:20px 24px;margin-bottom:14px;}
-.section-title{font-size:15px;font-weight:500;color:#1a1a2e;margin:0 0 14px;}
-.quarter-select{padding:8px 12px;border:0.5px solid #ddd;border-radius:8px;font-size:13px;font-family:inherit;color:#1a1a2e;background:#fff;cursor:pointer;min-width:160px;outline:none;}
+.section-title{font-size:19px;font-weight:500;color:#1a1a2e;margin:0 0 14px;}
+.quarter-select{padding:8px 12px;border:0.5px solid #ddd;border-radius:8px;font-size:16px;font-family:inherit;color:#1a1a2e;background:#fff;cursor:pointer;min-width:160px;outline:none;}
 
 .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
 .s-card{background:#f8f9fa;border-radius:10px;border:0.5px solid #e8e8e8;padding:14px;text-align:center;}
-.s-num{font-size:24px;font-weight:500;color:#2563eb;margin:4px 0;}
-.s-label{font-size:11px;color:#aaa;}
-.proj-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:6px;}
-.proj-table th{padding:8px 12px;background:#f8f9fa;border:0.5px solid #e8e8e8;font-weight:500;color:#666;font-size:11px;text-align:left;}
+.s-num{font-size:30px;font-weight:500;color:#2563eb;margin:4px 0;}
+.s-label{font-size:14px;color:#aaa;}
+.proj-table{width:100%;border-collapse:collapse;font-size:16px;margin-bottom:6px;}
+.proj-table th{padding:8px 12px;background:#f8f9fa;border:0.5px solid #e8e8e8;font-weight:500;color:#666;font-size:14px;text-align:left;}
 .proj-table td{padding:8px 12px;border:0.5px solid #e8e8e8;color:#1a1a2e;}
 .proj-table tr:nth-child(even) td{background:#fafafa;}
 .up{color:#16a34a;font-weight:500;} .down{color:#dc2626;font-weight:500;}
 .week-item{padding:10px 0;border-bottom:0.5px solid #f0f0f0;}
 .week-item:last-child{border-bottom:none;}
-.week-key{font-size:12px;font-weight:500;color:#2563eb;margin-bottom:3px;}
-.week-summary{font-size:12px;color:#555;line-height:1.8;}
-.ai-box{width:100%;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;padding:14px;font-size:13px;line-height:1.9;color:#222;min-height:100px;resize:vertical;font-family:inherit;outline:none;}
+.week-key{font-size:15px;font-weight:500;color:#2563eb;margin-bottom:3px;}
+.week-summary{font-size:15px;color:#555;line-height:1.8;}
+.ai-box{width:100%;background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;padding:14px;font-size:16px;line-height:1.9;color:#222;min-height:100px;resize:vertical;font-family:inherit;outline:none;}
 .ai-box:focus{border-color:#2563eb;background:#fff;}
-.ai-hint{font-size:11px;color:#aaa;margin-bottom:8px;}
-.send-btn{width:100%;padding:13px;background:#2563eb;color:#fff;font-size:14px;font-weight:500;border:none;border-radius:10px;cursor:pointer;font-family:inherit;}
+.ai-hint{font-size:14px;color:#aaa;margin-bottom:8px;}
+.send-btn{width:100%;padding:13px;background:#2563eb;color:#fff;font-size:18px;font-weight:500;border:none;border-radius:10px;cursor:pointer;font-family:inherit;}
 .send-btn:hover{background:#1d4ed8;}
 .send-btn:disabled{background:#ccc;cursor:not-allowed;}
-.empty{text-align:center;padding:40px;color:#bbb;font-size:13px;}
+.empty{text-align:center;padding:40px;color:#bbb;font-size:16px;}
 .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#2563eb;animation:blink 1s infinite;}
 .dot:nth-child(2){animation-delay:0.2s;} .dot:nth-child(3){animation-delay:0.4s;}
 @keyframes blink{0%,100%{opacity:0.2;}50%{opacity:1;}}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;display:none;z-index:999;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:8px;font-size:16px;display:none;z-index:999;}
 </style>
 </head>
 <body>
@@ -140,7 +140,7 @@ function renderPage() {
     const last = weeks[weeks.length-1]?.progress ?? 0;
     const diff = last - first;
     const diffStr = diff > 0 ? `<span class="up">▲${diff}%</span>` : diff < 0 ? `<span class="down">▼${Math.abs(diff)}%</span>` : '–';
-    return `<tr><td>${pName}</td><td style="color:#888;font-size:11px;">${pData.tag||''}</td><td style="font-weight:500;color:#2563eb;">${last}%</td><td>${diffStr}</td></tr>`;
+    return `<tr><td>${pName}</td><td style="color:#888;font-size:14px;">${pData.tag||''}</td><td style="font-weight:500;color:#2563eb;">${last}%</td><td>${diffStr}</td></tr>`;
   }).join('');
 
   const weekItems = weeklyRecords.map(r => `
