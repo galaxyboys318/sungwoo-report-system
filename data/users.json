@@ -104,6 +104,18 @@
       "isAdmin": false,
       "team": "초등편집팀",
       "division": ""
+    },
+    {
+      "id": "u1782958772372",
+      "name": "남은정",
+      "email": "coddakji789@sungwoobook.com",
+      "password": "1234",
+      "role": "팀원",
+      "position": "팀원",
+      "level": 4,
+      "isAdmin": false,
+      "team": "디자인팀",
+      "division": ""
     }
   ]
 }
