@@ -116,6 +116,18 @@
       "isAdmin": false,
       "team": "디자인팀",
       "division": ""
+    },
+    {
+      "id": "u1782958833649",
+      "name": "정현수",
+      "email": "paze23@sungwoobook.com",
+      "password": "1234",
+      "role": "이사",
+      "position": "이사",
+      "level": 2,
+      "isAdmin": false,
+      "team": "유아편집팀, 책육아콘텐츠연구실, 마케팅팀, 영상개발팀",
+      "division": "유아콘텐츠사업부"
     }
   ]
 }
