@@ -228,9 +228,10 @@
       "role": "이사",
       "position": "이사",
       "level": 2,
-      "isAdmin": false,
+      "isAdmin": true,
       "team": "영업관리본부",
-      "division": "영업관리본부"
+      "division": "영업관리본부",
+      "adminScope": "system"
     },
     {
       "id": "u1782959760900",
