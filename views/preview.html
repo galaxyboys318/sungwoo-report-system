@@ -14,7 +14,7 @@
       display: flex;
       justify-content: center;
     }
-    .wrap { width: 100%; max-width: 680px; }
+    .wrap { width: 100%; max-width: 1000px; padding: 0 24px; }
     .card {
       background: #fff;
       border-radius: 12px;
@@ -56,8 +56,9 @@
     .mail-body {
       width: 100%;
       border: none;
-      min-height: 520px;
+      min-height: 600px;
       display: block;
+      overflow: hidden;
     }
 
     /* 수신자 선택 */
@@ -245,6 +246,12 @@
     const iframe = document.getElementById('preview-body');
     if (data.htmlBody) {
       iframe.srcdoc = data.htmlBody;
+      iframe.onload = () => {
+        try {
+          const h = iframe.contentDocument.body.scrollHeight;
+          iframe.style.height = (h + 40) + 'px';
+        } catch(e) {}
+      };
     } else {
       // htmlBody 없으면 텍스트를 줄바꿈 유지해서 표시
       const escaped = (data.body || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
