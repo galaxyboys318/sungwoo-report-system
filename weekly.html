@@ -149,8 +149,7 @@ async function loadHistory() {
   const rows = records.map(r => {
     const sentAt = r.sentAt ? new Date(r.sentAt).toLocaleString('ko-KR', {timeZone:'Asia/Seoul'}) : '-';
     const to = (r.sentTo || []).join(', ');
-    const summary = (r.aiSummary || '').replace(/
-/g, ' ').slice(0, 100);
+    const summary = (r.aiSummary || '').replace(/\n/g, ' ').slice(0, 100);
     return `<div class="history-item">
       <div class="history-meta">
         <div class="history-week">${r.weekKey} &nbsp;(${fmt(r.weekStart)} ~ ${fmt(r.weekEnd)})</div>
@@ -186,11 +185,20 @@ async function deleteWeekly(fileName, weekKey) {
 }
 
 async function loadWeeklyData() {
-  const res = await fetch('/api/weekly-data');
-  const data = await res.json();
-  weeklyData = data;
-  renderPage();
-  if (data.weeklyDays && data.weeklyDays.length > 0) generateAiSummary();
+  try {
+    const res = await fetch('/api/weekly-data');
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: res.statusText }));
+      document.getElementById('main-content').innerHTML = `<div class="card"><div class="empty" style="color:#e74c3c;">❌ 데이터 로딩 실패 (${res.status}): ${err.error || res.statusText}</div></div>`;
+      return;
+    }
+    const data = await res.json();
+    weeklyData = data;
+    renderPage();
+    if (data.weeklyDays && data.weeklyDays.length > 0) generateAiSummary();
+  } catch (e) {
+    document.getElementById('main-content').innerHTML = `<div class="card"><div class="empty" style="color:#e74c3c;">❌ 오류 발생: ${e.message}</div></div>`;
+  }
 }
 
 // 프로젝트별 집계
