@@ -279,114 +279,176 @@ async function verifyConnection() {
 
 // ─── 주간보고 이메일 ───────────────────────────────────────
 function buildWeeklyHtmlEmail(data, reporterName, reporterTeam) {
-  const { weekStart, weekEnd, weeklyDays, aiSummary } = data;
-  const fmt = d => { const [y,m,dd] = d.split('-'); return `${y}.${m}.${dd}`; };
-  const dayNames = ['일','월','화','수','목','금','토'];
-  const fmtDate = d => { const dt = new Date(d+'T00:00:00'); return `${fmt(d)} (${dayNames[dt.getDay()]})`; };
-  const totalDays = weeklyDays.length;
-  const totalTasks = weeklyDays.reduce((s, d) => s + d.entries.reduce((ss, e) => ss + (e.checkedTasks?.length || 0), 0), 0);
+  const { weekStart, weekEnd, weeklyDays, aiSummary, projectSnapshot, prevSnapshot } = data;
+  const fmt = d => { if (!d) return ''; const [y,m,dd] = d.split('-'); return `${y}.${m}.${dd}`; };
+  const fmtShort = d => { if (!d) return ''; const [y,m,dd] = d.split('-'); return `${m}.${dd}`; };
 
-  // 프로젝트별 주간 집계
-  const projectMap = {};
-  weeklyDays.forEach(day => {
-    day.entries.forEach(entry => {
-      (entry.checkedTasks || []).forEach(task => {
-        if (!projectMap[task.projectName]) projectMap[task.projectName] = { tasks: {}, tag: task.projectTag || '' };
-        if (!projectMap[task.projectName].tasks[task.taskName]) {
-          projectMap[task.projectName].tasks[task.taskName] = { dates: [], finalPct: 0 };
-        }
-        projectMap[task.projectName].tasks[task.taskName].dates.push(day.date);
-        projectMap[task.projectName].tasks[task.taskName].finalPct = task.taskProgress || 0;
-      });
-    });
-  });
+  // ISO 주차 계산
+  const wDate = new Date(weekEnd + 'T00:00:00');
+  wDate.setDate(wDate.getDate() + 3 - (wDate.getDay() + 6) % 7);
+  const week1 = new Date(wDate.getFullYear(), 0, 4);
+  const isoWeek = 1 + Math.round(((wDate - week1) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+  const weekKey = `W${String(isoWeek).padStart(2,'0')}`;
 
-  const projectCards = Object.entries(projectMap).map(([pName, pData]) => {
-    const taskRows = Object.entries(pData.tasks).map(([tName, tData]) => `
-      <tr>
-        <td style="font-size:12px;color:#444;padding:6px 0 6px 14px;border-bottom:0.5px solid #f0f0f0;">
-          ${tName}
-          <span style="font-size:10px;color:#aaa;margin-left:6px;">${tData.dates.map(d => fmtDate(d)).join(', ')}</span>
-        </td>
-        <td align="right" style="font-size:12px;font-weight:500;color:#3498db;padding:6px 0;border-bottom:0.5px solid #f0f0f0;">
-          ${tData.finalPct}%
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2" style="padding:0 0 8px 14px;">
-          <div style="background:#e0e0e0;border-radius:20px;height:4px;overflow:hidden;">
-            <div style="width:${tData.finalPct}%;background:#3498db;height:4px;border-radius:20px;"></div>
-          </div>
-        </td>
-      </tr>`).join('');
+  const totalDays = (weeklyDays || []).length;
+  const totalTasks = (weeklyDays || []).reduce((s, d) => s + d.entries.reduce((ss, e) => ss + (e.checkedTasks?.length || 0), 0), 0);
+  const totalProjects = Object.keys(projectSnapshot || {}).length;
+
+  // 변화량 계산 헬퍼
+  const calcChange = (curr, prev) => {
+    if (prev == null) return null;
+    return Math.round(curr - prev);
+  };
+
+  // 가중 평균 진행률 계산
+  const calcWeightedProgress = (tasks) => {
+    const entries = Object.values(tasks || {});
+    const totalW = entries.reduce((s, t) => s + (t.weight || 0), 0);
+    if (totalW > 0) return Math.round(entries.reduce((s, t) => s + (t.progress || 0) * (t.weight || 0), 0) / totalW);
+    return entries.length > 0 ? Math.round(entries.reduce((s, t) => s + (t.progress || 0), 0) / entries.length) : 0;
+  };
+
+  // 프로젝트 카드 HTML
+  const projColors = ['#1a73e8', '#16a34a', '#f59e0b', '#9333ea', '#dc2626', '#0891b2'];
+  const projectCards = Object.entries(projectSnapshot || {}).map(([pName, pData], pi) => {
+    const color = projColors[pi % projColors.length];
+    const currPct = calcWeightedProgress(pData.tasks);
+    const prevPData = prevSnapshot?.[pName];
+    const prevPct = prevPData ? calcWeightedProgress(prevPData.tasks) : null;
+    const change = calcChange(currPct, prevPct);
+    const changeHtml = change !== null
+      ? `<span style="font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;${change >= 0 ? 'background:#f0fff4;color:#16a34a;' : 'background:#fef2f2;color:#dc2626;'}">${change >= 0 ? '▲' : '▼'}${Math.abs(change)}%</span>`
+      : '';
+    const prevBarHtml = prevPct !== null
+      ? `<div style="position:absolute;top:-3px;left:${prevPct}%;width:2px;height:16px;background:#888;border-radius:1px;z-index:2;"></div>`
+      : '';
+
+    const taskRows = Object.entries(pData.tasks || {}).map(([tName, tData]) => {
+      const tCurr = tData.progress || 0;
+      const tPrev = prevPData?.tasks?.[tName]?.progress;
+      const tChange = calcChange(tCurr, tPrev);
+      const tChangeHtml = tChange !== null
+        ? `<span style="font-size:10px;padding:1px 6px;border-radius:10px;${tChange >= 0 ? 'background:#f0fff4;color:#16a34a;' : 'background:#fef2f2;color:#dc2626;'}">${tChange >= 0 ? '▲' : '▼'}${Math.abs(tChange)}%</span>`
+        : tPrev === undefined ? '<span style="font-size:10px;padding:1px 6px;border-radius:10px;background:#e8f0fe;color:#1558b0;">신규</span>' : '';
+      const weightHtml = tData.weight ? `<span style="font-size:10px;color:#aaa;margin-left:4px;">${tData.weight}%</span>` : '';
+      return `
+        <tr>
+          <td style="padding:7px 0 2px 12px;font-size:12px;color:#333;">${tName}${weightHtml}</td>
+          <td style="padding:7px 0 2px 6px;font-size:11px;color:#aaa;text-align:center;">${tPrev != null ? tPrev + '%' : '—'}</td>
+          <td style="padding:7px 0 2px 6px;font-size:13px;font-weight:500;color:${color};text-align:center;">${tCurr}%</td>
+          <td style="padding:7px 0 2px 6px;text-align:right;">${tChangeHtml}</td>
+        </tr>
+        <tr>
+          <td colspan="4" style="padding:0 0 6px 12px;">
+            <div style="position:relative;height:6px;background:#e5e7eb;border-radius:3px;overflow:visible;">
+              <div style="width:${tCurr}%;background:${color};height:6px;border-radius:3px;"></div>
+              ${tPrev != null ? `<div style="position:absolute;top:-2px;left:${tPrev}%;width:2px;height:10px;background:#888;border-radius:1px;z-index:2;"></div>` : ''}
+            </div>
+          </td>
+        </tr>`;
+    }).join('');
+
     return `
-      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:10px;background:#f8fbff;border-radius:10px;border:1.5px solid #c8d8f8;">
-        <tr><td style="padding:14px 18px;">
-          <p style="margin:0 0 10px;font-size:14px;font-weight:500;color:#1a1a2e;">${pName}
-            <span style="margin-left:8px;font-size:10px;background:#e8f0fe;color:#1558b0;padding:2px 7px;border-radius:20px;">${pData.tag}</span>
-          </p>
-          <table width="100%" cellpadding="0" cellspacing="0" border="0">${taskRows}</table>
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:14px;border-radius:10px;border:1.5px solid ${color}22;overflow:hidden;">
+        <tr><td style="background:${color}0d;padding:12px 16px;">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td><span style="font-size:14px;font-weight:500;color:#1a1a2e;">${pName}</span>
+              <span style="margin-left:8px;font-size:10px;background:#e8f0fe;color:#1558b0;padding:2px 8px;border-radius:20px;">${pData.tag || ''}</span>
+            </td>
+            <td align="right" style="white-space:nowrap;">
+              <span style="font-size:16px;font-weight:500;color:${color};">${currPct}%</span>
+              &nbsp;${changeHtml}
+            </td>
+          </tr></table>
+          <div style="position:relative;margin-top:8px;">
+            <div style="font-size:10px;color:#aaa;margin-bottom:4px;display:flex;justify-content:space-between;">
+              <span>${prevPct !== null ? '전주 ' + prevPct + '%' : '첫 주간보고'}</span>
+              <span>이번주 ${currPct}%</span>
+            </div>
+            <div style="position:relative;height:10px;background:#e5e7eb;border-radius:5px;overflow:visible;">
+              <div style="width:${currPct}%;background:${color};height:10px;border-radius:5px;"></div>
+              ${prevBarHtml}
+            </div>
+          </div>
+        </td></tr>
+        <tr><td style="background:#fff;padding:4px 0;">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size:11px;">
+            <tr style="background:#f8f9fa;">
+              <th style="padding:5px 0 5px 12px;text-align:left;font-weight:500;color:#888;font-size:10px;">단위업무</th>
+              <th style="padding:5px 6px;text-align:center;font-weight:500;color:#888;font-size:10px;">전주</th>
+              <th style="padding:5px 6px;text-align:center;font-weight:500;color:#888;font-size:10px;">이번주</th>
+              <th style="padding:5px 6px;text-align:right;font-weight:500;color:#888;font-size:10px;">변화</th>
+            </tr>
+            ${taskRows}
+          </table>
         </td></tr>
       </table>`;
   }).join('');
 
-  const dayRows = weeklyDays.map(day => `
-    <tr>
-      <td style="padding:10px 0;border-bottom:0.5px solid #f0f0f0;vertical-align:top;">
-        <p style="margin:0 0 4px;font-size:12px;font-weight:500;color:#1a73e8;">${fmtDate(day.date)}</p>
-        ${day.entries.map(e => `<p style="margin:0;font-size:12px;color:#444;white-space:pre-line;line-height:1.8;">${e.body}</p>`).join('')}
-      </td>
-    </tr>`).join('');
+  // 범례
+  const legendHtml = `
+    <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:16px;">
+      <tr>
+        <td style="padding-right:16px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div style="width:24px;height:8px;background:#1a73e8;border-radius:3px;"></div>
+            <span style="font-size:11px;color:#888;">이번 주 진행률</span>
+          </div>
+        </td>
+        <td>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div style="width:2px;height:14px;background:#888;border-radius:1px;"></div>
+            <span style="font-size:11px;color:#888;">전주 진행률 마커</span>
+          </div>
+        </td>
+      </tr>
+    </table>`;
 
   return `
-<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f5f6fa" style="max-width:860px;margin:24px auto;border-radius:14px;font-family:'Malgun Gothic',sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f5f6fa" style="max-width:860px;margin:20px auto;border-radius:14px;font-family:'Malgun Gothic',sans-serif;">
 <tr><td style="background:#1a73e8;border-radius:14px 14px 0 0;padding:14px 28px;">
-  <span style="color:#fff;font-size:15px;font-weight:500;">도서출판 성우 &nbsp;·&nbsp; 주간업무보고</span>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+    <td><span style="color:#fff;font-size:15px;font-weight:500;">도서출판 성우 &nbsp;·&nbsp; 주간업무보고</span></td>
+    <td align="right"><span style="color:rgba(255,255,255,0.75);font-size:12px;">${weekKey} &nbsp;·&nbsp; ${fmtShort(weekStart)} – ${fmtShort(weekEnd)}</span></td>
+  </tr></table>
 </td></tr>
-<tr><td style="background:#fff;border-radius:0 0 14px 14px;padding:28px 32px;">
+<tr><td style="background:#fff;border-radius:0 0 14px 14px;padding:24px 28px;">
 
-  <p style="margin:0 0 4px;font-size:22px;font-weight:500;color:#1a1a2e;">주간 업무 보고서</p>
-  <p style="margin:0 0 24px;font-size:12px;color:#aaa;">${fmt(weekStart)} ~ ${fmt(weekEnd)} &nbsp;·&nbsp; ${reporterName} &nbsp;·&nbsp; ${reporterTeam}</p>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:6px;"><tr>
+    <td><p style="margin:0;font-size:13px;color:#aaa;">${fmt(weekStart)} ~ ${fmt(weekEnd)} &nbsp;·&nbsp; ${reporterName} (${reporterTeam})</p></td>
+  </tr></table>
 
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;"><tr>
-    <td width="30%" style="background:#f0f4ff;border-radius:10px;padding:16px;text-align:center;">
-      <p style="margin:0;font-size:11px;color:#666;">보고 일수</p>
-      <p style="margin:8px 0 2px;font-size:30px;font-weight:500;color:#1a73e8;">${totalDays}</p>
-      <p style="margin:0;font-size:10px;color:#888;">일</p>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:22px;border:0.5px solid #e8e8e8;border-radius:10px;overflow:hidden;"><tr>
+    <td width="33%" style="padding:12px 16px;text-align:center;border-right:0.5px solid #e8e8e8;">
+      <p style="margin:0;font-size:10px;color:#888;">보고 일수</p>
+      <p style="margin:4px 0;font-size:22px;font-weight:500;color:#1a73e8;">${totalDays}</p>
+      <p style="margin:0;font-size:10px;color:#aaa;">일</p>
     </td>
-    <td width="4%"></td>
-    <td width="30%" style="background:#f0fff4;border-radius:10px;padding:16px;text-align:center;">
-      <p style="margin:0;font-size:11px;color:#666;">총 업무</p>
-      <p style="margin:8px 0 2px;font-size:30px;font-weight:500;color:#639922;">${totalTasks}</p>
-      <p style="margin:0;font-size:10px;color:#888;">건</p>
+    <td width="33%" style="padding:12px 16px;text-align:center;border-right:0.5px solid #e8e8e8;">
+      <p style="margin:0;font-size:10px;color:#888;">총 업무</p>
+      <p style="margin:4px 0;font-size:22px;font-weight:500;color:#16a34a;">${totalTasks}</p>
+      <p style="margin:0;font-size:10px;color:#aaa;">건</p>
     </td>
-    <td width="4%"></td>
-    <td width="32%" style="background:#fef7e0;border-radius:10px;padding:16px;text-align:center;">
-      <p style="margin:0;font-size:11px;color:#666;">관여 프로젝트</p>
-      <p style="margin:8px 0 2px;font-size:30px;font-weight:500;color:#b06000;">${Object.keys(projectMap).length}</p>
-      <p style="margin:0;font-size:10px;color:#888;">개</p>
+    <td width="33%" style="padding:12px 16px;text-align:center;">
+      <p style="margin:0;font-size:10px;color:#888;">관여 프로젝트</p>
+      <p style="margin:4px 0;font-size:22px;font-weight:500;color:#f59e0b;">${totalProjects}</p>
+      <p style="margin:0;font-size:10px;color:#aaa;">개</p>
     </td>
   </tr></table>
 
-  <hr style="border:none;border-top:0.5px solid #eee;margin:0 0 18px;">
-  <p style="margin:0 0 14px;font-size:15px;font-weight:500;color:#1a1a2e;">프로젝트별 주간 진행 현황</p>
-  ${projectCards}
+  <p style="margin:0 0 10px;font-size:14px;font-weight:500;color:#1a1a2e;">프로젝트별 진행 현황</p>
+  ${legendHtml}
+  ${projectCards || '<p style="font-size:13px;color:#aaa;">프로젝트 데이터 없음</p>'}
 
-  <hr style="border:none;border-top:0.5px solid #eee;margin:4px 0 18px;">
-  <p style="margin:0 0 14px;font-size:15px;font-weight:500;color:#1a1a2e;">AI 주간 요약</p>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
-    <tr><td style="background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;padding:16px 18px;font-size:13px;line-height:1.9;color:#222;white-space:pre-line;">${aiSummary || '요약 없음'}</td></tr>
-  </table>
-
-  <hr style="border:none;border-top:0.5px solid #eee;margin:0 0 14px;">
-  <p style="margin:0 0 14px;font-size:15px;font-weight:500;color:#1a1a2e;">일자별 상세 내역</p>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">${dayRows}</table>
+  <hr style="border:none;border-top:0.5px solid #eee;margin:16px 0;">
+  <p style="margin:0 0 10px;font-size:14px;font-weight:500;color:#1a1a2e;">AI 주간 요약</p>
+  <div style="background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;padding:14px 16px;font-size:13px;line-height:1.9;color:#222;white-space:pre-line;margin-bottom:20px;">${aiSummary || '요약 없음'}</div>
 
   <hr style="border:none;border-top:0.5px solid #eee;margin:0 0 12px;">
-  <p style="margin:0;font-size:11px;color:#aaa;text-align:center;">이 보고서는 일일보고 자동화 시스템에서 발송되었습니다. &nbsp;·&nbsp; 도서출판 성우 솔루션개발팀</p>
+  <p style="margin:0;font-size:11px;color:#aaa;text-align:center;">도서출판 성우 ${reporterTeam} · 일일보고 자동화 시스템</p>
 
-</td></tr></table>`;
-}
+</td></tr></table>`;}
+
 
 async function sendWeeklyReport(data, recipients, reporterName, reporterTeam) {
   const { weekStart, weekEnd } = data;
