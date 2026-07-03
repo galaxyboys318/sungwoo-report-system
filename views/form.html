@@ -700,6 +700,18 @@
       return Math.round(total / steps.length);
     }
 
+    // 프로젝트 전체 진행률 — 가중치 있으면 가중 평균, 없으면 단순 평균
+    function calcProjectProgress(tasks) {
+      if (!tasks || tasks.length === 0) return 0;
+      const totalWeight = tasks.reduce((s, t) => s + (t.weight || 0), 0);
+      if (totalWeight > 0) {
+        const weighted = tasks.reduce((s, t) => s + calcTaskProgress(t.steps || []) * (t.weight || 0), 0);
+        return Math.round(weighted / totalWeight);
+      }
+      const sum = tasks.reduce((s, t) => s + calcTaskProgress(t.steps || []), 0);
+      return Math.round(sum / tasks.length);
+    }
+
     // 단계 추가 UI 제어
     function showStepInput(taskId) {
       document.getElementById(`step-input-row-${taskId}`).style.display = 'flex';

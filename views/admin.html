@@ -286,6 +286,7 @@
           </div>
           <div class="action-row">
             <button class="btn btn-red" onclick="deleteProject('${project.id}')">삭제</button>
+            <button class="btn" style="background:#f0f4ff;border-color:#c8d8f8;color:#1a73e8;" onclick="openWeightModal('${project.id}')">⚖️ 가중치 설정</button>
             <button class="btn btn-blue" onclick="saveProjectInfo('${project.id}')">저장</button>
           </div>
         </div>
@@ -327,6 +328,7 @@
         <div class="task-block-header" onclick="toggleTask('${task.id}')">
           <span class="task-block-name">${task.name}</span>
           <span class="task-assignees">${assignees.length ? assignees.join(', ') : '전체공개'}</span>
+          <span style="font-size:clamp(10px, 0.73vw, 14px);padding:2px 8px;border-radius:20px;background:#f0f4ff;color:#1a73e8;border:0.5px solid #c8d8f8;white-space:nowrap;">${task.weight != null ? task.weight + '%' : '가중치 미설정'}</span>
           <span class="task-progress">${prog}%</span>
           <button class="btn-sm" onclick="event.stopPropagation(); editTaskAssignees('${projectId}','${task.id}')">담당자</button>
           <button class="btn-sm" onclick="event.stopPropagation(); deleteTask('${projectId}','${task.id}')">✕</button>
@@ -570,6 +572,80 @@
       `;
       container.appendChild(div);
     });
+  }
+
+  // ─── 가중치 설정 모달 ──────────────────────────────
+  function openWeightModal(projectId) {
+    const project = projectData.projects.find(p => p.id === projectId);
+    if (!project) return;
+    const tasks = project.tasks || [];
+    if (tasks.length === 0) { alert('단위업무가 없습니다.'); return; }
+
+    const totalWeight = tasks.reduce((s, t) => s + (t.weight || 0), 0);
+    const rowsHtml = tasks.map((t, i) => `
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border);">
+        <span style="flex:1;font-size:13px;color:var(--text-primary);">${t.name}</span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <input type="number" class="weight-input" data-taskid="${t.id}"
+            value="${t.weight != null ? t.weight : ''}"
+            placeholder="0" min="0" max="100" step="1"
+            style="width:70px;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit;text-align:right;"
+            oninput="updateWeightTotal()">
+          <span style="font-size:13px;color:var(--text-secondary);">%</span>
+        </div>
+      </div>`).join('');
+
+    const modalHtml = `
+      <div id="weight-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;display:flex;align-items:center;justify-content:center;">
+        <div style="background:var(--surface-2);border-radius:14px;padding:28px;width:480px;max-width:90vw;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
+          <div style="font-size:16px;font-weight:500;color:var(--text-primary);margin-bottom:4px;">${project.name} — 단위업무 가중치 설정</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">각 단위업무의 비중을 설정해주세요. 합계가 반드시 <b>100%</b>가 되어야 합니다.</div>
+          <div style="overflow-y:auto;flex:1;padding-right:4px;margin-bottom:14px;">
+            ${rowsHtml}
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:0.5px solid var(--border);margin-bottom:14px;">
+            <span style="font-size:13px;color:var(--text-secondary);">합계</span>
+            <span id="weight-total" style="font-size:16px;font-weight:500;">${totalWeight}%</span>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="document.getElementById('weight-modal').remove()" style="flex:1;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--surface-2);font-size:13px;cursor:pointer;color:var(--text-secondary);">취소</button>
+            <button onclick="saveWeights('${projectId}')" style="flex:1;padding:10px;border:none;border-radius:8px;background:#1a73e8;color:#fff;font-size:13px;cursor:pointer;font-weight:500;">저장</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+  }
+
+  function updateWeightTotal() {
+    const inputs = document.querySelectorAll('.weight-input');
+    const total = [...inputs].reduce((s, el) => s + (parseFloat(el.value) || 0), 0);
+    const el = document.getElementById('weight-total');
+    if (el) {
+      el.textContent = total.toFixed(1) + '%';
+      el.style.color = Math.abs(total - 100) < 0.1 ? 'var(--text-success)' : 'var(--text-danger)';
+    }
+  }
+
+  async function saveWeights(projectId) {
+    const inputs = document.querySelectorAll('.weight-input');
+    const weights = [...inputs].map(el => ({ taskId: el.dataset.taskid, weight: parseFloat(el.value) || 0 }));
+    const total = weights.reduce((s, w) => s + w.weight, 0);
+    if (Math.abs(total - 100) > 0.1) {
+      alert(`합계가 ${total.toFixed(1)}%입니다. 합계를 100%로 맞춰주세요.`);
+      return;
+    }
+    const res = await fetch('/api/projects/task/weights', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ projectId, weights }),
+    });
+    if (res.ok) {
+      document.getElementById('weight-modal').remove();
+      showToast('가중치가 저장되었습니다.');
+      renderProjects();
+    } else {
+      const err = await res.json();
+      alert('저장 실패: ' + (err.error || ''));
+    }
   }
 
   // ─── 팀/부서 편집 모달 ──────────────────────────────
