@@ -990,18 +990,43 @@ app.post('/api/weekly-send', requireLogin, async (req, res) => {
     const isoWeek = getISOWeek(wDate);
     const weekKey = `${isoYear}-W${String(isoWeek).padStart(2,'0')}`;
 
-    // 프로젝트별 진행률 스냅샷
+    // 프로젝트별 진행률 스냅샷 (가중치 포함)
     const projData2 = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
     const projectSnapshot = {};
     (projData2.projects || []).forEach(p => {
       const tasks = {};
       (p.tasks || []).forEach(t => {
-        const stepsDone = (t.steps || []).filter(s => s.done || (s.pct || 0) >= 100 || ((s.current || 0) >= (s.target || 1))).length;
-        const totalSteps = (t.steps || []).length;
-        tasks[t.name] = { progress: t.progress || 0, stepsDone, totalSteps };
+        const steps = t.steps || [];
+        let progress = 0;
+        if (steps.length > 0) {
+          const total = steps.reduce((sum, s) => {
+            if (s.type === 'check') return sum + (s.done ? 100 : 0);
+            if (s.type === 'qty') return sum + (s.target > 0 ? Math.min(100, Math.round((s.current||0)/s.target*100)) : 0);
+            if (s.type === 'pct') return sum + (s.pct || 0);
+            return sum;
+          }, 0);
+          progress = Math.round(total / steps.length);
+        }
+        tasks[t.name] = { id: t.id, progress, weight: t.weight || 0, stepsDone: steps.filter(s => s.done || (s.pct||0) >= 100 || ((s.current||0) >= (s.target||1))).length, totalSteps: steps.length };
       });
-      projectSnapshot[p.name] = { tag: p.tag || '', tasks };
+      projectSnapshot[p.name] = { id: p.id, tag: p.tag || '', tasks };
     });
+
+    // 전주 스냅샷 찾기 (비교용)
+    const prevWeekNum = isoWeek === 1 ? 52 : isoWeek - 1;
+    const prevYear = isoWeek === 1 ? isoYear - 1 : isoYear;
+    const prevWeekKey = `${prevYear}-W${String(prevWeekNum).padStart(2,'0')}`;
+    let prevSnapshot = null;
+    const weeklyDir2 = path.join(__dirname, 'data', 'weekly');
+    if (fs.existsSync(weeklyDir2)) {
+      const prevFile = fs.readdirSync(weeklyDir2).find(f => f.startsWith(prevWeekKey) && (f.includes(user.id) || f.includes(user.email)));
+      if (prevFile) {
+        try {
+          const prev = JSON.parse(fs.readFileSync(path.join(weeklyDir2, prevFile), 'utf-8'));
+          prevSnapshot = prev.projectSnapshot || null;
+        } catch(e) {}
+      }
+    }
 
     const weeklyRecord = {
       weekKey, weekStart, weekEnd, isoYear, isoWeek,
@@ -1011,6 +1036,7 @@ app.post('/api/weekly-send', requireLogin, async (req, res) => {
       aiSummary,
       weeklyDays,
       projectSnapshot,
+      prevSnapshot,
     };
 
     const weeklyFilePath = path.join(weeklyDir, `${weekKey}-${user.id || user.email}.json`);
@@ -1183,7 +1209,14 @@ app.get('/api/quarterly-data', requireLogin, (req, res) => {
   weeklyRecords.forEach(rec => {
     Object.entries(rec.projectSnapshot || {}).forEach(([pName, pData]) => {
       if (!projectTrend[pName]) projectTrend[pName] = { tag: pData.tag, weeks: [] };
-      const avgProgress = Object.values(pData.tasks || {}).reduce((s, t) => s + (t.progress || 0), 0) / Math.max(Object.keys(pData.tasks || {}).length, 1);
+      const tasks = Object.values(pData.tasks || {});
+      const totalWeight = tasks.reduce((s, t) => s + (t.weight || 0), 0);
+      let avgProgress;
+      if (totalWeight > 0) {
+        avgProgress = tasks.reduce((s, t) => s + (t.progress || 0) * (t.weight || 0), 0) / totalWeight;
+      } else {
+        avgProgress = tasks.reduce((s, t) => s + (t.progress || 0), 0) / Math.max(tasks.length, 1);
+      }
       projectTrend[pName].weeks.push({ weekKey: rec.weekKey, progress: Math.round(avgProgress) });
     });
   });
@@ -1466,6 +1499,32 @@ app.post('/api/team-weekly-send', requireTeamLead, async (req, res) => {
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
+});
+
+// 단위업무 가중치(%) 일괄 업데이트
+app.post('/api/projects/task/weights', requireAdmin, (req, res) => {
+  const { projectId, weights } = req.body; // weights: [{taskId, weight}]
+  if (!projectId || !weights) return res.status(400).json({ error: '잘못된 요청' });
+
+  const data = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
+  const project = data.projects.find(p => p.id === projectId);
+  if (!project || !isProjectInScope(req.session.user, project)) {
+    return res.status(403).json({ error: '권한 없음' });
+  }
+
+  // 합계 100% 검증
+  const total = weights.reduce((s, w) => s + (parseFloat(w.weight) || 0), 0);
+  if (Math.abs(total - 100) > 0.1) {
+    return res.status(400).json({ error: `가중치 합계가 100%여야 합니다. (현재 ${total.toFixed(1)}%)` });
+  }
+
+  weights.forEach(({ taskId, weight }) => {
+    const task = project.tasks.find(t => t.id === taskId);
+    if (task) task.weight = parseFloat(weight) || 0;
+  });
+
+  saveProjects(data);
+  res.json({ success: true, projects: data.projects });
 });
 
 // ─── 프로젝트 취합 보고 ─────────────────────────────────────
