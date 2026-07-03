@@ -939,7 +939,51 @@ app.get('/api/weekly-data', requireLogin, (req, res) => {
     } catch (e) {}
   });
 
-  res.json({ weeklyDays, weekStart, weekEnd, user });
+  // 현재 프로젝트 스냅샷
+  const projData = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
+  const projectSnapshot = {};
+  (projData.projects || []).forEach(p => {
+    if (p.team && user.team && p.team !== user.team && (user.level || 4) >= 4) return;
+    const tasks = {};
+    (p.tasks || []).forEach(t => {
+      const steps = t.steps || [];
+      let progress = 0;
+      if (steps.length > 0) {
+        const total = steps.reduce((sum, s) => {
+          if (s.type === 'check') return sum + (s.done ? 100 : 0);
+          if (s.type === 'qty') return sum + (s.target > 0 ? Math.min(100, Math.round((s.current||0)/s.target*100)) : 0);
+          if (s.type === 'pct') return sum + (s.pct || 0);
+          return sum;
+        }, 0);
+        progress = Math.round(total / steps.length);
+      }
+      tasks[t.name] = { id: t.id, progress, weight: t.weight || 0 };
+    });
+    projectSnapshot[p.name] = { id: p.id, tag: p.tag || '', tasks };
+  });
+
+  // 전주 스냅샷
+  const wDate = new Date(weekEnd + 'T00:00:00');
+  wDate.setDate(wDate.getDate() + 3 - (wDate.getDay() + 6) % 7);
+  const week1 = new Date(wDate.getFullYear(), 0, 4);
+  const isoWeek = 1 + Math.round(((wDate - week1) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+  const isoYear = wDate.getFullYear();
+  const prevWeekNum = isoWeek === 1 ? 52 : isoWeek - 1;
+  const prevYear = isoWeek === 1 ? isoYear - 1 : isoYear;
+  const prevWeekKey = `${prevYear}-W${String(prevWeekNum).padStart(2,'0')}`;
+  let prevSnapshot = null;
+  const weeklyDir = path.join(__dirname, 'data', 'weekly');
+  if (fs.existsSync(weeklyDir)) {
+    const prevFile = fs.readdirSync(weeklyDir).find(f => f.startsWith(prevWeekKey) && (f.includes(user.id) || f.includes(user.email)));
+    if (prevFile) {
+      try {
+        const prev = JSON.parse(fs.readFileSync(path.join(weeklyDir, prevFile), 'utf-8'));
+        prevSnapshot = prev.projectSnapshot || null;
+      } catch(e) {}
+    }
+  }
+
+  res.json({ weeklyDays, weekStart, weekEnd, user, projectSnapshot, prevSnapshot });
 });
 
 // 주간보고 발송 API
