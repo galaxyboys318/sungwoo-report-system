@@ -220,7 +220,7 @@ function aggregateProjects(weeklyDays) {
 }
 
 function renderPage() {
-  const { weeklyDays, weekStart, weekEnd } = weeklyData;
+  const { weeklyDays, weekStart, weekEnd, projectSnapshot, prevSnapshot } = weeklyData;
   const container = document.getElementById('main-content');
 
   if (!weeklyDays || weeklyDays.length === 0) {
@@ -229,11 +229,12 @@ function renderPage() {
         <div class="section-title" style="margin-bottom:5px;">📅 ${fmt(weekStart)} ~ ${fmt(weekEnd)}</div>
         <p style="font-size:clamp(11px, 0.78vw, 16px);color:#aaa;margin-bottom:0;">이번 주 보고 내역이 없습니다.</p>
       </div>`;
+    renderSendSection();
     return;
   }
 
-  const projectMap = aggregateProjects(weeklyDays);
   const totalTasks = weeklyDays.reduce((s,d) => s + d.entries.reduce((ss,e) => ss + (e.checkedTasks?.length || 0), 0), 0);
+  const projCount = Object.keys(projectSnapshot || {}).length;
 
   // 요약 카드
   const summaryHtml = `
@@ -242,26 +243,94 @@ function renderPage() {
       <div class="summary-grid">
         <div class="summary-item"><div class="summary-label">보고 일수</div><div class="summary-value v-blue">${weeklyDays.length}</div><div class="summary-unit">일</div></div>
         <div class="summary-item"><div class="summary-label">총 업무</div><div class="summary-value v-green">${totalTasks}</div><div class="summary-unit">건</div></div>
-        <div class="summary-item"><div class="summary-label">관여 프로젝트</div><div class="summary-value v-orange">${Object.keys(projectMap).length}</div><div class="summary-unit">개</div></div>
+        <div class="summary-item"><div class="summary-label">관여 프로젝트</div><div class="summary-value v-orange">${projCount}</div><div class="summary-unit">개</div></div>
       </div>
     </div>`;
 
-  // 프로젝트 카드 (checkedTasks 있을 때만)
+  // 가중 평균 계산
+  const calcWeighted = (tasks) => {
+    const entries = Object.values(tasks || {});
+    const totalW = entries.reduce((s, t) => s + (t.weight || 0), 0);
+    if (totalW > 0) return Math.round(entries.reduce((s, t) => s + (t.progress||0) * (t.weight||0), 0) / totalW);
+    return entries.length > 0 ? Math.round(entries.reduce((s, t) => s + (t.progress||0), 0) / entries.length) : 0;
+  };
+
+  // 프로젝트 그래프 카드
+  const projColors = ['#1a73e8','#16a34a','#f59e0b','#9333ea','#dc2626','#0891b2'];
   let projectsHtml = '';
-  if (Object.keys(projectMap).length > 0) {
-    const cards = Object.entries(projectMap).map(([pName, pData]) => {
-      const taskRows = Object.entries(pData.tasks).map(([tName, tData]) => `
-        <div class="task-row">
-          <span class="task-name">${tName}<span class="task-dates">${tData.dates.map(fmtDay).join(', ')}</span></span>
-          <span class="task-pct">${tData.finalPct}%</span>
-        </div>
-        <div class="bar-bg"><div class="bar-fill" style="width:${tData.finalPct}%"></div></div>`).join('');
-      return `<div class="project-card">
-        <div class="project-header"><span class="project-name">${pName}</span><span class="tag">${pData.tag}</span></div>
-        ${taskRows}
-      </div>`;
+  if (projectSnapshot && Object.keys(projectSnapshot).length > 0) {
+    const cards = Object.entries(projectSnapshot).map(([pName, pData], pi) => {
+      const color = projColors[pi % projColors.length];
+      const currPct = calcWeighted(pData.tasks);
+      const prevPData = prevSnapshot?.[pName];
+      const prevPct = prevPData ? calcWeighted(prevPData.tasks) : null;
+      const change = prevPct !== null ? Math.round(currPct - prevPct) : null;
+      const changeHtml = change !== null
+        ? `<span style="font-size:clamp(10px, 0.73vw, 14px);padding:2px 8px;border-radius:20px;${change >= 0 ? 'background:#f0fff4;color:#16a34a;' : 'background:#fef2f2;color:#dc2626;'}">${change >= 0 ? '▲' : '▼'}${Math.abs(change)}%</span>`
+        : '';
+
+      const taskRows = Object.entries(pData.tasks || {}).map(([tName, tData]) => {
+        const tCurr = tData.progress || 0;
+        const tPrev = prevPData?.tasks?.[tName]?.progress;
+        const tChange = tPrev != null ? Math.round(tCurr - tPrev) : null;
+        const tChangeHtml = tChange !== null
+          ? `<span style="font-size:clamp(10px, 0.62vw, 13px);padding:1px 6px;border-radius:10px;${tChange >= 0 ? 'background:#f0fff4;color:#16a34a;' : 'background:#fef2f2;color:#dc2626;'}">${tChange >= 0 ? '▲' : '▼'}${Math.abs(tChange)}%</span>`
+          : tPrev === undefined ? '<span style="font-size:clamp(10px, 0.62vw, 13px);padding:1px 6px;border-radius:10px;background:#e8f0fe;color:#1558b0;">신규</span>' : '';
+        const weightHtml = tData.weight ? `<span style="font-size:clamp(9px, 0.6vw, 12px);color:#aaa;margin-left:4px;">${tData.weight}%</span>` : '';
+        const prevMarker = tPrev != null ? `<div style="position:absolute;top:-2px;left:${tPrev}%;width:2px;height:9px;background:#888;border-radius:1px;z-index:2;"></div>` : '';
+        return `
+          <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:0.5px solid #f5f5f5;">
+            <span style="flex:1;font-size:clamp(11px, 0.78vw, 16px);color:#333;">${tName}${weightHtml}</span>
+            <span style="font-size:clamp(10px, 0.73vw, 14px);color:#aaa;min-width:28px;text-align:center;">${tPrev != null ? tPrev+'%' : '—'}</span>
+            <span style="font-size:clamp(12px, 0.83vw, 17px);font-weight:500;color:${color};min-width:36px;text-align:center;">${tCurr}%</span>
+            ${tChangeHtml}
+            <div style="width:100px;position:relative;">
+              <div style="height:5px;background:#e5e7eb;border-radius:3px;overflow:visible;position:relative;">
+                <div style="width:${tCurr}%;background:${color};height:5px;border-radius:3px;"></div>
+                ${prevMarker}
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+
+      return `
+        <div style="border:0.5px solid ${color}33;border-radius:10px;margin-bottom:14px;overflow:hidden;">
+          <div style="background:${color}0d;padding:12px 16px;border-bottom:0.5px solid ${color}22;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+              <span style="font-size:clamp(13px, 0.9vw, 18px);font-weight:500;color:#1a1a2e;flex:1;">${pName}</span>
+              <span style="font-size:clamp(10px, 0.62vw, 13px);background:#e8f0fe;color:#1558b0;padding:2px 8px;border-radius:20px;">${pData.tag||''}</span>
+              <span style="font-size:clamp(14px, 0.94vw, 19px);font-weight:500;color:${color};">${currPct}%</span>
+              ${changeHtml}
+            </div>
+            <div style="font-size:clamp(10px, 0.62vw, 13px);color:#aaa;margin-bottom:4px;display:flex;justify-content:space-between;">
+              <span>${prevPct !== null ? '전주 '+prevPct+'%' : '첫 주간보고'}</span>
+              <span>이번주 ${currPct}%</span>
+            </div>
+            <div style="position:relative;height:10px;background:#e5e7eb;border-radius:5px;overflow:visible;">
+              <div style="width:${currPct}%;background:${color};height:10px;border-radius:5px;"></div>
+              ${prevPct !== null ? `<div style="position:absolute;top:-3px;left:${prevPct}%;width:2px;height:16px;background:#888;border-radius:1px;z-index:2;"></div>` : ''}
+            </div>
+          </div>
+          <div style="padding:4px 16px 8px;background:#fff;">
+            <div style="display:flex;gap:8px;padding:5px 0;border-bottom:0.5px solid #f0f0f0;font-size:clamp(10px, 0.62vw, 13px);color:#aaa;">
+              <span style="flex:1;">단위업무</span>
+              <span style="min-width:28px;text-align:center;">전주</span>
+              <span style="min-width:36px;text-align:center;">이번주</span>
+              <span>변화</span>
+              <div style="width:100px;"></div>
+            </div>
+            ${taskRows}
+          </div>
+        </div>`;
     }).join('');
-    projectsHtml = `<div class="card"><div class="section-title">프로젝트별 진행 현황</div>${cards}</div>`;
+
+    const legendHtml = `
+      <div style="display:flex;gap:16px;margin-bottom:12px;font-size:clamp(10px, 0.62vw, 13px);color:#888;align-items:center;">
+        <div style="display:flex;align-items:center;gap:5px;"><div style="width:20px;height:6px;background:#1a73e8;border-radius:3px;"></div><span>이번 주</span></div>
+        <div style="display:flex;align-items:center;gap:5px;"><div style="width:2px;height:12px;background:#888;border-radius:1px;"></div><span>전주 마커</span></div>
+      </div>`;
+
+    projectsHtml = `<div class="card"><div class="section-title">프로젝트별 진행 현황</div>${legendHtml}${cards}</div>`;
   }
 
   // AI 요약 영역
@@ -269,10 +338,10 @@ function renderPage() {
     <div class="card">
       <div class="section-title" style="margin-bottom:15px;">✨ AI 주간 요약</div>
       <div class="ai-header">
-        <span style="font-size:clamp(10px, 0.73vw, 15px);color:#1a73e8;">✨ AI가 작성한 초안입니다. 직접 수정 후 발송하세요.</span>
+        <span style="font-size:clamp(10px, 0.73vw, 15px);color:#1a73e8;">AI가 작성한 초안입니다. 직접 수정 후 발송하세요.</span>
         <span class="ai-hint" id="ai-status">요약 생성 중...</span>
       </div>
-      <textarea class="ai-box" id="ai-summary-box" placeholder="AI 요약이 생성되면 여기에 표시됩니다. 내용을 직접 수정할 수 있어요."></textarea>
+      <textarea class="ai-box" id="ai-summary-box" placeholder="AI 요약이 생성되면 여기에 표시됩니다."></textarea>
     </div>`;
 
   // 일자별 내역
@@ -288,11 +357,10 @@ function renderPage() {
   }).join('');
   const dayHtml = `<div class="card"><div class="section-title">일자별 상세 내역</div>${dayRows}</div>`;
 
-  // 발송 영역 — 수신자 목록은 비동기로 렌더링
+  // 발송 영역
   const sendHtml = `
     <div class="card">
       <div class="section-title" style="margin-bottom:18px;">📨 발송 설정</div>
-
       <div class="warning-box">
         <span class="warning-icon">⚠️</span>
         <div class="warning-text">
@@ -302,7 +370,6 @@ function renderPage() {
           발송 후 이번 주 메모 히스토리가 초기화됩니다.
         </div>
       </div>
-
       <div style="font-size:clamp(12px, 0.83vw, 18px);font-weight:500;color:#1a1a2e;margin-bottom:12px;">수신자 선택</div>
       <div class="recipient-list" id="recipient-list">
         <div style="font-size:clamp(12px, 0.83vw, 18px);color:#aaa;">수신자 목록 불러오는 중...</div>
