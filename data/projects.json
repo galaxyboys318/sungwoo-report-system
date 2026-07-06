@@ -75,8 +75,13 @@
                 "함흥우"
               ],
               "pct": 80,
-              "memoHistory": [],
-              "memo": "",
+              "memoHistory": [
+                {
+                  "date": "2026-07-06",
+                  "memo": "VLAN24측에서"
+                }
+              ],
+              "memo": "VLAN24측에서",
               "history": [
                 {
                   "date": "2026-06-25",
