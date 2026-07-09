@@ -467,7 +467,15 @@
           "id": "p1783586678448t1783587670198",
           "name": "AEO-MCP 실행계획서 작성",
           "assignees": [],
-          "steps": []
+          "steps": [
+            {
+              "id": "s1783587721331",
+              "name": "실행계획서 초안 작성 후 대표님께 보고",
+              "type": "check",
+              "assignees": [],
+              "done": false
+            }
+          ]
         }
       ]
     }
