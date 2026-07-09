@@ -502,6 +502,13 @@
               "type": "pct",
               "assignees": [],
               "pct": 0
+            },
+            {
+              "id": "s1783587851034",
+              "name": "업무협조진행",
+              "type": "pct",
+              "assignees": [],
+              "pct": 0
             }
           ]
         }
