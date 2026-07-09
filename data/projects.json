@@ -473,7 +473,7 @@
               "name": "실행계획서 초안 작성 후 대표님께 보고",
               "type": "check",
               "assignees": [],
-              "done": false
+              "done": true
             },
             {
               "id": "s1783587751419",
