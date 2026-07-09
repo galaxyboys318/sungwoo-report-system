@@ -474,6 +474,13 @@
               "type": "check",
               "assignees": [],
               "done": false
+            },
+            {
+              "id": "s1783587751419",
+              "name": "마케팅팀 협업 요청 및 입수",
+              "type": "pct",
+              "assignees": [],
+              "pct": 0
             }
           ]
         }
