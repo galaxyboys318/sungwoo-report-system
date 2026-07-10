@@ -565,6 +565,16 @@
               ],
               "target": 50,
               "current": 0
+            },
+            {
+              "id": "s1783672604510",
+              "name": "AI별 노출실측 진행(2차작업후)",
+              "type": "qty",
+              "assignees": [
+                "함흥우"
+              ],
+              "target": 50,
+              "current": 0
             }
           ]
         }
