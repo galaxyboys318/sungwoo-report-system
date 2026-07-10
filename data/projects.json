@@ -538,7 +538,18 @@
           "assignees": [
             "함흥우"
           ],
-          "steps": []
+          "steps": [
+            {
+              "id": "s1783672526161",
+              "name": "AI별 노출실측 진행(작업전)",
+              "type": "qty",
+              "assignees": [
+                "함흥우"
+              ],
+              "target": 50,
+              "current": 0
+            }
+          ]
         }
       ]
     }
