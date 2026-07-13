@@ -485,8 +485,13 @@
               "type": "pct",
               "assignees": [],
               "pct": 10,
-              "memoHistory": [],
-              "memo": "",
+              "memoHistory": [
+                {
+                  "date": "2026-07-13",
+                  "memo": "마케팅팀으로 부터"
+                }
+              ],
+              "memo": "마케팅팀으로 부터",
               "history": [
                 {
                   "date": "2026-07-13",
