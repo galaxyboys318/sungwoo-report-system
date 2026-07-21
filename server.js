@@ -845,30 +845,21 @@ async function pullDataFromGitHub() {
   await fetchAndSave('data/projects.json', PROJECTS_PATH);
 
   // users.json 복원 — 비밀번호는 GitHub 값 무시, 로컬 값 우선
-  // 로컬 파일이 이미 있으면 GitHub에서 구조(adminScope 등)만 업데이트하고 비밀번호는 반드시 보존
-  // 로컬 파일이 없으면(최초 배포) GitHub에서 복원하되 비밀번호는 기본값 유지
   try {
     const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data/users.json`, { headers: HEADERS });
     if (res.ok) {
       const fileInfo = await res.json();
       const ghData = JSON.parse(Buffer.from(fileInfo.content, 'base64').toString('utf-8'));
-
       if (fs.existsSync(USERS_PATH)) {
-        // 로컬 파일이 있으면: 비밀번호와 현재 세션 데이터를 로컬에서 가져와 덮어쓰기
         const localData = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
         const localMap = {};
         (localData.users || []).forEach(u => { localMap[u.id] = u; });
-
         (ghData.users || []).forEach(u => {
-          if (localMap[u.id]) {
-            // 비밀번호는 무조건 로컬값 사용
-            u.password = localMap[u.id].password || u.password;
-          }
+          if (localMap[u.id]) u.password = localMap[u.id].password || u.password;
         });
         fs.writeFileSync(USERS_PATH, JSON.stringify(ghData, null, 2), 'utf-8');
         console.log('[GitHub] 복원 완료: data/users.json (비밀번호 로컬값 보존)');
       } else {
-        // 로컬 파일 없음(최초 배포): 그냥 GitHub 값 사용
         fs.writeFileSync(USERS_PATH, JSON.stringify(ghData, null, 2), 'utf-8');
         console.log('[GitHub] 복원 완료: data/users.json (최초 배포)');
       }
@@ -877,22 +868,31 @@ async function pullDataFromGitHub() {
     console.error('[GitHub] users.json 복원 실패:', e.message);
   }
 
-  // data/reports/ 폴더 내 모든 파일 복원
-  try {
-    const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data/reports`, { headers: HEADERS });
-    if (res.ok) {
-      const files = await res.json();
-      const reportsDir = path.join(__dirname, 'data', 'reports');
-      fs.mkdirSync(reportsDir, { recursive: true });
-      await Promise.all(
-        files.filter(f => f.name.endsWith('.json')).map(f =>
-          fetchAndSave(`data/reports/${f.name}`, path.join(reportsDir, f.name))
-        )
-      );
+  // data/ 폴더 전체 재귀 복원 (users.json, projects.json 제외 — 위에서 처리)
+  async function restoreFolder(ghPath, localDir) {
+    try {
+      const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${ghPath}`, { headers: HEADERS });
+      if (!res.ok) return;
+      const items = await res.json();
+      if (!Array.isArray(items)) return;
+      fs.mkdirSync(localDir, { recursive: true });
+      for (const item of items) {
+        const localPath = path.join(localDir, item.name);
+        if (item.type === 'dir') {
+          await restoreFolder(`${ghPath}/${item.name}`, localPath);
+        } else if (item.type === 'file' && item.name.endsWith('.json')) {
+          // users.json, projects.json은 이미 위에서 처리
+          if (ghPath === 'data' && (item.name === 'users.json' || item.name === 'projects.json')) continue;
+          await fetchAndSave(`${ghPath}/${item.name}`, localPath);
+        }
+      }
+      console.log(`[GitHub] 복원 완료: ${ghPath}`);
+    } catch (e) {
+      console.error(`[GitHub] ${ghPath} 복원 실패:`, e.message);
     }
-  } catch (e) {
-    console.error('[GitHub] reports 폴더 복원 실패:', e.message);
   }
+
+  await restoreFolder('data', path.join(__dirname, 'data'));
 }
 
 pullDataFromGitHub().then(() => {
