@@ -805,7 +805,10 @@ async function pullDataFromGitHub() {
 
   async function fetchAndSave(ghPath, localPath) {
     try {
-      const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${ghPath}`, { headers: HEADERS });
+      const url = `https://api.github.com/repos/${REPO}/contents/${ghPath}`;
+      console.log(`[GitHub] 복원 시도: ${ghPath}`);
+      const res = await fetch(url, { headers: HEADERS });
+      console.log(`[GitHub] 응답 상태: ${ghPath} → ${res.status}`);
       if (!res.ok) return;
       const fileInfo = await res.json();
       const content = Buffer.from(fileInfo.content, 'base64').toString('utf-8');
