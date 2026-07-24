@@ -527,9 +527,16 @@
               "name": "업무협조진행",
               "type": "pct",
               "assignees": [],
-              "pct": 0,
+              "pct": 40,
               "memoHistory": [],
-              "memo": ""
+              "memo": "",
+              "history": [
+                {
+                  "date": "2026-07-24",
+                  "from": 0,
+                  "to": 40
+                }
+              ]
             }
           ]
         },
