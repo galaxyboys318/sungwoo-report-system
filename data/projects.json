@@ -528,8 +528,13 @@
               "type": "pct",
               "assignees": [],
               "pct": 40,
-              "memoHistory": [],
-              "memo": "",
+              "memoHistory": [
+                {
+                  "date": "2026-07-24",
+                  "memo": "업체 확인 후 테스트 진행 중 차주 테스트 진행"
+                }
+              ],
+              "memo": "업체 확인 후 테스트 진행 중 차주 테스트 진행",
               "history": [
                 {
                   "date": "2026-07-24",
