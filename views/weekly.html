@@ -228,8 +228,14 @@ function renderPage() {
       <div class="card">
         <div class="section-title" style="margin-bottom:5px;">📅 ${fmt(weekStart)} ~ ${fmt(weekEnd)}</div>
         <p style="font-size:clamp(11px, 0.78vw, 16px);color:#aaa;margin-bottom:0;">이번 주 보고 내역이 없습니다.</p>
+      </div>
+      <div class="card">
+        <div class="section-title" style="margin-bottom:18px;">📨 발송 설정</div>
+        <div class="recipient-list" id="recipient-list"><div style="font-size:clamp(12px,0.83vw,18px);color:#aaa;">수신자 목록 불러오는 중...</div></div>
+        <button class="send-btn" id="send-btn" onclick="sendWeekly()">📨 주간보고 발송</button>
+        <div class="send-hint">보고 내역이 없어도 발송 가능합니다.</div>
       </div>`;
-    renderSendSection();
+    loadRecipients();
     return;
   }
 
