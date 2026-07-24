@@ -464,7 +464,7 @@
               "name": "마케팅팀 협업 요청 및 입수",
               "type": "pct",
               "assignees": [],
-              "pct": 50,
+              "pct": 70,
               "memoHistory": [],
               "memo": "",
               "history": [
@@ -472,6 +472,11 @@
                   "date": "2026-07-14",
                   "from": 0,
                   "to": 50
+                },
+                {
+                  "date": "2026-07-24",
+                  "from": 50,
+                  "to": 70
                 }
               ]
             },
