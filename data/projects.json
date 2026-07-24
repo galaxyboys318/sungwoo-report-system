@@ -465,8 +465,13 @@
               "type": "pct",
               "assignees": [],
               "pct": 70,
-              "memoHistory": [],
-              "memo": "",
+              "memoHistory": [
+                {
+                  "date": "2026-07-24",
+                  "memo": "마케팅팀 요청사항 입수 후 검토.수정진행"
+                }
+              ],
+              "memo": "마케팅팀 요청사항 입수 후 검토.수정진행",
               "history": [
                 {
                   "date": "2026-07-14",
