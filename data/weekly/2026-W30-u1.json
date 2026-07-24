@@ -1,0 +1,177 @@
+{
+  "weekKey": "2026-W30",
+  "weekStart": "2026-07-20",
+  "weekEnd": "2026-07-24",
+  "isoYear": 2026,
+  "isoWeek": 30,
+  "reporter": "함흥우",
+  "team": "솔루션개발팀",
+  "email": "ham318@sungwoobook.com",
+  "sentAt": "2026-07-24T09:06:24.773Z",
+  "sentTo": [
+    "sungwoomb@sungwoobook.com",
+    "p4jyoung@sungwoobook.com",
+    "khs386@sungwoobook.com"
+  ],
+  "aiSummary": "주간 업무 요약 (2026-07-20 ~ 2026-07-24)\n\n1. AI활용 생산성개선\n   - 일일보고 자동화 시스템 버그 수정(깃허브 토큰 변경) : 완료\n\n2. 기타 업무협조\n   - 릴라팝 꿈틀이 영상 카탈로그 변경 : 완료\n\n3. AI검색(AEO, MCP) 개발 \n   - AEO-MCP 실행계획서 초안 작성 후 보고 : 완료\n   - 마케팅팀 협업 요청 및 입수 : 70% 진행\n   - 홈페이지 관리업체 협조 : 40% 진행\n\n기보고사항의 깃허브 토큰만료로 일자별 상세내역이 삭제되었습니다.\n해당 토큰 만료를 무제한으로 변경하여 수정하였고 차후 해당 이슈 발생하지 않도록 수정하였습니다.\n\n이상 업무에 참고하시기 바랍니다.",
+  "weeklyDays": [
+    {
+      "date": "2026-07-24",
+      "entries": [
+        {
+          "timestamp": "2026-07-24T09:05:07.994Z",
+          "reporterEmail": "ham318@sungwoobook.com",
+          "reporterName": "함흥우",
+          "reporterTeam": "솔루션개발팀",
+          "subject": "일일업무보고_솔루션개발팀 함흥우 (07.24)",
+          "body": "1. AI활용 생산성개선 / AI활용\n -. 일일보고 자동화 시스템\n   1) 버그 수정(깃허브 토큰 만료에 따른 토큰 변경-무제한으로 변경) 보고 누락 건 수정 : 완료하였습니다. \n2. 기타 / 업무협조\n -. 릴라팝 꿈틀이 영상 카탈로그 변경 진행\n   1) 변경 완료(기 보고 내용 복구) : 완료하였습니다.\n3. AI검색(AEO,MCP)개발 / 단기프로젝트\n -. AEO-MCP 실행계획서 작성\n   1) 실행계획서 초안 작성 후 대표님께 보고 : 완료하였습니다. \n   2) 마케팅팀 협업 요청 및 입수 : 70% 진행 중입니다. \n -. 홈페이지 관리업체 협조\n   1) 업무협조 진행 : 40% 진행 중입니다. \n이상 업무에 참고하여 주시기 바랍니다.\n\n -함흥우 드림-",
+          "htmlBody": "<!DOCTYPE html>\n<html lang=\"ko\">\n<head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\"></head>\n<body style=\"margin:0;padding:0;background:#f5f6fa;font-family:'Malgun Gothic','맑은 고딕',sans-serif;\">\n\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background:#1a73e8;\">\n  <tr><td style=\"padding:14px 28px;\">\n    <span style=\"color:#fff;font-size:15px;font-weight:500;\">도서출판 성우 &nbsp;·&nbsp; 일일업무보고</span>\n  </td></tr>\n</table>\n\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#f5f6fa\" style=\"max-width:860px;margin:20px auto;border-radius:14px;\">\n<tr><td style=\"padding:16px;\">\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#ffffff\" style=\"border-radius:12px;\">\n<tr><td style=\"padding:28px 32px;\">\n\n<p style=\"margin:0 0 24px;font-size:22px;font-weight:500;color:#1a1a2e;\">일일 업무 보고서</p>\n\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:24px;\"><tr>\n  <td width=\"23%\" style=\"background:#f0f4ff;border-radius:10px;padding:16px 12px;text-align:center;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">보고자</p>\n    <p style=\"margin:7px 0 2px;font-size:17px;font-weight:500;color:#1a1a2e;\">함흥우</p>\n    <p style=\"margin:0;font-size:10px;color:#888;\">솔루션개발팀</p>\n  </td><td width=\"2%\"></td>\n  <td width=\"23%\" style=\"background:#f0fff4;border-radius:10px;padding:16px 12px;text-align:center;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">오늘 업무</p>\n    <p style=\"margin:7px 0 2px;font-size:32px;font-weight:500;color:#639922;\">4</p>\n    <p style=\"margin:0;font-size:10px;color:#888;\">건</p>\n  </td><td width=\"2%\"></td>\n  <td width=\"23%\" style=\"background:#f0f7ff;border-radius:10px;padding:16px 12px;text-align:center;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">보고 일자</p>\n    <p style=\"margin:7px 0 2px;font-size:14px;font-weight:500;color:#378ADD;\">2026.07.24</p>\n    <p style=\"margin:0;font-size:10px;color:#888;\">오늘</p>\n  </td><td width=\"2%\"></td>\n  <td width=\"25%\" style=\"background:#fff0f0;border-radius:10px;padding:16px 12px;text-align:center;border:1.5px solid #e74c3c;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">가장 빠른 마감</p>\n    <p style=\"margin:7px 0 4px;font-size:26px;font-weight:500;color:#e74c3c;\">-</p>\n    <p style=\"margin:0;font-size:10px;color:#e74c3c;\">AI활용 생산성개선</p>\n  </td>\n</tr></table>\n\n<hr style=\"border:none;border-top:0.5px solid #eee;margin:0 0 18px;\">\n<p style=\"margin:0 0 14px;font-size:15px;font-weight:500;color:#1a1a2e;\">프로젝트 진행 현황</p>\n\n      <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:10px;background:#f8fbff;border-radius:10px;border:1.5px solid #c8d8f8;\">\n      <tr><td style=\"padding:14px 18px;\">\n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:8px;\">\n          <tr>\n            <td>\n              <span style=\"font-size:14px;font-weight:500;color:#1a1a2e;\">AI활용 생산성개선</span>\n              <span style=\"margin-left:8px;font-size:10px;background:#e8f0fe;color:#1558b0;padding:2px 7px;border-radius:20px;font-weight:500;\">AI활용</span>\n              \n            </td>\n            <td align=\"right\" style=\"font-size:16px;font-weight:600;color:#4285f4;\">78%</td>\n          </tr>\n        </table>\n        <div style=\"background:#e0e0e0;border-radius:20px;height:6px;overflow:hidden;margin-bottom:12px;\">\n          <div style=\"width:78%;background:#4285f4;height:6px;border-radius:20px;\"></div>\n        </div>\n        \n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:10px;\">\n          <tr>\n            <td style=\"font-size:13px;font-weight:500;color:#1a1a2e;padding-bottom:3px;\">일일보고 자동화 시스템</td>\n            <td align=\"right\" style=\"font-size:13px;font-weight:600;color:#3498db;padding-bottom:3px;\">78%</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding-bottom:6px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:5px;overflow:hidden;\">\n              <div style=\"width:78%;background:#3498db;height:5px;border-radius:20px;\"></div>\n            </div>\n          </td></tr>\n          \n        <tr><td colspan=\"2\" style=\"padding:4px 0 6px 0;\">\n          <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background:#fff;border-radius:6px;border:0.5px solid #c8d8f8;padding:6px 10px;\">\n            <tr><td colspan=\"2\" style=\"padding:4px 0 2px;font-size:10px;font-weight:600;color:#4285f4;\">단계별 진행</td></tr>\n            \n          <tr>\n            <td style=\"padding:4px 0 0 14px;font-size:11px;color:#666;\">버그수정(깃허브 토큰만료에 따른 토큰변경-무제한으로 변경) 보고누락 건 수정</td>\n            <td align=\"right\" style=\"padding:4px 0 0;font-size:11px;font-weight:500;color:#34a853;white-space:nowrap;\">완료</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding:2px 0 6px 14px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:3px;overflow:hidden;\">\n              <div style=\"width:100%;background:#34a853;height:3px;border-radius:20px;\"></div>\n            </div>\n            <div style=\"font-size:10px;color:#888;padding-left:18px;margin-top:1px;line-height:1.5;\">토큰만료 건 수정완료</div>\n          </td></tr>\n          </table>\n        </td></tr>\n        </table>\n      </td></tr></table>\n      <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:10px;background:#f6fff8;border-radius:10px;border:1.5px solid #b2dfdb;\">\n      <tr><td style=\"padding:14px 18px;\">\n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:8px;\">\n          <tr>\n            <td>\n              <span style=\"font-size:14px;font-weight:500;color:#1a1a2e;\">기타</span>\n              <span style=\"margin-left:8px;font-size:10px;background:#e8f0fe;color:#1558b0;padding:2px 7px;border-radius:20px;font-weight:500;\">업무협조</span>\n              \n            </td>\n            <td align=\"right\" style=\"font-size:16px;font-weight:600;color:#34a853;\">100%</td>\n          </tr>\n        </table>\n        <div style=\"background:#e0e0e0;border-radius:20px;height:6px;overflow:hidden;margin-bottom:12px;\">\n          <div style=\"width:100%;background:#34a853;height:6px;border-radius:20px;\"></div>\n        </div>\n        \n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:10px;\">\n          <tr>\n            <td style=\"font-size:13px;font-weight:500;color:#1a1a2e;padding-bottom:3px;\">릴라팝 꿈틀이 영상 카탈로그 변경 진행</td>\n            <td align=\"right\" style=\"font-size:13px;font-weight:600;color:#3498db;padding-bottom:3px;\">100%</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding-bottom:6px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:5px;overflow:hidden;\">\n              <div style=\"width:100%;background:#3498db;height:5px;border-radius:20px;\"></div>\n            </div>\n          </td></tr>\n          \n        <tr><td colspan=\"2\" style=\"padding:4px 0 6px 0;\">\n          <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background:#fff;border-radius:6px;border:0.5px solid #b2dfdb;padding:6px 10px;\">\n            <tr><td colspan=\"2\" style=\"padding:4px 0 2px;font-size:10px;font-weight:600;color:#34a853;\">단계별 진행</td></tr>\n            \n          <tr>\n            <td style=\"padding:4px 0 0 14px;font-size:11px;color:#666;\">변경완료(기 보고내용복구)</td>\n            <td align=\"right\" style=\"padding:4px 0 0;font-size:11px;font-weight:500;color:#34a853;white-space:nowrap;\">완료</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding:2px 0 6px 14px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:3px;overflow:hidden;\">\n              <div style=\"width:100%;background:#34a853;height:3px;border-radius:20px;\"></div>\n            </div>\n            \n          </td></tr>\n          </table>\n        </td></tr>\n        </table>\n      </td></tr></table>\n      <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:10px;background:#fff8f0;border-radius:10px;border:1.5px solid #ffe0b2;\">\n      <tr><td style=\"padding:14px 18px;\">\n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:8px;\">\n          <tr>\n            <td>\n              <span style=\"font-size:14px;font-weight:500;color:#1a1a2e;\">AI검색(AEO,MCP)개발</span>\n              <span style=\"margin-left:8px;font-size:10px;background:#e8f0fe;color:#1558b0;padding:2px 7px;border-radius:20px;font-weight:500;\">단기프로젝트</span>\n              \n            </td>\n            <td align=\"right\" style=\"font-size:16px;font-weight:600;color:#e67e22;\">44%</td>\n          </tr>\n        </table>\n        <div style=\"background:#e0e0e0;border-radius:20px;height:6px;overflow:hidden;margin-bottom:12px;\">\n          <div style=\"width:44%;background:#e67e22;height:6px;border-radius:20px;\"></div>\n        </div>\n        \n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:10px;\">\n          <tr>\n            <td style=\"font-size:13px;font-weight:500;color:#1a1a2e;padding-bottom:3px;\">AEO-MCP 실행계획서 작성</td>\n            <td align=\"right\" style=\"font-size:13px;font-weight:600;color:#3498db;padding-bottom:3px;\">57%</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding-bottom:6px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:5px;overflow:hidden;\">\n              <div style=\"width:57%;background:#3498db;height:5px;border-radius:20px;\"></div>\n            </div>\n          </td></tr>\n          \n        <tr><td colspan=\"2\" style=\"padding:4px 0 6px 0;\">\n          <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background:#fff;border-radius:6px;border:0.5px solid #ffe0b2;padding:6px 10px;\">\n            <tr><td colspan=\"2\" style=\"padding:4px 0 2px;font-size:10px;font-weight:600;color:#e67e22;\">단계별 진행</td></tr>\n            \n          <tr>\n            <td style=\"padding:4px 0 0 14px;font-size:11px;color:#666;\">실행계획서 초안 작성 후 대표님께 보고</td>\n            <td align=\"right\" style=\"padding:4px 0 0;font-size:11px;font-weight:500;color:#34a853;white-space:nowrap;\">완료</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding:2px 0 6px 14px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:3px;overflow:hidden;\">\n              <div style=\"width:100%;background:#34a853;height:3px;border-radius:20px;\"></div>\n            </div>\n            <div style=\"font-size:10px;color:#888;padding-left:18px;margin-top:1px;line-height:1.5;\">실행계획서 초안 보고완료(지난데이타 삭제로 인한 재송부)</div>\n          </td></tr>\n          <tr>\n            <td style=\"padding:4px 0 0 14px;font-size:11px;color:#666;\">마케팅팀 협업 요청 및 입수</td>\n            <td align=\"right\" style=\"padding:4px 0 0;font-size:11px;font-weight:500;color:#e67e22;white-space:nowrap;\">70%</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding:2px 0 6px 14px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:3px;overflow:hidden;\">\n              <div style=\"width:70%;background:#e67e22;height:3px;border-radius:20px;\"></div>\n            </div>\n            <div style=\"font-size:10px;color:#888;padding-left:18px;margin-top:1px;line-height:1.5;\">마케팅팀 요청사항 입수 후 검토.수정진행</div>\n          </td></tr>\n          </table>\n        </td></tr>\n        </table>\n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:10px;\">\n          <tr>\n            <td style=\"font-size:13px;font-weight:500;color:#1a1a2e;padding-bottom:3px;\">홈페이지 관리업체 협조</td>\n            <td align=\"right\" style=\"font-size:13px;font-weight:600;color:#3498db;padding-bottom:3px;\">30%</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding-bottom:6px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:5px;overflow:hidden;\">\n              <div style=\"width:30%;background:#3498db;height:5px;border-radius:20px;\"></div>\n            </div>\n          </td></tr>\n          \n        <tr><td colspan=\"2\" style=\"padding:4px 0 6px 0;\">\n          <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background:#fff;border-radius:6px;border:0.5px solid #ffe0b2;padding:6px 10px;\">\n            <tr><td colspan=\"2\" style=\"padding:4px 0 2px;font-size:10px;font-weight:600;color:#e67e22;\">단계별 진행</td></tr>\n            \n          <tr>\n            <td style=\"padding:4px 0 0 14px;font-size:11px;color:#666;\">업무협조진행</td>\n            <td align=\"right\" style=\"padding:4px 0 0;font-size:11px;font-weight:500;color:#e67e22;white-space:nowrap;\">40%</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding:2px 0 6px 14px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:3px;overflow:hidden;\">\n              <div style=\"width:40%;background:#e67e22;height:3px;border-radius:20px;\"></div>\n            </div>\n            <div style=\"font-size:10px;color:#888;padding-left:18px;margin-top:1px;line-height:1.5;\">업체 확인 후 테스트 진행 중 차주 테스트 진행</div>\n          </td></tr>\n          </table>\n        </td></tr>\n        </table>\n      </td></tr></table>\n\n<hr style=\"border:none;border-top:0.5px solid #eee;margin:4px 0 18px;\">\n<p style=\"margin:0 0 12px;font-size:15px;font-weight:500;color:#1a1a2e;\">보고 내용</p>\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:20px;\">\n  <tr><td style=\"background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;padding:16px 18px;font-size:13px;line-height:1.9;color:#222;\">\n    <div style=\"padding-left:0px;min-height:1.7em;font-weight:600;color:#1a1a2e;\">1. AI활용 생산성개선 / AI활용</div><div style=\"padding-left:6px;min-height:1.7em;font-weight:400;color:#444;\">-. 일일보고 자동화 시스템</div><div style=\"padding-left:18px;min-height:1.7em;font-weight:400;color:#444;\">1) 버그 수정(깃허브 토큰 만료에 따른 토큰 변경-무제한으로 변경) 보고 누락 건 수정 : 완료하였습니다.</div><div style=\"padding-left:0px;min-height:1.7em;font-weight:600;color:#1a1a2e;\">2. 기타 / 업무협조</div><div style=\"padding-left:6px;min-height:1.7em;font-weight:400;color:#444;\">-. 릴라팝 꿈틀이 영상 카탈로그 변경 진행</div><div style=\"padding-left:18px;min-height:1.7em;font-weight:400;color:#444;\">1) 변경 완료(기 보고 내용 복구) : 완료하였습니다.</div><div style=\"padding-left:0px;min-height:1.7em;font-weight:600;color:#1a1a2e;\">3. AI검색(AEO,MCP)개발 / 단기프로젝트</div><div style=\"padding-left:6px;min-height:1.7em;font-weight:400;color:#444;\">-. AEO-MCP 실행계획서 작성</div><div style=\"padding-left:18px;min-height:1.7em;font-weight:400;color:#444;\">1) 실행계획서 초안 작성 후 대표님께 보고 : 완료하였습니다.</div><div style=\"padding-left:18px;min-height:1.7em;font-weight:400;color:#444;\">2) 마케팅팀 협업 요청 및 입수 : 70% 진행 중입니다.</div><div style=\"padding-left:6px;min-height:1.7em;font-weight:400;color:#444;\">-. 홈페이지 관리업체 협조</div><div style=\"padding-left:18px;min-height:1.7em;font-weight:400;color:#444;\">1) 업무협조 진행 : 40% 진행 중입니다.</div><div style=\"padding-left:0px;min-height:1.7em;font-weight:400;color:#444;\">이상 업무에 참고하여 주시기 바랍니다.</div><div style=\"min-height:0.6em\">&nbsp;</div><div style=\"padding-left:6px;min-height:1.7em;font-weight:400;color:#444;\">-함흥우 드림-</div>\n  </td></tr>\n</table>\n\n<hr style=\"border:none;border-top:0.5px solid #eee;margin:0 0 12px;\">\n<p style=\"margin:0;font-size:11px;color:#aaa;text-align:center;\">이 보고서는 일일보고 자동화 시스템에서 발송되었습니다. &nbsp;·&nbsp; 도서출판 성우 솔루션개발팀</p>\n\n</td></tr></table>\n</td></tr></table>\n\n</body></html>",
+          "sentTo": [
+            "sungwoomb@sungwoobook.com",
+            "p4jyoung@sungwoobook.com",
+            "khs386@sungwoobook.com"
+          ]
+        }
+      ]
+    }
+  ],
+  "projectSnapshot": {
+    "뒤집기솔루션": {
+      "id": "p1",
+      "tag": "신규사업",
+      "tasks": {
+        "AI 풀이 위젯 개발": {
+          "id": "p1t1",
+          "progress": 67,
+          "weight": 0,
+          "stepsDone": 3,
+          "totalSteps": 6
+        },
+        "마케팅 기획": {
+          "id": "p1t2",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        },
+        "가격 정책 수립": {
+          "id": "p1t3",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        },
+        "기획서 작성": {
+          "id": "p1t4",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        }
+      }
+    },
+    "AI활용 생산성개선": {
+      "id": "p2",
+      "tag": "AI활용",
+      "tasks": {
+        "일일보고 자동화 시스템": {
+          "id": "p2t1",
+          "progress": 78,
+          "weight": 0,
+          "stepsDone": 4,
+          "totalSteps": 7
+        },
+        "AI 뉴스레터 자동화": {
+          "id": "p2t2",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        }
+      }
+    },
+    "기타": {
+      "id": "p3",
+      "tag": "업무협조",
+      "tasks": {
+        "알림톡 검수 대응": {
+          "id": "p3t1",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        },
+        "그룹웨어 관리": {
+          "id": "p3t2",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        },
+        "CS대응": {
+          "id": "p3t1781688045449",
+          "progress": 100,
+          "weight": 0,
+          "stepsDone": 1,
+          "totalSteps": 1
+        },
+        "영상수정업무요청대응(초등팀, 영상팀)": {
+          "id": "p3t1782180873510",
+          "progress": 80,
+          "weight": 0,
+          "stepsDone": 3,
+          "totalSteps": 4
+        },
+        "릴라팝 꿈틀이 영상 카탈로그 변경 진행": {
+          "id": "p3t1784883791224",
+          "progress": 100,
+          "weight": 0,
+          "stepsDone": 1,
+          "totalSteps": 1
+        }
+      }
+    },
+    "AI검색(AEO,MCP)개발": {
+      "id": "p1783586678448",
+      "tag": "단기프로젝트",
+      "tasks": {
+        "AEO-MCP 실행계획서 작성": {
+          "id": "p1783586678448t1783587670198",
+          "progress": 57,
+          "weight": 0,
+          "stepsDone": 1,
+          "totalSteps": 3
+        },
+        "홈페이지 관리업체 협조": {
+          "id": "p1783586678448t1783587815995",
+          "progress": 30,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 2
+        },
+        "MCP서버제작": {
+          "id": "p1783586678448t1783588074309",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        },
+        "AI노출실측 및 모니터링": {
+          "id": "p1783586678448t1783672451487",
+          "progress": 33,
+          "weight": 0,
+          "stepsDone": 1,
+          "totalSteps": 3
+        },
+        "홈페이지 플랫폼 별 콘솔등록관련": {
+          "id": "p1783586678448t1784103525124",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 1
+        }
+      }
+    }
+  },
+  "prevSnapshot": null
+}
