@@ -791,6 +791,7 @@ app.get('/', (req, res) => {
 
 // ─── 서버 시작 시 GitHub에서 최신 데이터 복원 ──────────────
 async function pullDataFromGitHub() {
+  console.log('[GitHub] 데이터 복원 시작... GITHUB_TOKEN 존재:', !!process.env.GITHUB_TOKEN);
   if (!process.env.GITHUB_TOKEN) {
     console.log('[GitHub] GITHUB_TOKEN 없음 — 데이터 복원 건너뜀');
     return;
