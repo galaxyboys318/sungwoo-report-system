@@ -314,7 +314,14 @@
               "assignees": [
                 "함흥우"
               ],
-              "done": true
+              "done": true,
+              "memoHistory": [
+                {
+                  "date": "2026-07-24",
+                  "memo": "토큰만료 건 수정완료"
+                }
+              ],
+              "memo": "토큰만료 건 수정완료"
             }
           ]
         },
