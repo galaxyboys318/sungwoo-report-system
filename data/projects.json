@@ -455,6 +455,15 @@
               "done": true,
               "memoHistory": [],
               "memo": ""
+            },
+            {
+              "id": "s1785920368403",
+              "name": "꼬마사회뒤집기 영상 카탈로그 변경",
+              "type": "check",
+              "assignees": [
+                "함흥우"
+              ],
+              "done": false
             }
           ]
         }
