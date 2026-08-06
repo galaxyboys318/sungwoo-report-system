@@ -484,7 +484,17 @@
           "assignees": [
             "함흥우"
           ],
-          "steps": []
+          "steps": [
+            {
+              "id": "s1786006274558",
+              "name": "NICE본인인증관련",
+              "type": "check",
+              "assignees": [
+                "함흥우"
+              ],
+              "done": false
+            }
+          ]
         }
       ]
     },
