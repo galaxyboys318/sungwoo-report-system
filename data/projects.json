@@ -370,9 +370,16 @@
               "assignees": [
                 "함흥우"
               ],
-              "pct": 0,
+              "pct": 70,
               "memoHistory": [],
-              "memo": ""
+              "memo": "",
+              "history": [
+                {
+                  "date": "2026-08-24",
+                  "from": 0,
+                  "to": 70
+                }
+              ]
             },
             {
               "id": "s1786439024553",
