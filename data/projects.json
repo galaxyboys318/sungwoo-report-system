@@ -529,6 +529,15 @@
               "current": 214,
               "memoHistory": [],
               "memo": ""
+            },
+            {
+              "id": "s1787907620637",
+              "name": "꼬마과학일부수정관련",
+              "type": "check",
+              "assignees": [
+                "함흥우"
+              ],
+              "done": false
             }
           ]
         },
