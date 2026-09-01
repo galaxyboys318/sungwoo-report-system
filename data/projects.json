@@ -559,6 +559,15 @@
               "done": true,
               "memoHistory": [],
               "memo": ""
+            },
+            {
+              "id": "s1788253721780",
+              "name": "꼬마사회샘플권QR수정관련",
+              "type": "check",
+              "assignees": [
+                "함흥우"
+              ],
+              "done": false
             }
           ]
         },
