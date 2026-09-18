@@ -753,17 +753,7 @@
           "assignees": [
             "함흥우"
           ],
-          "steps": [
-            {
-              "id": "s1789721725653",
-              "name": "샘플책영상관련",
-              "type": "check",
-              "assignees": [
-                "함흥우"
-              ],
-              "done": false
-            }
-          ]
+          "steps": []
         }
       ]
     },
