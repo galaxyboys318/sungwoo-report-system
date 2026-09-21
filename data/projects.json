@@ -725,6 +725,15 @@
               "done": false,
               "memoHistory": [],
               "memo": ""
+            },
+            {
+              "id": "s1789984373059",
+              "name": "홈페이지세팅",
+              "type": "pct",
+              "assignees": [
+                "함흥우"
+              ],
+              "pct": 0
             }
           ]
         },
