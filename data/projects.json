@@ -709,6 +709,15 @@
               "done": true,
               "memoHistory": [],
               "memo": ""
+            },
+            {
+              "id": "s1792056802638",
+              "name": "스마일서브 스트리밍 관련 관리부 문의 대응",
+              "type": "check",
+              "assignees": [
+                "함흥우"
+              ],
+              "done": false
             }
           ]
         },
@@ -1021,7 +1030,7 @@
               "assignees": [
                 "함흥우"
               ],
-              "done": false,
+              "done": true,
               "memoHistory": [
                 {
                   "date": "2026-10-15",
