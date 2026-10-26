@@ -417,6 +417,15 @@
               "done": true,
               "memoHistory": [],
               "memo": ""
+            },
+            {
+              "id": "s1793000088642",
+              "name": "버그수정",
+              "type": "check",
+              "assignees": [
+                "함흥우"
+              ],
+              "done": false
             }
           ]
         },
