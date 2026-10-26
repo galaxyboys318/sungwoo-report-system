@@ -1006,7 +1006,17 @@
           "assignees": [
             "함흥우"
           ],
-          "steps": []
+          "steps": [
+            {
+              "id": "s1793005294980",
+              "name": "성우홈페이지대응",
+              "type": "check",
+              "assignees": [
+                "함흥우"
+              ],
+              "done": false
+            }
+          ]
         }
       ]
     },
