@@ -604,6 +604,7 @@ app.post('/report/send', async (req, res) => {
       body: report.body,
       htmlBody: buildHtmlEmail(report, reporterName, reporterTeam, checkedTasks || report.checkedTasks),
       sentTo: toAddresses,
+      checkedTasks: checkedTasks || report.checkedTasks || [], // 주간보고 GPT 요약의 단계별 수치(stepSummary)에 사용
     };
     // 기존 기록에 누적 저장 (배열)
     let logs = [];
@@ -1069,17 +1070,7 @@ app.post('/api/weekly-send', requireLogin, async (req, res) => {
     const ghWeeklyPath = `data/weekly/${weekKey}-${user.id || user.email}.json`;
     saveToGitHub(ghWeeklyPath, weeklyRecord).catch(e => console.error('[GitHub weekly 백업 실패]', e.message));
 
-    // 주간보고 발송 후 memoHistory 초기화
-    const projData = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
-    projData.projects.forEach(p => {
-      (p.tasks || []).forEach(t => {
-        (t.steps || []).forEach(s => {
-          s.memoHistory = [];
-          s.memo = '';
-        });
-      });
-    });
-    saveProjects(projData);
+    // memoHistory 는 지우지 않는다 — 다른 직원의 메모까지 지워지므로. 지난 메모는 폼에서 이번 주만 보이도록 거른다
 
     res.json({ success: true });
   } catch (e) {
