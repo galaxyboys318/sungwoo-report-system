@@ -618,7 +618,11 @@
                 disabled>${(() => { const t = new Date().toISOString().slice(0,10); const h = (step.memoHistory||[]).find(m=>m.date===t); return h ? h.memo : ''; })()}</textarea>
               ${(() => {
                 const today = new Date().toISOString().slice(0, 10);
-                const history = (step.memoHistory || []).filter(h => h.date !== today).slice().reverse().slice(0, 7);
+                // 이번 주 월요일 이후 메모만 표시 (지난 메모는 지우지 않고 화면에서만 거름)
+                const mon = new Date();
+                mon.setDate(mon.getDate() - ((mon.getDay() + 6) % 7));
+                const monday = `${mon.getFullYear()}-${String(mon.getMonth() + 1).padStart(2, '0')}-${String(mon.getDate()).padStart(2, '0')}`;
+                const history = (step.memoHistory || []).filter(h => h.date !== today && h.date >= monday).slice().reverse();
                 if (!history.length) return '';
                 const items = history.map(h => {
                   const d = new Date(h.date + 'T00:00:00');
