@@ -925,7 +925,17 @@
           "assignees": [
             "함흥우"
           ],
-          "steps": []
+          "steps": [
+            {
+              "id": "s1793177783116",
+              "name": "영업팀요청사항대응",
+              "type": "check",
+              "assignees": [
+                "함흥우"
+              ],
+              "done": false
+            }
+          ]
         },
         {
           "id": "p3t1790758853600",
