@@ -1,0 +1,616 @@
+{
+  "weekKey": "2026-W46",
+  "weekStart": "2026-11-09",
+  "weekEnd": "2026-11-13",
+  "isoYear": 2026,
+  "isoWeek": 46,
+  "reporter": "함흥우",
+  "team": "솔루션개발팀",
+  "email": "ham318@sungwoobook.com",
+  "sentAt": "2026-11-13T03:31:09.413Z",
+  "sentTo": [
+    "sungwoomb@sungwoobook.com",
+    "p4jyoung@sungwoobook.com",
+    "khs386@sungwoobook.com"
+  ],
+  "aiSummary": "",
+  "weeklyDays": [
+    {
+      "date": "2026-11-09",
+      "entries": [
+        {
+          "timestamp": "2026-11-09T09:01:47.061Z",
+          "reporterEmail": "ham318@sungwoobook.com",
+          "reporterName": "함흥우",
+          "reporterTeam": "솔루션개발팀",
+          "subject": "일일업무보고_솔루션개발팀 함흥우 (11.09)",
+          "body": "1. AI검색(AEO,MCP)개발 / 단기프로젝트\n -. 홈페이지세팅\n   1) 홈페이지SEO최적화작업 : 80% 진행하였습니다. 지난주 홈페이지 업데이트 이후 관리자 페이지에서 SEO 메타태그 등록이 가능해져 각 도서별 메타태그를 등록한 후 서버 반영을 최종 확인하였습니다. 추가로 구글 서치 콘솔과 네이버 서치 어드바이저에 색인 생성 및 웹페이지 수집 요청을 진행하였습니다.\n\n이상 업무에 참고하여 주시기 바랍니다.\n\n -함흥우 드림-",
+          "htmlBody": "<!DOCTYPE html>\n<html lang=\"ko\">\n<head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\"></head>\n<body style=\"margin:0;padding:0;background:#f5f6fa;font-family:'Malgun Gothic','맑은 고딕',sans-serif;\">\n\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background:#1a73e8;\">\n  <tr><td style=\"padding:14px 28px;\">\n    <span style=\"color:#fff;font-size:15px;font-weight:500;\">도서출판 성우 &nbsp;·&nbsp; 일일업무보고</span>\n  </td></tr>\n</table>\n\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#f5f6fa\" style=\"max-width:860px;margin:20px auto;border-radius:14px;\">\n<tr><td style=\"padding:16px;\">\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#ffffff\" style=\"border-radius:12px;\">\n<tr><td style=\"padding:28px 32px;\">\n\n<p style=\"margin:0 0 24px;font-size:22px;font-weight:500;color:#1a1a2e;\">일일 업무 보고서</p>\n\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:24px;\"><tr>\n  <td width=\"23%\" style=\"background:#f0f4ff;border-radius:10px;padding:16px 12px;text-align:center;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">보고자</p>\n    <p style=\"margin:7px 0 2px;font-size:17px;font-weight:500;color:#1a1a2e;\">함흥우</p>\n    <p style=\"margin:0;font-size:10px;color:#888;\">솔루션개발팀</p>\n  </td><td width=\"2%\"></td>\n  <td width=\"23%\" style=\"background:#f0fff4;border-radius:10px;padding:16px 12px;text-align:center;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">오늘 업무</p>\n    <p style=\"margin:7px 0 2px;font-size:32px;font-weight:500;color:#639922;\">1</p>\n    <p style=\"margin:0;font-size:10px;color:#888;\">건</p>\n  </td><td width=\"2%\"></td>\n  <td width=\"23%\" style=\"background:#f0f7ff;border-radius:10px;padding:16px 12px;text-align:center;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">보고 일자</p>\n    <p style=\"margin:7px 0 2px;font-size:14px;font-weight:500;color:#378ADD;\">2026.11.09</p>\n    <p style=\"margin:0;font-size:10px;color:#888;\">오늘</p>\n  </td><td width=\"2%\"></td>\n  <td width=\"25%\" style=\"background:#fff0f0;border-radius:10px;padding:16px 12px;text-align:center;border:1.5px solid #e74c3c;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">가장 빠른 마감</p>\n    <p style=\"margin:7px 0 4px;font-size:26px;font-weight:500;color:#e74c3c;\">-</p>\n    <p style=\"margin:0;font-size:10px;color:#e74c3c;\">AI검색(AEO,MCP)개발</p>\n  </td>\n</tr></table>\n\n<hr style=\"border:none;border-top:0.5px solid #eee;margin:0 0 18px;\">\n<p style=\"margin:0 0 14px;font-size:15px;font-weight:500;color:#1a1a2e;\">프로젝트 진행 현황</p>\n\n      <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:10px;background:#f8fbff;border-radius:10px;border:1.5px solid #c8d8f8;\">\n      <tr><td style=\"padding:14px 18px;\">\n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:8px;\">\n          <tr>\n            <td>\n              <span style=\"font-size:14px;font-weight:500;color:#1a1a2e;\">AI검색(AEO,MCP)개발</span>\n              <span style=\"margin-left:8px;font-size:10px;background:#e8f0fe;color:#1558b0;padding:2px 7px;border-radius:20px;font-weight:500;\">단기프로젝트</span>\n              \n            </td>\n            <td align=\"right\" style=\"font-size:16px;font-weight:600;color:#4285f4;\">90%</td>\n          </tr>\n        </table>\n        <div style=\"background:#e0e0e0;border-radius:20px;height:6px;overflow:hidden;margin-bottom:12px;\">\n          <div style=\"width:90%;background:#4285f4;height:6px;border-radius:20px;\"></div>\n        </div>\n        \n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:10px;\">\n          <tr>\n            <td style=\"font-size:13px;font-weight:500;color:#1a1a2e;padding-bottom:3px;\">홈페이지세팅</td>\n            <td align=\"right\" style=\"font-size:13px;font-weight:600;color:#3498db;padding-bottom:3px;\">90%</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding-bottom:6px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:5px;overflow:hidden;\">\n              <div style=\"width:90%;background:#3498db;height:5px;border-radius:20px;\"></div>\n            </div>\n          </td></tr>\n          \n        <tr><td colspan=\"2\" style=\"padding:4px 0 6px 0;\">\n          <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background:#fff;border-radius:6px;border:0.5px solid #c8d8f8;padding:6px 10px;\">\n            <tr><td colspan=\"2\" style=\"padding:4px 0 2px;font-size:10px;font-weight:600;color:#4285f4;\">단계별 진행</td></tr>\n            \n          <tr>\n            <td style=\"padding:4px 0 0 14px;font-size:11px;color:#666;\">홈페이지SEO최적화작업</td>\n            <td align=\"right\" style=\"padding:4px 0 0;font-size:11px;font-weight:500;color:#e67e22;white-space:nowrap;\">80%</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding:2px 0 6px 14px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:3px;overflow:hidden;\">\n              <div style=\"width:80%;background:#e67e22;height:3px;border-radius:20px;\"></div>\n            </div>\n            <div style=\"font-size:10px;color:#888;padding-left:18px;margin-top:1px;line-height:1.5;\">지난주 홈페이지 업데이트 이후 관리자 페이지 SEO 메타태그 등록이 가능하여 각 도서별 메타태그 등록 후 서버반영을 최종 확인하였습니다. 추가로 구글서치콘솔과 네이버 서치어드바이저에 색인 생성 및 웹페이지 수집 요청 진행 하였습니다.</div>\n          </td></tr>\n          </table>\n        </td></tr>\n        </table>\n      </td></tr></table>\n\n<hr style=\"border:none;border-top:0.5px solid #eee;margin:4px 0 18px;\">\n<p style=\"margin:0 0 12px;font-size:15px;font-weight:500;color:#1a1a2e;\">보고 내용</p>\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:20px;\">\n  <tr><td style=\"background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;padding:16px 18px;font-size:13px;line-height:1.9;color:#222;\">\n    <div style=\"padding-left:0px;min-height:1.7em;font-weight:600;color:#1a1a2e;\">1. AI검색(AEO,MCP)개발 / 단기프로젝트</div><div style=\"padding-left:6px;min-height:1.7em;font-weight:400;color:#444;\">-. 홈페이지세팅</div><div style=\"padding-left:18px;min-height:1.7em;font-weight:400;color:#444;\">1) 홈페이지SEO최적화작업 : 80% 진행하였습니다. 지난주 홈페이지 업데이트 이후 관리자 페이지에서 SEO 메타태그 등록이 가능해져 각 도서별 메타태그를 등록한 후 서버 반영을 최종 확인하였습니다. 추가로 구글 서치 콘솔과 네이버 서치 어드바이저에 색인 생성 및 웹페이지 수집 요청을 진행하였습니다.</div><div style=\"min-height:0.6em\">&nbsp;</div><div style=\"padding-left:0px;min-height:1.7em;font-weight:400;color:#444;\">이상 업무에 참고하여 주시기 바랍니다.</div><div style=\"min-height:0.6em\">&nbsp;</div><div style=\"padding-left:6px;min-height:1.7em;font-weight:400;color:#444;\">-함흥우 드림-</div>\n  </td></tr>\n</table>\n\n<hr style=\"border:none;border-top:0.5px solid #eee;margin:0 0 12px;\">\n<p style=\"margin:0;font-size:11px;color:#aaa;text-align:center;\">이 보고서는 일일보고 자동화 시스템에서 발송되었습니다. &nbsp;·&nbsp; 도서출판 성우 솔루션개발팀</p>\n\n</td></tr></table>\n</td></tr></table>\n\n</body></html>",
+          "sentTo": [
+            "sungwoomb@sungwoobook.com",
+            "p4jyoung@sungwoobook.com",
+            "khs386@sungwoobook.com"
+          ],
+          "checkedTasks": [
+            {
+              "projectName": "AI검색(AEO,MCP)개발",
+              "projectTag": "단기프로젝트",
+              "taskName": "홈페이지세팅",
+              "memo": "",
+              "progress": 90,
+              "steps": [
+                {
+                  "name": "홈페이지SEO최적화작업",
+                  "type": "pct",
+                  "pct": 80,
+                  "checkedToday": true,
+                  "memo": "지난주 홈페이지 업데이트 이후 관리자 페이지 SEO 메타태그 등록이 가능하여 각 도서별 메타태그 등록 후 서버반영을 최종 확인하였습니다. 추가로 구글서치콘솔과 네이버 서치어드바이저에 색인 생성 및 웹페이지 수집 요청 진행 하였습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-11-10",
+      "entries": [
+        {
+          "timestamp": "2026-11-10T09:07:59.453Z",
+          "reporterEmail": "ham318@sungwoobook.com",
+          "reporterName": "함흥우",
+          "reporterTeam": "솔루션개발팀",
+          "subject": "일일업무보고_솔루션개발팀 함흥우 (11.10)",
+          "body": "1. 기타 / 업무협조\n -. 꼬마생각뒤집기관련\n   1) 영상데이타관련 : 20% 진행\n      → 영상데이터 관련 11종 교체 및 1종 추가 업로드를 완료하였습니다.\n -. 홈페이지이관준비\n   1) 홈페이지 랜딩페이지 기획 : 35% 진행\n      → 홈페이지 프론트 기획서 재검토를 진행 중입니다. 기 작성된 기획서 검수 시 관리자 페이지 입력란이 없는 부분들이 반영된 것들이 있어 관리자 페이지 추가 개발 여부를 2개 안으로 수정하면서 재작업을 진행 중입니다. 추가로 지난번 권이사님이 지시하신 개발 일정, 개발비(내부, 외부, 협업 등 조건 별) 등 내용도 추가 진행 중입니다.\n\n이상 업무에 참고하여 주시기 바랍니다.\n\n -함흥우 드림-",
+          "htmlBody": "<!DOCTYPE html>\n<html lang=\"ko\">\n<head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\"></head>\n<body style=\"margin:0;padding:0;background:#f5f6fa;font-family:'Malgun Gothic','맑은 고딕',sans-serif;\">\n\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background:#1a73e8;\">\n  <tr><td style=\"padding:14px 28px;\">\n    <span style=\"color:#fff;font-size:15px;font-weight:500;\">도서출판 성우 &nbsp;·&nbsp; 일일업무보고</span>\n  </td></tr>\n</table>\n\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#f5f6fa\" style=\"max-width:860px;margin:20px auto;border-radius:14px;\">\n<tr><td style=\"padding:16px;\">\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#ffffff\" style=\"border-radius:12px;\">\n<tr><td style=\"padding:28px 32px;\">\n\n<p style=\"margin:0 0 24px;font-size:22px;font-weight:500;color:#1a1a2e;\">일일 업무 보고서</p>\n\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:24px;\"><tr>\n  <td width=\"23%\" style=\"background:#f0f4ff;border-radius:10px;padding:16px 12px;text-align:center;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">보고자</p>\n    <p style=\"margin:7px 0 2px;font-size:17px;font-weight:500;color:#1a1a2e;\">함흥우</p>\n    <p style=\"margin:0;font-size:10px;color:#888;\">솔루션개발팀</p>\n  </td><td width=\"2%\"></td>\n  <td width=\"23%\" style=\"background:#f0fff4;border-radius:10px;padding:16px 12px;text-align:center;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">오늘 업무</p>\n    <p style=\"margin:7px 0 2px;font-size:32px;font-weight:500;color:#639922;\">2</p>\n    <p style=\"margin:0;font-size:10px;color:#888;\">건</p>\n  </td><td width=\"2%\"></td>\n  <td width=\"23%\" style=\"background:#f0f7ff;border-radius:10px;padding:16px 12px;text-align:center;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">보고 일자</p>\n    <p style=\"margin:7px 0 2px;font-size:14px;font-weight:500;color:#378ADD;\">2026.11.10</p>\n    <p style=\"margin:0;font-size:10px;color:#888;\">오늘</p>\n  </td><td width=\"2%\"></td>\n  <td width=\"25%\" style=\"background:#fff0f0;border-radius:10px;padding:16px 12px;text-align:center;border:1.5px solid #e74c3c;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">가장 빠른 마감</p>\n    <p style=\"margin:7px 0 4px;font-size:26px;font-weight:500;color:#e74c3c;\">-</p>\n    <p style=\"margin:0;font-size:10px;color:#e74c3c;\">기타</p>\n  </td>\n</tr></table>\n\n<hr style=\"border:none;border-top:0.5px solid #eee;margin:0 0 18px;\">\n<p style=\"margin:0 0 14px;font-size:15px;font-weight:500;color:#1a1a2e;\">프로젝트 진행 현황</p>\n\n      <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:10px;background:#f8fbff;border-radius:10px;border:1.5px solid #c8d8f8;\">\n      <tr><td style=\"padding:14px 18px;\">\n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:8px;\">\n          <tr>\n            <td>\n              <span style=\"font-size:14px;font-weight:500;color:#1a1a2e;\">기타</span>\n              <span style=\"margin-left:8px;font-size:10px;background:#e8f0fe;color:#1558b0;padding:2px 7px;border-radius:20px;font-weight:500;\">업무협조</span>\n              \n            </td>\n            <td align=\"right\" style=\"font-size:16px;font-weight:600;color:#4285f4;\">49%</td>\n          </tr>\n        </table>\n        <div style=\"background:#e0e0e0;border-radius:20px;height:6px;overflow:hidden;margin-bottom:12px;\">\n          <div style=\"width:49%;background:#4285f4;height:6px;border-radius:20px;\"></div>\n        </div>\n        \n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:10px;\">\n          <tr>\n            <td style=\"font-size:13px;font-weight:500;color:#1a1a2e;padding-bottom:3px;\">꼬마생각뒤집기관련</td>\n            <td align=\"right\" style=\"font-size:13px;font-weight:600;color:#3498db;padding-bottom:3px;\">54%</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding-bottom:6px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:5px;overflow:hidden;\">\n              <div style=\"width:54%;background:#3498db;height:5px;border-radius:20px;\"></div>\n            </div>\n          </td></tr>\n          \n        <tr><td colspan=\"2\" style=\"padding:4px 0 6px 0;\">\n          <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background:#fff;border-radius:6px;border:0.5px solid #c8d8f8;padding:6px 10px;\">\n            <tr><td colspan=\"2\" style=\"padding:4px 0 2px;font-size:10px;font-weight:600;color:#4285f4;\">단계별 진행</td></tr>\n            \n          <tr>\n            <td style=\"padding:4px 0 0 14px;font-size:11px;color:#666;\">영상데이타관련</td>\n            <td align=\"right\" style=\"padding:4px 0 0;font-size:11px;font-weight:500;color:#e67e22;white-space:nowrap;\">20%</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding:2px 0 6px 14px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:3px;overflow:hidden;\">\n              <div style=\"width:20%;background:#e67e22;height:3px;border-radius:20px;\"></div>\n            </div>\n            <div style=\"font-size:10px;color:#888;padding-left:18px;margin-top:1px;line-height:1.5;\">영상데이터 관련 11종 교체 및 1종 추가 업로드 완료하였습니다.</div>\n          </td></tr>\n          </table>\n        </td></tr>\n        </table>\n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:10px;\">\n          <tr>\n            <td style=\"font-size:13px;font-weight:500;color:#1a1a2e;padding-bottom:3px;\">홈페이지이관준비</td>\n            <td align=\"right\" style=\"font-size:13px;font-weight:600;color:#3498db;padding-bottom:3px;\">43%</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding-bottom:6px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:5px;overflow:hidden;\">\n              <div style=\"width:43%;background:#3498db;height:5px;border-radius:20px;\"></div>\n            </div>\n          </td></tr>\n          \n        <tr><td colspan=\"2\" style=\"padding:4px 0 6px 0;\">\n          <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background:#fff;border-radius:6px;border:0.5px solid #c8d8f8;padding:6px 10px;\">\n            <tr><td colspan=\"2\" style=\"padding:4px 0 2px;font-size:10px;font-weight:600;color:#4285f4;\">단계별 진행</td></tr>\n            \n          <tr>\n            <td style=\"padding:4px 0 0 14px;font-size:11px;color:#666;\">홈페이지 랜딩페이지 기획</td>\n            <td align=\"right\" style=\"padding:4px 0 0;font-size:11px;font-weight:500;color:#e67e22;white-space:nowrap;\">35%</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding:2px 0 6px 14px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:3px;overflow:hidden;\">\n              <div style=\"width:35%;background:#e67e22;height:3px;border-radius:20px;\"></div>\n            </div>\n            <div style=\"font-size:10px;color:#888;padding-left:18px;margin-top:1px;line-height:1.5;\">홈페이지 프론트 기획서 재검토 진행중 입니다. 기 작성된 기획서 검수 시 관리자 페이지 입력란이 없는 부분들이 반영된 것들이 있어 관리자페이지 추가개발 여부 2개 안으로 수정하면서 재작업 진행중입니다. 추가로 지난번 권이사님이 지시하신 개발일정, 개발비(내부, 외부, 협업 등 조건 별) 등 내용도 추가 진행 중 입니다.</div>\n          </td></tr>\n          </table>\n        </td></tr>\n        </table>\n      </td></tr></table>\n\n<hr style=\"border:none;border-top:0.5px solid #eee;margin:4px 0 18px;\">\n<p style=\"margin:0 0 12px;font-size:15px;font-weight:500;color:#1a1a2e;\">보고 내용</p>\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:20px;\">\n  <tr><td style=\"background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;padding:16px 18px;font-size:13px;line-height:1.9;color:#222;\">\n    <div style=\"padding-left:0px;min-height:1.7em;font-weight:600;color:#1a1a2e;\">1. 기타 / 업무협조</div><div style=\"padding-left:6px;min-height:1.7em;font-weight:400;color:#444;\">-. 꼬마생각뒤집기관련</div><div style=\"padding-left:18px;min-height:1.7em;font-weight:400;color:#444;\">1) 영상데이타관련 : 20% 진행</div><div style=\"padding-left:36px;min-height:1.7em;font-weight:400;color:#444;\">→ 영상데이터 관련 11종 교체 및 1종 추가 업로드를 완료하였습니다.</div><div style=\"padding-left:6px;min-height:1.7em;font-weight:400;color:#444;\">-. 홈페이지이관준비</div><div style=\"padding-left:18px;min-height:1.7em;font-weight:400;color:#444;\">1) 홈페이지 랜딩페이지 기획 : 35% 진행</div><div style=\"padding-left:36px;min-height:1.7em;font-weight:400;color:#444;\">→ 홈페이지 프론트 기획서 재검토를 진행 중입니다. 기 작성된 기획서 검수 시 관리자 페이지 입력란이 없는 부분들이 반영된 것들이 있어 관리자 페이지 추가 개발 여부를 2개 안으로 수정하면서 재작업을 진행 중입니다. 추가로 지난번 권이사님이 지시하신 개발 일정, 개발비(내부, 외부, 협업 등 조건 별) 등 내용도 추가 진행 중입니다.</div><div style=\"min-height:0.6em\">&nbsp;</div><div style=\"padding-left:0px;min-height:1.7em;font-weight:400;color:#444;\">이상 업무에 참고하여 주시기 바랍니다.</div><div style=\"min-height:0.6em\">&nbsp;</div><div style=\"padding-left:6px;min-height:1.7em;font-weight:400;color:#444;\">-함흥우 드림-</div>\n  </td></tr>\n</table>\n\n<hr style=\"border:none;border-top:0.5px solid #eee;margin:0 0 12px;\">\n<p style=\"margin:0;font-size:11px;color:#aaa;text-align:center;\">이 보고서는 일일보고 자동화 시스템에서 발송되었습니다. &nbsp;·&nbsp; 도서출판 성우 솔루션개발팀</p>\n\n</td></tr></table>\n</td></tr></table>\n\n</body></html>",
+          "sentTo": [
+            "sungwoomb@sungwoobook.com",
+            "p4jyoung@sungwoobook.com",
+            "khs386@sungwoobook.com"
+          ],
+          "checkedTasks": [
+            {
+              "projectName": "기타",
+              "projectTag": "업무협조",
+              "taskName": "꼬마생각뒤집기관련",
+              "memo": "",
+              "progress": 54,
+              "steps": [
+                {
+                  "name": "영상데이타관련",
+                  "type": "pct",
+                  "pct": 20,
+                  "checkedToday": true,
+                  "memo": "영상데이터 관련 11종 교체 및 1종 추가 업로드 완료하였습니다."
+                }
+              ]
+            },
+            {
+              "projectName": "기타",
+              "projectTag": "업무협조",
+              "taskName": "홈페이지이관준비",
+              "memo": "",
+              "progress": 43,
+              "steps": [
+                {
+                  "name": "홈페이지 랜딩페이지 기획",
+                  "type": "pct",
+                  "pct": 35,
+                  "checkedToday": true,
+                  "memo": "홈페이지 프론트 기획서 재검토 진행중 입니다. 기 작성된 기획서 검수 시 관리자 페이지 입력란이 없는 부분들이 반영된 것들이 있어 관리자페이지 추가개발 여부 2개 안으로 수정하면서 재작업 진행중입니다. 추가로 지난번 권이사님이 지시하신 개발일정, 개발비(내부, 외부, 협업 등 조건 별) 등 내용도 추가 진행 중 입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-11-11",
+      "entries": [
+        {
+          "timestamp": "2026-11-11T09:01:28.919Z",
+          "reporterEmail": "ham318@sungwoobook.com",
+          "reporterName": "함흥우",
+          "reporterTeam": "솔루션개발팀",
+          "subject": "일일업무보고_솔루션개발팀 함흥우 (11.11)",
+          "body": "1. AI 활용 생산성 개선 / AI 활용\n -. 세이펜 음원 파일 작업 자동화 진행 중입니다.\n2. 기타 / 업무 협조\n -. 홈페이지 이관 준비\n   1) 홈페이지 랜딩 페이지 기획 : 35% 진행\n      → 작일에 이어 홈페이지 기획서 관련 기본 구조 부분은 재검토 및 수정 완료하였습니다. 화면 별 구현 및 데이터 매핑 부분은 재검토 진행 중입니다.\n\n이상 업무에 참고하여 주시기 바랍니다.\n\n -함흥우 드림-",
+          "htmlBody": "<!DOCTYPE html>\n<html lang=\"ko\">\n<head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\"></head>\n<body style=\"margin:0;padding:0;background:#f5f6fa;font-family:'Malgun Gothic','맑은 고딕',sans-serif;\">\n\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background:#1a73e8;\">\n  <tr><td style=\"padding:14px 28px;\">\n    <span style=\"color:#fff;font-size:15px;font-weight:500;\">도서출판 성우 &nbsp;·&nbsp; 일일업무보고</span>\n  </td></tr>\n</table>\n\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#f5f6fa\" style=\"max-width:860px;margin:20px auto;border-radius:14px;\">\n<tr><td style=\"padding:16px;\">\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#ffffff\" style=\"border-radius:12px;\">\n<tr><td style=\"padding:28px 32px;\">\n\n<p style=\"margin:0 0 24px;font-size:22px;font-weight:500;color:#1a1a2e;\">일일 업무 보고서</p>\n\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:24px;\"><tr>\n  <td width=\"23%\" style=\"background:#f0f4ff;border-radius:10px;padding:16px 12px;text-align:center;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">보고자</p>\n    <p style=\"margin:7px 0 2px;font-size:17px;font-weight:500;color:#1a1a2e;\">함흥우</p>\n    <p style=\"margin:0;font-size:10px;color:#888;\">솔루션개발팀</p>\n  </td><td width=\"2%\"></td>\n  <td width=\"23%\" style=\"background:#f0fff4;border-radius:10px;padding:16px 12px;text-align:center;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">오늘 업무</p>\n    <p style=\"margin:7px 0 2px;font-size:32px;font-weight:500;color:#639922;\">2</p>\n    <p style=\"margin:0;font-size:10px;color:#888;\">건</p>\n  </td><td width=\"2%\"></td>\n  <td width=\"23%\" style=\"background:#f0f7ff;border-radius:10px;padding:16px 12px;text-align:center;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">보고 일자</p>\n    <p style=\"margin:7px 0 2px;font-size:14px;font-weight:500;color:#378ADD;\">2026.11.11</p>\n    <p style=\"margin:0;font-size:10px;color:#888;\">오늘</p>\n  </td><td width=\"2%\"></td>\n  <td width=\"25%\" style=\"background:#fff0f0;border-radius:10px;padding:16px 12px;text-align:center;border:1.5px solid #e74c3c;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">가장 빠른 마감</p>\n    <p style=\"margin:7px 0 4px;font-size:26px;font-weight:500;color:#e74c3c;\">-</p>\n    <p style=\"margin:0;font-size:10px;color:#e74c3c;\">AI활용 생산성개선</p>\n  </td>\n</tr></table>\n\n<hr style=\"border:none;border-top:0.5px solid #eee;margin:0 0 18px;\">\n<p style=\"margin:0 0 14px;font-size:15px;font-weight:500;color:#1a1a2e;\">프로젝트 진행 현황</p>\n\n      <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:10px;background:#f8fbff;border-radius:10px;border:1.5px solid #c8d8f8;\">\n      <tr><td style=\"padding:14px 18px;\">\n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:8px;\">\n          <tr>\n            <td>\n              <span style=\"font-size:14px;font-weight:500;color:#1a1a2e;\">AI활용 생산성개선</span>\n              <span style=\"margin-left:8px;font-size:10px;background:#e8f0fe;color:#1558b0;padding:2px 7px;border-radius:20px;font-weight:500;\">AI활용</span>\n              \n            </td>\n            <td align=\"right\" style=\"font-size:16px;font-weight:600;color:#4285f4;\">80%</td>\n          </tr>\n        </table>\n        <div style=\"background:#e0e0e0;border-radius:20px;height:6px;overflow:hidden;margin-bottom:12px;\">\n          <div style=\"width:80%;background:#4285f4;height:6px;border-radius:20px;\"></div>\n        </div>\n        \n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:10px;\">\n          <tr>\n            <td style=\"font-size:13px;font-weight:500;color:#1a1a2e;padding-bottom:3px;\">세이펜음원파일작업자동화</td>\n            <td align=\"right\" style=\"font-size:13px;font-weight:600;color:#3498db;padding-bottom:3px;\">80%</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding-bottom:6px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:5px;overflow:hidden;\">\n              <div style=\"width:80%;background:#3498db;height:5px;border-radius:20px;\"></div>\n            </div>\n          </td></tr>\n          \n        <tr><td colspan=\"2\" style=\"padding:4px 0 6px 0;\">\n          <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background:#fff;border-radius:6px;border:0.5px solid #c8d8f8;padding:6px 10px;\">\n            <tr><td colspan=\"2\" style=\"padding:4px 0 2px;font-size:10px;font-weight:600;color:#4285f4;\">단계별 진행</td></tr>\n            \n          <tr>\n            <td style=\"padding:4px 0 0 14px;font-size:11px;color:#666;\">유아편집부세이펜업무대응</td>\n            <td align=\"right\" style=\"padding:4px 0 0;font-size:11px;font-weight:500;color:#34a853;white-space:nowrap;\">0 / 40</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding:2px 0 6px 14px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:3px;overflow:hidden;\">\n              <div style=\"width:0%;background:#e67e22;height:3px;border-radius:20px;\"></div>\n            </div>\n            <div style=\"font-size:10px;color:#888;padding-left:18px;margin-top:1px;line-height:1.5;\">유아팀 신제품 세이펜 업무 대응 중 입니다. 금일 9종 10,14,17, 21, 25, 27, 28, 32, 37권 입수하였고 일부 PDF는 채색이 되어 있지 않은 상태로 스크립트 우선 제작 진행하였습니다. 스크립트 외 영역지 부분은 차후 입수/진행 될 예정입니다.</div>\n          </td></tr>\n          </table>\n        </td></tr>\n        </table>\n      </td></tr></table>\n      <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:10px;background:#f6fff8;border-radius:10px;border:1.5px solid #b2dfdb;\">\n      <tr><td style=\"padding:14px 18px;\">\n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:8px;\">\n          <tr>\n            <td>\n              <span style=\"font-size:14px;font-weight:500;color:#1a1a2e;\">기타</span>\n              <span style=\"margin-left:8px;font-size:10px;background:#e8f0fe;color:#1558b0;padding:2px 7px;border-radius:20px;font-weight:500;\">업무협조</span>\n              \n            </td>\n            <td align=\"right\" style=\"font-size:16px;font-weight:600;color:#34a853;\">43%</td>\n          </tr>\n        </table>\n        <div style=\"background:#e0e0e0;border-radius:20px;height:6px;overflow:hidden;margin-bottom:12px;\">\n          <div style=\"width:43%;background:#34a853;height:6px;border-radius:20px;\"></div>\n        </div>\n        \n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:10px;\">\n          <tr>\n            <td style=\"font-size:13px;font-weight:500;color:#1a1a2e;padding-bottom:3px;\">홈페이지이관준비</td>\n            <td align=\"right\" style=\"font-size:13px;font-weight:600;color:#3498db;padding-bottom:3px;\">43%</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding-bottom:6px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:5px;overflow:hidden;\">\n              <div style=\"width:43%;background:#3498db;height:5px;border-radius:20px;\"></div>\n            </div>\n          </td></tr>\n          \n        <tr><td colspan=\"2\" style=\"padding:4px 0 6px 0;\">\n          <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background:#fff;border-radius:6px;border:0.5px solid #b2dfdb;padding:6px 10px;\">\n            <tr><td colspan=\"2\" style=\"padding:4px 0 2px;font-size:10px;font-weight:600;color:#34a853;\">단계별 진행</td></tr>\n            \n          <tr>\n            <td style=\"padding:4px 0 0 14px;font-size:11px;color:#666;\">홈페이지 랜딩페이지 기획</td>\n            <td align=\"right\" style=\"padding:4px 0 0;font-size:11px;font-weight:500;color:#e67e22;white-space:nowrap;\">35%</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding:2px 0 6px 14px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:3px;overflow:hidden;\">\n              <div style=\"width:35%;background:#e67e22;height:3px;border-radius:20px;\"></div>\n            </div>\n            <div style=\"font-size:10px;color:#888;padding-left:18px;margin-top:1px;line-height:1.5;\">작일에 이어 홈페이지 기획서 관련 기본구조 부분은 재검토/수정 완료되었습니다. 화면 별 구현,데이터 매핑 부분 재검토 진행 중 입니다.</div>\n          </td></tr>\n          </table>\n        </td></tr>\n        </table>\n      </td></tr></table>\n\n<hr style=\"border:none;border-top:0.5px solid #eee;margin:4px 0 18px;\">\n<p style=\"margin:0 0 12px;font-size:15px;font-weight:500;color:#1a1a2e;\">보고 내용</p>\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:20px;\">\n  <tr><td style=\"background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;padding:16px 18px;font-size:13px;line-height:1.9;color:#222;\">\n    <div style=\"padding-left:0px;min-height:1.7em;font-weight:600;color:#1a1a2e;\">1. AI 활용 생산성 개선 / AI 활용</div><div style=\"padding-left:6px;min-height:1.7em;font-weight:400;color:#444;\">-. 세이펜 음원 파일 작업 자동화 진행 중입니다.</div><div style=\"padding-left:0px;min-height:1.7em;font-weight:600;color:#1a1a2e;\">2. 기타 / 업무 협조</div><div style=\"padding-left:6px;min-height:1.7em;font-weight:400;color:#444;\">-. 홈페이지 이관 준비</div><div style=\"padding-left:18px;min-height:1.7em;font-weight:400;color:#444;\">1) 홈페이지 랜딩 페이지 기획 : 35% 진행</div><div style=\"padding-left:36px;min-height:1.7em;font-weight:400;color:#444;\">→ 작일에 이어 홈페이지 기획서 관련 기본 구조 부분은 재검토 및 수정 완료하였습니다. 화면 별 구현 및 데이터 매핑 부분은 재검토 진행 중입니다.</div><div style=\"min-height:0.6em\">&nbsp;</div><div style=\"padding-left:0px;min-height:1.7em;font-weight:400;color:#444;\">이상 업무에 참고하여 주시기 바랍니다.</div><div style=\"min-height:0.6em\">&nbsp;</div><div style=\"padding-left:6px;min-height:1.7em;font-weight:400;color:#444;\">-함흥우 드림-</div>\n  </td></tr>\n</table>\n\n<hr style=\"border:none;border-top:0.5px solid #eee;margin:0 0 12px;\">\n<p style=\"margin:0;font-size:11px;color:#aaa;text-align:center;\">이 보고서는 일일보고 자동화 시스템에서 발송되었습니다. &nbsp;·&nbsp; 도서출판 성우 솔루션개발팀</p>\n\n</td></tr></table>\n</td></tr></table>\n\n</body></html>",
+          "sentTo": [
+            "sungwoomb@sungwoobook.com",
+            "p4jyoung@sungwoobook.com",
+            "khs386@sungwoobook.com"
+          ],
+          "checkedTasks": [
+            {
+              "projectName": "AI활용 생산성개선",
+              "projectTag": "AI활용",
+              "taskName": "세이펜음원파일작업자동화",
+              "memo": "",
+              "progress": 80,
+              "steps": [
+                {
+                  "name": "유아편집부세이펜업무대응",
+                  "type": "qty",
+                  "current": 0,
+                  "target": 40,
+                  "checkedToday": true,
+                  "memo": "유아팀 신제품 세이펜 업무 대응 중 입니다. 금일 9종 10,14,17, 21, 25, 27, 28, 32, 37권 입수하였고 일부 PDF는 채색이 되어 있지 않은 상태로 스크립트 우선 제작 진행하였습니다. 스크립트 외 영역지 부분은 차후 입수/진행 될 예정입니다."
+                }
+              ]
+            },
+            {
+              "projectName": "기타",
+              "projectTag": "업무협조",
+              "taskName": "홈페이지이관준비",
+              "memo": "",
+              "progress": 43,
+              "steps": [
+                {
+                  "name": "홈페이지 랜딩페이지 기획",
+                  "type": "pct",
+                  "pct": 35,
+                  "checkedToday": true,
+                  "memo": "작일에 이어 홈페이지 기획서 관련 기본구조 부분은 재검토/수정 완료되었습니다. 화면 별 구현,데이터 매핑 부분 재검토 진행 중 입니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-11-13",
+      "entries": [
+        {
+          "timestamp": "2026-11-13T03:30:57.742Z",
+          "reporterEmail": "ham318@sungwoobook.com",
+          "reporterName": "함흥우",
+          "reporterTeam": "솔루션개발팀",
+          "subject": "일일업무보고_솔루션개발팀 함흥우 (11.12)",
+          "body": "1. 기타 / 업무협조\n -. 홈페이지이관준비\n   1) 홈페이지 랜딩페이지 기획 : 35% 진행\n      → 홈페이지 기획서와 관련하여 화면 별 구현 방법, 데이터 매핑 부분을 검토하였으며, 자체 개발 방안과 돋움 협력, 외주 프리랜서 및 내부 개발 부분에 대해 조건별로 검토 및 수정을 진행하였습니다. 해당 기획서는 실무진에서 확인해야 할 부분들이므로, 윗선에서 보실 수 있도록 간략하게 비교표 형식으로 작성 중이며, 명일 중에 자료를 보고드리도록 하겠습니다.\n\n이상 업무에 참고하여 주시기 바랍니다.\n\n -함흥우 드림-",
+          "htmlBody": "<!DOCTYPE html>\n<html lang=\"ko\">\n<head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\"></head>\n<body style=\"margin:0;padding:0;background:#f5f6fa;font-family:'Malgun Gothic','맑은 고딕',sans-serif;\">\n\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background:#1a73e8;\">\n  <tr><td style=\"padding:14px 28px;\">\n    <span style=\"color:#fff;font-size:15px;font-weight:500;\">도서출판 성우 &nbsp;·&nbsp; 일일업무보고</span>\n  </td></tr>\n</table>\n\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#f5f6fa\" style=\"max-width:860px;margin:20px auto;border-radius:14px;\">\n<tr><td style=\"padding:16px;\">\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" bgcolor=\"#ffffff\" style=\"border-radius:12px;\">\n<tr><td style=\"padding:28px 32px;\">\n\n<p style=\"margin:0 0 24px;font-size:22px;font-weight:500;color:#1a1a2e;\">일일 업무 보고서</p>\n\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:24px;\"><tr>\n  <td width=\"23%\" style=\"background:#f0f4ff;border-radius:10px;padding:16px 12px;text-align:center;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">보고자</p>\n    <p style=\"margin:7px 0 2px;font-size:17px;font-weight:500;color:#1a1a2e;\">함흥우</p>\n    <p style=\"margin:0;font-size:10px;color:#888;\">솔루션개발팀</p>\n  </td><td width=\"2%\"></td>\n  <td width=\"23%\" style=\"background:#f0fff4;border-radius:10px;padding:16px 12px;text-align:center;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">오늘 업무</p>\n    <p style=\"margin:7px 0 2px;font-size:32px;font-weight:500;color:#639922;\">1</p>\n    <p style=\"margin:0;font-size:10px;color:#888;\">건</p>\n  </td><td width=\"2%\"></td>\n  <td width=\"23%\" style=\"background:#f0f7ff;border-radius:10px;padding:16px 12px;text-align:center;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">보고 일자</p>\n    <p style=\"margin:7px 0 2px;font-size:14px;font-weight:500;color:#378ADD;\">2026.11.13</p>\n    <p style=\"margin:0;font-size:10px;color:#888;\">오늘</p>\n  </td><td width=\"2%\"></td>\n  <td width=\"25%\" style=\"background:#fff0f0;border-radius:10px;padding:16px 12px;text-align:center;border:1.5px solid #e74c3c;\">\n    <p style=\"margin:0;font-size:11px;color:#666;\">가장 빠른 마감</p>\n    <p style=\"margin:7px 0 4px;font-size:26px;font-weight:500;color:#e74c3c;\">-</p>\n    <p style=\"margin:0;font-size:10px;color:#e74c3c;\">기타</p>\n  </td>\n</tr></table>\n\n<hr style=\"border:none;border-top:0.5px solid #eee;margin:0 0 18px;\">\n<p style=\"margin:0 0 14px;font-size:15px;font-weight:500;color:#1a1a2e;\">프로젝트 진행 현황</p>\n\n      <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:10px;background:#f8fbff;border-radius:10px;border:1.5px solid #c8d8f8;\">\n      <tr><td style=\"padding:14px 18px;\">\n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:8px;\">\n          <tr>\n            <td>\n              <span style=\"font-size:14px;font-weight:500;color:#1a1a2e;\">기타</span>\n              <span style=\"margin-left:8px;font-size:10px;background:#e8f0fe;color:#1558b0;padding:2px 7px;border-radius:20px;font-weight:500;\">업무협조</span>\n              \n            </td>\n            <td align=\"right\" style=\"font-size:16px;font-weight:600;color:#4285f4;\">43%</td>\n          </tr>\n        </table>\n        <div style=\"background:#e0e0e0;border-radius:20px;height:6px;overflow:hidden;margin-bottom:12px;\">\n          <div style=\"width:43%;background:#4285f4;height:6px;border-radius:20px;\"></div>\n        </div>\n        \n        <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:10px;\">\n          <tr>\n            <td style=\"font-size:13px;font-weight:500;color:#1a1a2e;padding-bottom:3px;\">홈페이지이관준비</td>\n            <td align=\"right\" style=\"font-size:13px;font-weight:600;color:#3498db;padding-bottom:3px;\">43%</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding-bottom:6px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:5px;overflow:hidden;\">\n              <div style=\"width:43%;background:#3498db;height:5px;border-radius:20px;\"></div>\n            </div>\n          </td></tr>\n          \n        <tr><td colspan=\"2\" style=\"padding:4px 0 6px 0;\">\n          <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"background:#fff;border-radius:6px;border:0.5px solid #c8d8f8;padding:6px 10px;\">\n            <tr><td colspan=\"2\" style=\"padding:4px 0 2px;font-size:10px;font-weight:600;color:#4285f4;\">단계별 진행</td></tr>\n            \n          <tr>\n            <td style=\"padding:4px 0 0 14px;font-size:11px;color:#666;\">홈페이지 랜딩페이지 기획</td>\n            <td align=\"right\" style=\"padding:4px 0 0;font-size:11px;font-weight:500;color:#e67e22;white-space:nowrap;\">35%</td>\n          </tr>\n          <tr><td colspan=\"2\" style=\"padding:2px 0 6px 14px;\">\n            <div style=\"background:#e0e0e0;border-radius:20px;height:3px;overflow:hidden;\">\n              <div style=\"width:35%;background:#e67e22;height:3px;border-radius:20px;\"></div>\n            </div>\n            <div style=\"font-size:10px;color:#888;padding-left:18px;margin-top:1px;line-height:1.5;\">홈페이지 기획서 관련 화면 별 구현방법 테이터 매핑 부분 검토 및 자체개발방안, 돋움 협력, 외주 프리랜서+내부개발 부분 조건별 검토/수정 진행하였습니다. 해당 기획서는 실무진에서 봐야할 부분들이라 윗선에서 보실 수 있도록 간략하게 비교표 형식으로 작성 중이고 명일 중에 자료보고드리도록 하겠습니다.</div>\n          </td></tr>\n          </table>\n        </td></tr>\n        </table>\n      </td></tr></table>\n\n<hr style=\"border:none;border-top:0.5px solid #eee;margin:4px 0 18px;\">\n<p style=\"margin:0 0 12px;font-size:15px;font-weight:500;color:#1a1a2e;\">보고 내용</p>\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-bottom:20px;\">\n  <tr><td style=\"background:#f8f9fa;border-radius:8px;border:0.5px solid #e8e8e8;padding:16px 18px;font-size:13px;line-height:1.9;color:#222;\">\n    <div style=\"padding-left:0px;min-height:1.7em;font-weight:600;color:#1a1a2e;\">1. 기타 / 업무협조</div><div style=\"padding-left:6px;min-height:1.7em;font-weight:400;color:#444;\">-. 홈페이지이관준비</div><div style=\"padding-left:18px;min-height:1.7em;font-weight:400;color:#444;\">1) 홈페이지 랜딩페이지 기획 : 35% 진행</div><div style=\"padding-left:36px;min-height:1.7em;font-weight:400;color:#444;\">→ 홈페이지 기획서와 관련하여 화면 별 구현 방법, 데이터 매핑 부분을 검토하였으며, 자체 개발 방안과 돋움 협력, 외주 프리랜서 및 내부 개발 부분에 대해 조건별로 검토 및 수정을 진행하였습니다. 해당 기획서는 실무진에서 확인해야 할 부분들이므로, 윗선에서 보실 수 있도록 간략하게 비교표 형식으로 작성 중이며, 명일 중에 자료를 보고드리도록 하겠습니다.</div><div style=\"min-height:0.6em\">&nbsp;</div><div style=\"padding-left:0px;min-height:1.7em;font-weight:400;color:#444;\">이상 업무에 참고하여 주시기 바랍니다.</div><div style=\"min-height:0.6em\">&nbsp;</div><div style=\"padding-left:6px;min-height:1.7em;font-weight:400;color:#444;\">-함흥우 드림-</div>\n  </td></tr>\n</table>\n\n<hr style=\"border:none;border-top:0.5px solid #eee;margin:0 0 12px;\">\n<p style=\"margin:0;font-size:11px;color:#aaa;text-align:center;\">이 보고서는 일일보고 자동화 시스템에서 발송되었습니다. &nbsp;·&nbsp; 도서출판 성우 솔루션개발팀</p>\n\n</td></tr></table>\n</td></tr></table>\n\n</body></html>",
+          "sentTo": [
+            "sungwoomb@sungwoobook.com",
+            "p4jyoung@sungwoobook.com",
+            "khs386@sungwoobook.com"
+          ],
+          "checkedTasks": [
+            {
+              "projectName": "기타",
+              "projectTag": "업무협조",
+              "taskName": "홈페이지이관준비",
+              "memo": "",
+              "progress": 43,
+              "steps": [
+                {
+                  "name": "홈페이지 랜딩페이지 기획",
+                  "type": "pct",
+                  "pct": 35,
+                  "checkedToday": true,
+                  "memo": "홈페이지 기획서 관련 화면 별 구현방법 테이터 매핑 부분 검토 및 자체개발방안, 돋움 협력, 외주 프리랜서+내부개발 부분 조건별 검토/수정 진행하였습니다. 해당 기획서는 실무진에서 봐야할 부분들이라 윗선에서 보실 수 있도록 간략하게 비교표 형식으로 작성 중이고 명일 중에 자료보고드리도록 하겠습니다."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "projectSnapshot": {
+    "뒤집기솔루션": {
+      "id": "p1",
+      "tag": "신규사업",
+      "tasks": {
+        "AI 풀이 위젯 개발": {
+          "id": "p1t1",
+          "progress": 67,
+          "weight": 0,
+          "stepsDone": 3,
+          "totalSteps": 6
+        },
+        "마케팅 기획": {
+          "id": "p1t2",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        },
+        "가격 정책 수립": {
+          "id": "p1t3",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        },
+        "기획서 작성": {
+          "id": "p1t4",
+          "progress": 35,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 3
+        },
+        "문제집제작관련": {
+          "id": "p1t1788945596881",
+          "progress": 80,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 1
+        }
+      }
+    },
+    "AI활용 생산성개선": {
+      "id": "p2",
+      "tag": "AI활용",
+      "tasks": {
+        "일일보고 자동화 시스템": {
+          "id": "p2t1",
+          "progress": 68,
+          "weight": 0,
+          "stepsDone": 4,
+          "totalSteps": 8
+        },
+        "AI 뉴스레터 자동화": {
+          "id": "p2t2",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        },
+        "세이펜음원파일작업자동화": {
+          "id": "p2t1786438734307",
+          "progress": 85,
+          "weight": 0,
+          "stepsDone": 4,
+          "totalSteps": 5
+        },
+        "주문대시보드관련": {
+          "id": "p2t1792140470397",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 1
+        },
+        "고도화업무관련": {
+          "id": "p2t1792658020836",
+          "progress": 25,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 1
+        }
+      }
+    },
+    "기타": {
+      "id": "p3",
+      "tag": "업무협조",
+      "tasks": {
+        "알림톡 검수 대응": {
+          "id": "p3t1",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        },
+        "그룹웨어 관리": {
+          "id": "p3t2",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        },
+        "CS대응": {
+          "id": "p3t1781688045449",
+          "progress": 100,
+          "weight": 0,
+          "stepsDone": 1,
+          "totalSteps": 1
+        },
+        "영상수정업무요청대응(초등팀, 영상팀)": {
+          "id": "p3t1782180873510",
+          "progress": 70,
+          "weight": 0,
+          "stepsDone": 4,
+          "totalSteps": 6
+        },
+        "릴라팝 꿈틀이 영상 카탈로그 변경 진행": {
+          "id": "p3t1784883791224",
+          "progress": 100,
+          "weight": 0,
+          "stepsDone": 2,
+          "totalSteps": 2
+        },
+        "기타 시스템업무": {
+          "id": "p3t1786006256823",
+          "progress": 50,
+          "weight": 0,
+          "stepsDone": 1,
+          "totalSteps": 2
+        },
+        "꼬마생각뒤집기관련": {
+          "id": "p3t1789548331776",
+          "progress": 54,
+          "weight": 0,
+          "stepsDone": 2,
+          "totalSteps": 7
+        },
+        "영상관련업무협조": {
+          "id": "p3t1789721712053",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 1
+        },
+        "홈페이지이관준비": {
+          "id": "p3t1790758853600",
+          "progress": 75,
+          "weight": 0,
+          "stepsDone": 1,
+          "totalSteps": 2
+        },
+        "PHP보안이슈 대응": {
+          "id": "p3t1793002443510",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 1
+        }
+      }
+    },
+    "AI검색(AEO,MCP)개발": {
+      "id": "p1783586678448",
+      "tag": "단기프로젝트",
+      "tasks": {
+        "AEO-MCP 실행계획서 작성": {
+          "id": "p1783586678448t1783587670198",
+          "progress": 100,
+          "weight": 0,
+          "stepsDone": 2,
+          "totalSteps": 2
+        },
+        "홈페이지 관리업체 협조": {
+          "id": "p1783586678448t1783587815995",
+          "progress": 93,
+          "weight": 0,
+          "stepsDone": 3,
+          "totalSteps": 4
+        },
+        "MCP서버제작": {
+          "id": "p1783586678448t1783588074309",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        },
+        "AI노출실측 및 모니터링": {
+          "id": "p1783586678448t1783672451487",
+          "progress": 33,
+          "weight": 0,
+          "stepsDone": 1,
+          "totalSteps": 3
+        },
+        "홈페이지 플랫폼 별 콘솔등록관련": {
+          "id": "p1783586678448t1784103525124",
+          "progress": 100,
+          "weight": 0,
+          "stepsDone": 1,
+          "totalSteps": 1
+        },
+        "홈페이지세팅": {
+          "id": "p1783586678448t1785229779239",
+          "progress": 90,
+          "weight": 0,
+          "stepsDone": 1,
+          "totalSteps": 2
+        }
+      }
+    }
+  },
+  "prevSnapshot": {
+    "뒤집기솔루션": {
+      "id": "p1",
+      "tag": "신규사업",
+      "tasks": {
+        "AI 풀이 위젯 개발": {
+          "id": "p1t1",
+          "progress": 67,
+          "weight": 0,
+          "stepsDone": 3,
+          "totalSteps": 6
+        },
+        "마케팅 기획": {
+          "id": "p1t2",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        },
+        "가격 정책 수립": {
+          "id": "p1t3",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        },
+        "기획서 작성": {
+          "id": "p1t4",
+          "progress": 35,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 3
+        },
+        "문제집제작관련": {
+          "id": "p1t1788945596881",
+          "progress": 80,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 1
+        }
+      }
+    },
+    "AI활용 생산성개선": {
+      "id": "p2",
+      "tag": "AI활용",
+      "tasks": {
+        "일일보고 자동화 시스템": {
+          "id": "p2t1",
+          "progress": 68,
+          "weight": 0,
+          "stepsDone": 4,
+          "totalSteps": 8
+        },
+        "AI 뉴스레터 자동화": {
+          "id": "p2t2",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        },
+        "세이펜음원파일작업자동화": {
+          "id": "p2t1786438734307",
+          "progress": 80,
+          "weight": 0,
+          "stepsDone": 4,
+          "totalSteps": 5
+        },
+        "주문대시보드관련": {
+          "id": "p2t1792140470397",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 1
+        },
+        "고도화업무관련": {
+          "id": "p2t1792658020836",
+          "progress": 25,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 1
+        }
+      }
+    },
+    "기타": {
+      "id": "p3",
+      "tag": "업무협조",
+      "tasks": {
+        "알림톡 검수 대응": {
+          "id": "p3t1",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        },
+        "그룹웨어 관리": {
+          "id": "p3t2",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        },
+        "CS대응": {
+          "id": "p3t1781688045449",
+          "progress": 100,
+          "weight": 0,
+          "stepsDone": 1,
+          "totalSteps": 1
+        },
+        "영상수정업무요청대응(초등팀, 영상팀)": {
+          "id": "p3t1782180873510",
+          "progress": 70,
+          "weight": 0,
+          "stepsDone": 4,
+          "totalSteps": 6
+        },
+        "릴라팝 꿈틀이 영상 카탈로그 변경 진행": {
+          "id": "p3t1784883791224",
+          "progress": 100,
+          "weight": 0,
+          "stepsDone": 2,
+          "totalSteps": 2
+        },
+        "기타 시스템업무": {
+          "id": "p3t1786006256823",
+          "progress": 50,
+          "weight": 0,
+          "stepsDone": 1,
+          "totalSteps": 2
+        },
+        "꼬마생각뒤집기관련": {
+          "id": "p3t1789548331776",
+          "progress": 54,
+          "weight": 0,
+          "stepsDone": 2,
+          "totalSteps": 7
+        },
+        "영상관련업무협조": {
+          "id": "p3t1789721712053",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 1
+        },
+        "홈페이지이관준비": {
+          "id": "p3t1790758853600",
+          "progress": 43,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 2
+        },
+        "PHP보안이슈 대응": {
+          "id": "p3t1793002443510",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 1
+        }
+      }
+    },
+    "AI검색(AEO,MCP)개발": {
+      "id": "p1783586678448",
+      "tag": "단기프로젝트",
+      "tasks": {
+        "AEO-MCP 실행계획서 작성": {
+          "id": "p1783586678448t1783587670198",
+          "progress": 100,
+          "weight": 0,
+          "stepsDone": 2,
+          "totalSteps": 2
+        },
+        "홈페이지 관리업체 협조": {
+          "id": "p1783586678448t1783587815995",
+          "progress": 93,
+          "weight": 0,
+          "stepsDone": 3,
+          "totalSteps": 4
+        },
+        "MCP서버제작": {
+          "id": "p1783586678448t1783588074309",
+          "progress": 0,
+          "weight": 0,
+          "stepsDone": 0,
+          "totalSteps": 0
+        },
+        "AI노출실측 및 모니터링": {
+          "id": "p1783586678448t1783672451487",
+          "progress": 33,
+          "weight": 0,
+          "stepsDone": 1,
+          "totalSteps": 3
+        },
+        "홈페이지 플랫폼 별 콘솔등록관련": {
+          "id": "p1783586678448t1784103525124",
+          "progress": 100,
+          "weight": 0,
+          "stepsDone": 1,
+          "totalSteps": 1
+        },
+        "홈페이지세팅": {
+          "id": "p1783586678448t1785229779239",
+          "progress": 90,
+          "weight": 0,
+          "stepsDone": 1,
+          "totalSteps": 2
+        }
+      }
+    }
+  }
+}
