@@ -77,9 +77,9 @@ function assembleReportText(checkedTasks, extraMemo, reporterName) {
  * GPT는 문장 표현만 다듬기 — 내용·구조·순서 변경 금지
  */
 async function convertToReport(checkedTasks, extraMemo, reporterName, reporterTeam) {
-  const today = new Date();
-  const dateStr = `${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`;
-  const dateFullStr = `${today.getFullYear()}.${dateStr}`;
+  const kst = new Date(Date.now() + 9 * 60 * 60 * 1000); // 한국시간 기준
+  const dateStr = `${String(kst.getUTCMonth() + 1).padStart(2, '0')}.${String(kst.getUTCDate()).padStart(2, '0')}`;
+  const dateFullStr = `${kst.getUTCFullYear()}.${dateStr}`;
 
   // 1단계: 시스템이 직접 조립
   const assembled = assembleReportText(checkedTasks, extraMemo, reporterName);

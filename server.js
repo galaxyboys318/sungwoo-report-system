@@ -7,6 +7,12 @@ const { convertToReport } = require('./report-form');
 const { sendReport, verifyConnection, buildHtmlEmail } = require('./mailer');
 
 const app = express();
+
+// 한국시간(KST, UTC+9) 기준 날짜 — 서버(UTC) 시각 때문에 오전 9시 이전 보고가 전날로 저장되는 문제 방지
+function kstDate(d = new Date()) {
+  return new Date(d.getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
 const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
@@ -465,14 +471,14 @@ app.post('/api/projects/step/update', (req, res) => {
   else if (type === 'pct') {
     if (!step.history) step.history = [];
     if (step.pct !== value) {
-      step.history.push({ date: new Date().toISOString().slice(0, 10), from: step.pct || 0, to: value });
+      step.history.push({ date: kstDate(), from: step.pct || 0, to: value });
     }
     step.pct = value;
   }
   // 메모 저장 — 날짜별 누적 (memoHistory)
   if (memo !== undefined && memo.trim() !== '') {
     if (!step.memoHistory) step.memoHistory = [];
-    const today = new Date().toISOString().slice(0, 10);
+    const today = kstDate();
     const existing = step.memoHistory.find(m => m.date === today);
     if (existing) existing.memo = memo;
     else step.memoHistory.push({ date: today, memo });
@@ -593,7 +599,7 @@ app.post('/report/send', async (req, res) => {
     const reporterTeam = req.session.user?.team || process.env.REPORTER_TEAM;
     await sendReport(report, toAddresses, reporterName, reporterTeam, checkedTasks || report.checkedTasks);
 
-    const today = new Date().toISOString().slice(0, 10);
+    const today = kstDate();
     const logPath = path.join(__dirname, 'data', 'reports', `${today}.json`);
     const newEntry = {
       timestamp: new Date().toISOString(),
@@ -604,7 +610,6 @@ app.post('/report/send', async (req, res) => {
       body: report.body,
       htmlBody: buildHtmlEmail(report, reporterName, reporterTeam, checkedTasks || report.checkedTasks),
       sentTo: toAddresses,
-      checkedTasks: checkedTasks || report.checkedTasks || [], // 주간보고 GPT 요약의 단계별 수치(stepSummary)에 사용
     };
     // 기존 기록에 누적 저장 (배열)
     let logs = [];
@@ -661,7 +666,7 @@ app.get('/dashboard', requireLogin, (req, res) => {
 
 // 오늘 보고자 목록 API
 app.get('/api/reports/today', requireLogin, (req, res) => {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = kstDate();
   const logPath = path.join(__dirname, 'data', 'reports', `${today}.json`);
   try {
     if (!fs.existsSync(logPath)) return res.json({ reporters: [] });
@@ -1070,7 +1075,17 @@ app.post('/api/weekly-send', requireLogin, async (req, res) => {
     const ghWeeklyPath = `data/weekly/${weekKey}-${user.id || user.email}.json`;
     saveToGitHub(ghWeeklyPath, weeklyRecord).catch(e => console.error('[GitHub weekly 백업 실패]', e.message));
 
-    // memoHistory 는 지우지 않는다 — 다른 직원의 메모까지 지워지므로. 지난 메모는 폼에서 이번 주만 보이도록 거른다
+    // 주간보고 발송 후 memoHistory 초기화
+    const projData = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
+    projData.projects.forEach(p => {
+      (p.tasks || []).forEach(t => {
+        (t.steps || []).forEach(s => {
+          s.memoHistory = [];
+          s.memo = '';
+        });
+      });
+    });
+    saveProjects(projData);
 
     res.json({ success: true });
   } catch (e) {
@@ -1366,7 +1381,7 @@ app.get('/team-daily', requireTeamLead, (req, res) => {
 
 app.get('/api/team-daily-status', requireTeamLead, (req, res) => {
   const leader = req.session.user;
-  const date = req.query.date || new Date().toISOString().slice(0, 10);
+  const date = req.query.date || kstDate();
   const usersData = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
   const teamMembers = usersData.users.filter(u => u.team === leader.team && u.email !== leader.email);
 
@@ -1550,7 +1565,7 @@ app.get('/project-report', requireTeamLead, (req, res) => {
 app.get('/api/project-report-data', requireTeamLead, (req, res) => {
   const { projectId, date } = req.query;
   const user = req.session.user;
-  const today = date || new Date().toISOString().slice(0, 10);
+  const today = date || kstDate();
 
   const projData = JSON.parse(fs.readFileSync(PROJECTS_PATH, 'utf-8'));
   const project = (projData.projects || []).find(p => p.id === projectId);
