@@ -574,6 +574,13 @@ app.post('/report/preview', async (req, res) => {
 // 메일 발송 API
 app.post('/report/send', async (req, res) => {
   const { report, recipients, checkedTasks } = req.body;
+  // 제목 끝의 (MM.DD)를 발송 시점의 한국 날짜로 맞춤 (미리보기를 며칠 뒤 발송해도 날짜가 어긋나지 않게)
+  if (report && typeof report.subject === 'string') {
+    const k = kstDate();
+    const md = `${k.slice(5, 7)}.${k.slice(8, 10)}`;
+    report.subject = report.subject.replace(/\(\d{2}\.\d{2}\)\s*$/, `(${md})`);
+    report.date = `${k.slice(0, 4)}.${md}`;
+  }
 
   if (!report || !recipients || recipients.length === 0) {
     return res.status(400).json({ error: '잘못된 요청입니다.' });
