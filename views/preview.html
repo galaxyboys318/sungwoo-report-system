@@ -208,6 +208,12 @@
       location.href = '/report';
     }
 
+    // 제목의 날짜를 오늘(한국시간) 기준으로 표시 — 서버도 발송 시 같은 방식으로 맞춤
+    (function () {
+      const k = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+      const md = k.slice(5, 7) + '.' + k.slice(8, 10);
+      data.subject = String(data.subject || '').replace(/\(\d{2}\.\d{2}\)\s*$/, '(' + md + ')');
+    })();
     document.getElementById('preview-subject').textContent = data.subject;
     document.getElementById('preview-from').textContent = data.reporterEmail || '';
 
