@@ -1179,17 +1179,7 @@
           "assignees": [
             "함흥우"
           ],
-          "steps": [
-            {
-              "id": "s1795076194878",
-              "name": "해피콜업무이전프로세스확정",
-              "type": "check",
-              "assignees": [
-                "함흥우"
-              ],
-              "done": false
-            }
-          ]
+          "steps": []
         }
       ]
     },
